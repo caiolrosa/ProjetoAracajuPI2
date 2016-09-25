@@ -9,10 +9,11 @@
 #pragma endregion
 
 // Variaveis globais
-const int width = 800;
-const int height = 400;
+const int WIDTH = 800;
+const int HEIGHT = 400;
 
 // Prototipos
+void InitJogador(Jogador *jogador);
 
 int main() {
 
@@ -21,7 +22,7 @@ int main() {
 	const int FPS = 60;
 
 	// Variaveis de objeto
-
+	Jogador jogador;
 
 	// Variaveis do Allegro
 	ALLEGRO_DISPLAY *display = NULL;
@@ -35,12 +36,15 @@ int main() {
 	}
 
 	// Initialize display
-	display = al_create_display(width, height);					// Inicializa o display
+	display = al_create_display(WIDTH, HEIGHT);					// Inicializa o display
 
 	// Addons e instalações do allegro
 	al_install_mouse();											// Possibilita o uso do mouse
-	//al_init_font_addon();										// Possibilita escrever na tela
-	//al_init_ttf_addon();										// Possibilita usar formato ttf
+	al_init_font_addon();										// Possibilita escrever na tela
+	al_init_ttf_addon();										// Possibilita usar formato ttf
+
+	// Inicializacao dos nossos objetos
+	InitJogador(&jogador);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1 / FPS);							// Inicializa o timer para que tenhamos 60 fps
@@ -76,3 +80,8 @@ int main() {
 }
 
 // Definicao de funcoes
+void InitJogador(Jogador *jogador)
+{
+	jogador->pontos = 0;
+	jogador->vidas = 5;
+}

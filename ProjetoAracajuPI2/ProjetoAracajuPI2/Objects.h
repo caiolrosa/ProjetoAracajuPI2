@@ -1,7 +1,24 @@
+#pragma region Jogador, Lista e Mapa
+
 typedef struct Jogador {
-	int score;
+	int pontos;
 	int vidas;
 } Jogador;
+
+// TODO: Verificar como vamos implementar a lista
+typedef struct Lista {
+	char *estado;
+	int velocidade; // Velocidade em que caem os estados, capitais e siglas
+} Lista;
+
+typedef struct Mapa {
+	int x;
+	int y;
+	int width;
+	int height;
+} Mapa;
+
+#pragma endregion
 
 #pragma region Regiao Sul
 
