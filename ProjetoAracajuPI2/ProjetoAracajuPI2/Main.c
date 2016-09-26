@@ -77,6 +77,11 @@ int main() {
 			finished = true;
 		}
 	}
+
+	// Libera a memoria alocada para variaveis Allegro
+	al_destroy_display(display);
+	al_destroy_event_queue(event_queue);
+	al_destroy_timer(timer);
 }
 
 // Definicao de funcoes
