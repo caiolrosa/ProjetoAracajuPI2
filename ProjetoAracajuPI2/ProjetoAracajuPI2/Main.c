@@ -10,13 +10,15 @@
 #pragma endregion
 
 // Variaveis globais
-const int WIDTH = 1000;
-const int HEIGHT = 800;
-const int WIDTHMAPA = 670;
-const int HEIGHTMAPA = 800;
+const int WIDTH = 900;
+const int HEIGHT = 700;
+const int WIDTHMAPA = 650;
+const int HEIGHTMAPA = 650;
 
 // Prototipos
 void InitJogador(Jogador *jogador);
+void InitLista(Lista *lista);
+void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista);
 
 int main() {
 
@@ -27,6 +29,7 @@ int main() {
 
 	// Variaveis de objeto
 	Jogador jogador;
+	Lista lista;
 
 	// Variaveis do Allegro
 	ALLEGRO_DISPLAY *display = NULL;
@@ -64,6 +67,7 @@ int main() {
 
 	// Inicializacao dos nossos objetos
 	InitJogador(&jogador);
+	InitLista(&lista);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
@@ -93,9 +97,8 @@ int main() {
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-			al_draw_text(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 100, 10, 0, "Santa Catarina");		// Coloca o texto da lista na tela
-			al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
-
+			UpdateLista(fontLista, &lista);
+			al_draw_scaled_bitmap(mapaBrasil, -150, -50, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 			al_flip_display();									// Muda para o back buffer
 			al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela			
 		}	
@@ -114,4 +117,24 @@ void InitJogador(Jogador *jogador)
 {
 	jogador->pontos = 0;
 	jogador->vidas = 5;
+}
+
+void InitLista(Lista *lista)
+{
+	lista->velocidade = 10;
+	lista->heightLista = 0;
+}
+
+void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista)
+{
+	if (lista->heightLista < HEIGHTMAPA)
+	{
+		al_clear_to_color(al_map_rgb(255, 255, 255));
+		al_draw_text(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, lista->velocidade + 10, 0, "Santa Catarina");
+		lista->heightLista = lista->velocidade + 10;
+		lista->velocidade += 5;
+	}
+	else {
+		al_draw_text(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, HEIGHTMAPA, 0, "Santa Catarina");
+	}
 }

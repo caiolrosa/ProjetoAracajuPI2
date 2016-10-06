@@ -7,7 +7,7 @@ typedef struct Jogador {
 
 // TODO: Verificar como vamos implementar a lista
 typedef struct Lista {
-	char *estado;
+	int heightLista;
 	int velocidade; // Velocidade em que caem os estados, capitais e siglas
 } Lista;
 
