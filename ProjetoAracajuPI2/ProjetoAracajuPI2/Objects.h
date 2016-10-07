@@ -7,8 +7,10 @@ typedef struct Jogador {
 
 // TODO: Verificar como vamos implementar a lista
 typedef struct Lista {
-	int heightLista;
+	int heightLista; // Altura do ultimo item da lista
 	int velocidade; // Velocidade em que caem os estados, capitais e siglas
+	int posicao;
+	bool isMaxHeight;
 } Lista;
 
 typedef struct Mapa {
@@ -19,7 +21,6 @@ typedef struct Mapa {
 } Mapa;
 
 #pragma endregion
-
 #pragma region Regiao Sul
 
 // Estados regiao Sul
@@ -227,5 +228,21 @@ typedef struct Acre {
 	int boundX;
 	int boundY;
 } Acre;
+
+#pragma endregion
+#pragma region Listas
+
+char *Estados[] = { "Rio Grande do Sul", "Santa Catarina", u8"Paraná", u8"São Paulo", "Mato Grosso do Sul",
+"Rio de Janeiro", "Minas Gerais", u8"Espírito Santo", u8"Goiás", "Distrito Federal", "Mato Grosso", "Bahia",
+"Tocantins", u8"Rondônia", "Acre", "Amazonas", "Roraima", u8"Pará", u8"Amapá", u8"Maranhão", u8"Piauí", u8"Ceará",
+"Rio Grande do Norte", u8"Paraíba", "Pernambuco", "Alagoas", "Sergipe" };
+
+char *Siglas[] = { "RS", "SC", "PR", "SP", "MS", "RJ", "MG", "ES", "GO", "DF", "MT", "BA", "TO", "RO",
+"AC", "AM", "RR", "PA", "AP", "MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE" };
+
+char *Capitais[] = { "Porto Alegre", "Florianópolis", "Curitiba", u8"São Paulo", "Campo Grande",
+"Rio de Janeiro", "Belo Horizonte", u8"Vitória", u8"Goiânia", "Brasilia", u8"Cuiabá", "Salvador",
+"Palmas", "Porto Velho", "Rio Branco", "Manaus", "Boa Vista", u8"Belém", u8"Macapá", u8"São Luis", "Teresina",
+"Fortaleza", "Natal", u8"João Pessoa", "Recife", u8"Maceió", "Aracaju" };
 
 #pragma endregion

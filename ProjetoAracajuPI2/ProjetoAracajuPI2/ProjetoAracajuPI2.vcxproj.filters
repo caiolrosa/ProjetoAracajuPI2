@@ -27,4 +27,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
+  <ItemGroup>
+    <Font Include="fonts\AlexandriaFLF.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+    <Font Include="fonts\Magnificent.ttf">
+      <Filter>Resource Files</Filter>
+    </Font>
+  </ItemGroup>
 </Project>

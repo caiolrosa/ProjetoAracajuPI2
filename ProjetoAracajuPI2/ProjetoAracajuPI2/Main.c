@@ -21,7 +21,6 @@ void InitLista(Lista *lista);
 void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista);
 
 int main() {
-
 	// Tipos Primitivos
 	bool finished = false;
 	bool redraw = true;
@@ -63,7 +62,7 @@ int main() {
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
 
 	// Carrega as fonts
-	fontLista = al_load_font("fonts/AlexandriaFLF.ttf", 20, 0);
+	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
 
 	// Inicializacao dos nossos objetos
 	InitJogador(&jogador);
@@ -121,20 +120,30 @@ void InitJogador(Jogador *jogador)
 
 void InitLista(Lista *lista)
 {
-	lista->velocidade = 10;
+	lista->velocidade = 30;
 	lista->heightLista = 0;
+	lista->posicao = 0;
 }
 
 void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista)
 {
+	if (lista->isMaxHeight)
+	{
+		lista->heightLista = 0;
+		lista->velocidade = 30;
+	}
+
 	if (lista->heightLista < HEIGHTMAPA)
 	{
 		al_clear_to_color(al_map_rgb(255, 255, 255));
-		al_draw_text(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, lista->velocidade + 10, 0, "Santa Catarina");
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, lista->velocidade + 10, 0, "%s", Estados[lista->posicao]);
 		lista->heightLista = lista->velocidade + 10;
 		lista->velocidade += 5;
+		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_text(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, HEIGHTMAPA, 0, "Santa Catarina");
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, HEIGHTMAPA, 0, "%s", Estados[lista->posicao]);
+		lista->isMaxHeight = true;
+		lista->posicao++;
 	}
 }
