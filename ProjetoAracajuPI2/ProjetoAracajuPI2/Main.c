@@ -19,6 +19,7 @@ const int HEIGHTMAPA = 650;
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
 void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista);
+void SortLista(char *sortedLista[]);
 
 int main() {
 	// Tipos Primitivos
@@ -67,6 +68,7 @@ int main() {
 	// Inicializacao dos nossos objetos
 	InitJogador(&jogador);
 	InitLista(&lista);
+	SortLista(sortedLista);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
@@ -80,8 +82,8 @@ int main() {
 	// Looping Principal
 	while (!finished) {
 		ALLEGRO_EVENT ev;
-		al_wait_for_event(event_queue, &ev);		
-		
+		al_wait_for_event(event_queue, &ev);
+
 		// É invocado a cada frame "Função de update" 
 		if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
@@ -136,14 +138,38 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista)
 	if (lista->heightLista < HEIGHTMAPA)
 	{
 		al_clear_to_color(al_map_rgb(255, 255, 255));
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, lista->velocidade + 10, 0, "%s", Estados[lista->posicao]);
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, lista->velocidade + 10, 0, "%s", sortedLista[lista->posicao]);
 		lista->heightLista = lista->velocidade + 10;
 		lista->velocidade += 5;
 		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, HEIGHTMAPA, 0, "%s", Estados[lista->posicao]);
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, HEIGHTMAPA, 0, "%s", sortedLista[lista->posicao]);
 		lista->isMaxHeight = true;
 		lista->posicao++;
 	}
+}
+
+void SortLista(char *sortedLista[])
+{
+	int i;
+	srand(time(NULL));
+	
+	for (i = 0; i < 100; i++)
+	{
+		switch ((rand() * 5) % 3)
+		{
+		case 0:
+			sortedLista[i] = Estados[rand() % 27];
+			break;
+		case 1:
+			sortedLista[i] = Siglas[rand() % 27];
+			break;
+		case 2:
+			sortedLista[i] = Capitais[rand() % 27];
+			break;
+		default:
+			break;
+		}
+	}	
 }

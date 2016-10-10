@@ -9,8 +9,8 @@ typedef struct Jogador {
 typedef struct Lista {
 	int heightLista; // Altura do ultimo item da lista
 	int velocidade; // Velocidade em que caem os estados, capitais e siglas
-	int posicao;
-	bool isMaxHeight;
+	int posicao;	// Index da lista
+	bool isMaxHeight;	// Verifica se a palavra chegou na altura maxima
 } Lista;
 
 typedef struct Mapa {
@@ -240,9 +240,11 @@ char *Estados[] = { "Rio Grande do Sul", "Santa Catarina", u8"Paraná", u8"São Pa
 char *Siglas[] = { "RS", "SC", "PR", "SP", "MS", "RJ", "MG", "ES", "GO", "DF", "MT", "BA", "TO", "RO",
 "AC", "AM", "RR", "PA", "AP", "MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE" };
 
-char *Capitais[] = { "Porto Alegre", "Florianópolis", "Curitiba", u8"São Paulo", "Campo Grande",
+char *Capitais[] = { "Porto Alegre", u8"Florianópolis", "Curitiba", u8"São Paulo", "Campo Grande",
 "Rio de Janeiro", "Belo Horizonte", u8"Vitória", u8"Goiânia", "Brasilia", u8"Cuiabá", "Salvador",
 "Palmas", "Porto Velho", "Rio Branco", "Manaus", "Boa Vista", u8"Belém", u8"Macapá", u8"São Luis", "Teresina",
 "Fortaleza", "Natal", u8"João Pessoa", "Recife", u8"Maceió", "Aracaju" };
+
+char *sortedLista[100];
 
 #pragma endregion
