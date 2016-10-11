@@ -5,13 +5,14 @@
 #include <allegro5\allegro_font.h>
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_image.h>
+#include <allegro5\allegro_primitives.h>
 #include "Objects.h"
 
 #pragma endregion
 
 // Variaveis globais
-const int WIDTH = 900;
-const int HEIGHT = 700;
+const int WIDTH = 1024;
+const int HEIGHT = 720;
 const int WIDTHMAPA = 650;
 const int HEIGHTMAPA = 650;
 
@@ -56,6 +57,7 @@ int main() {
 	al_init_font_addon();										// Possibilita escrever na tela
 	al_init_ttf_addon();										// Possibilita usar formato ttf
 	al_init_image_addon();										// Possibilita usar varios formatos de imagem
+	al_init_primitives_addon();									// Possibilita usar formas geometricas
 
 	// Carrega os bitmaps
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D.png");			// Cria o bitmap com as medidas das variaveis passadas como parametros
@@ -99,6 +101,7 @@ int main() {
 			redraw = false;
 
 			UpdateLista(fontLista, &lista);
+			
 			al_draw_scaled_bitmap(mapaBrasil, -150, -50, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 			al_flip_display();									// Muda para o back buffer
 			al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela			
@@ -129,22 +132,31 @@ void InitLista(Lista *lista)
 
 void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista)
 {
+	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
 		lista->heightLista = 0;
 		lista->velocidade = 30;
+		al_clear_to_color(al_map_rgb(255, 255, 255));
 	}
 
+	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
 	if (lista->heightLista < HEIGHTMAPA)
 	{
 		al_clear_to_color(al_map_rgb(255, 255, 255));
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, lista->velocidade + 10, 0, "%s", sortedLista[lista->posicao]);
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", sortedLista[lista->posicao]);
+		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Siglas[lista->posicao]);
+		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
+		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
 		lista->heightLista = lista->velocidade + 10;
 		lista->velocidade += 5;
 		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 50, HEIGHTMAPA, 0, "%s", sortedLista[lista->posicao]);
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, HEIGHTMAPA, 0, "%s", sortedLista[lista->posicao]);
+		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s	%s", Estados[lista->posicao], Siglas[lista->posicao]);
+		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
+		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
 		lista->isMaxHeight = true;
 		lista->posicao++;
 	}
