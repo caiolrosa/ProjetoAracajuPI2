@@ -11,16 +11,22 @@
 #pragma endregion
 
 // Variaveis globais
-const int WIDTH = 1024;
+const int WIDTH = 1280;
 const int HEIGHT = 720;
 const int WIDTHMAPA = 650;
 const int HEIGHTMAPA = 650;
+
+//variaveis da matriz
+const int TOTAL_DE_LINHAS = 26;
+const int TOTAL_DE_COLUNAS = 26;
 
 // Prototipos
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
 void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista);
 void SortLista(char *sortedLista[]);
+void createMatrix(float lines[], float columns[], int totalLines, int totalColumns);
+int checkClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
 
 int main() {
 	// Tipos Primitivos
@@ -31,6 +37,8 @@ int main() {
 	// Variaveis de objeto
 	Jogador jogador;
 	Lista lista;
+	float mLines[26];
+	float mColumns[26];
 
 	// Variaveis do Allegro
 	ALLEGRO_DISPLAY *display = NULL;
@@ -60,14 +68,17 @@ int main() {
 	al_init_primitives_addon();									// Possibilita usar formas geometricas
 
 	// Carrega os bitmaps
-	mapaBrasil = al_load_bitmap("imgs/Brasil-3D.png");			// Cria o bitmap com as medidas das variaveis passadas como parametros
+	//mapaBrasil = al_load_bitmap("imgs/Brasil-3D.png");			// Cria o bitmap com as medidas das variaveis passadas como parametros
+	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
+	al_draw_scaled_bitmap(mapaBrasil, -0, -0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
 
 	// Carrega as fonts
 	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
 
 	// Inicializacao dos nossos objetos
+	createMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
 	InitJogador(&jogador);
 	InitLista(&lista);
 	SortLista(sortedLista);
@@ -95,6 +106,10 @@ int main() {
 		{
 			finished = true;
 		}
+		else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) // Verifica se houve input de click na tela
+		{
+			checkClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
+		}
 
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
 		{															// Lista de eventos vazia e (evitar bugs)
@@ -102,10 +117,10 @@ int main() {
 
 			UpdateLista(fontLista, &lista);
 			
-			al_draw_scaled_bitmap(mapaBrasil, -150, -50, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
+			al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 			al_flip_display();									// Muda para o back buffer
 			al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela			
-		}	
+		}
 	}
 
 	// Libera a memoria alocada para variaveis Allegro
@@ -184,4 +199,43 @@ void SortLista(char *sortedLista[])
 			break;
 		}
 	}	
+}
+
+// aqui crio a matriz sobre o bitmap do mapa
+void createMatrix(float lines[], float columns[], int totalLines, int totalColumns)
+{
+	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
+	float pixelH = HEIGHTMAPA / (float)totalColumns; // mesma coisa de cima
+
+	int i = 0, j = 0;
+	for (i = 0; i < totalLines; i++)
+	{
+		lines[i] = pixelH + pixelH * i; // adiciono o valor em pixels onde ira comecar a matriz de Linhas
+	}
+	for (j = 0; j < totalColumns; j++)
+	{
+		columns[j] = pixelW + pixelW * j; // adiciono o valor em pixels onde ira comecar a matriz de colunas
+	}
+}
+
+//retorna 0 caso não esteja dentro do gride, 1 caso esteja
+int checkClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev) //verifica em qual indice foi realizado o clique
+{
+	int x = ev.mouse.x, y = ev.mouse.y;
+	printf("x = %d y - %d\n", x, y);
+
+	int i = 0, j = 0;
+	for (i = 0; i < totalLines; i++) // percorre todas as linhas
+	{
+		for (j = 0; j < totalColumns; j++) // percorre todas as colunas
+		{
+			if (x > ((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso está dentro do range desse quadrado
+			{
+				printf("i - %d, j %d\n", i, j);
+				return 1; //verdadeiro para quando o click estiver no mapa
+			}
+		}
+	}
+
+	return 0; //falso para quando esta fora do mapa
 }
