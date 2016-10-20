@@ -23,22 +23,24 @@ const int TOTAL_DE_COLUNAS = 26;
 // Prototipos
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
+void InitSP(SaoPaulo *SP);
 void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista);
 void SortLista(char *sortedLista[]);
-void createMatrix(float lines[], float columns[], int totalLines, int totalColumns);
-int checkClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
+void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
+int CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
 
 int main() {
 	// Tipos Primitivos
 	bool finished = false;
 	bool redraw = true;
 	const int FPS = 60;
+	float mLines[26];
+	float mColumns[26];
 
 	// Variaveis de objeto
 	Jogador jogador;
 	Lista lista;
-	float mLines[26];
-	float mColumns[26];
+	SaoPaulo SP;
 
 	// Variaveis do Allegro
 	ALLEGRO_DISPLAY *display = NULL;
@@ -78,9 +80,10 @@ int main() {
 	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
 
 	// Inicializacao dos nossos objetos
-	createMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
+	CreateMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
 	InitJogador(&jogador);
 	InitLista(&lista);
+	InitSP(&SP);
 	SortLista(sortedLista);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
@@ -108,7 +111,7 @@ int main() {
 		}
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) // Verifica se houve input de click na tela
 		{
-			checkClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
+			CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 		}
 
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
@@ -143,6 +146,11 @@ void InitLista(Lista *lista)
 	lista->velocidade = 30;
 	lista->heightLista = 0;
 	lista->posicao = 0;
+}
+
+void InitSP(SaoPaulo *SP)
+{
+	//SP->boundX
 }
 
 void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista)
@@ -202,7 +210,7 @@ void SortLista(char *sortedLista[])
 }
 
 // aqui crio a matriz sobre o bitmap do mapa
-void createMatrix(float lines[], float columns[], int totalLines, int totalColumns)
+void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns)
 {
 	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
 	float pixelH = HEIGHTMAPA / (float)totalColumns; // mesma coisa de cima
@@ -219,7 +227,7 @@ void createMatrix(float lines[], float columns[], int totalLines, int totalColum
 }
 
 //retorna 0 caso não esteja dentro do gride, 1 caso esteja
-int checkClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev) //verifica em qual indice foi realizado o clique
+int CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev) //verifica em qual indice foi realizado o clique
 {
 	int x = ev.mouse.x, y = ev.mouse.y;
 	printf("x = %d y - %d\n", x, y);
@@ -232,6 +240,13 @@ int checkClickPosition(float lines[], float columns[], int totalLines, int total
 			if (x > ((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso está dentro do range desse quadrado
 			{
 				printf("i - %d, j %d\n", i, j);
+
+				// Sao Paulo
+				if (i >= 16 && i <= 18 && j >= 13 && j <= 15)
+				{
+					printf("Clicou em SP");
+				}
+
 				return 1; //verdadeiro para quando o click estiver no mapa
 			}
 		}
