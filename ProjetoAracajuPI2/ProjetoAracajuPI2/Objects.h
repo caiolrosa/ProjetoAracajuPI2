@@ -245,6 +245,10 @@ char *Capitais[] = { "Porto Alegre", u8"Florianópolis", "Curitiba", u8"São Paulo
 "Palmas", "Porto Velho", "Rio Branco", "Manaus", "Boa Vista", u8"Belém", u8"Macapá", u8"São Luis", "Teresina",
 "Fortaleza", "Natal", u8"João Pessoa", "Recife", u8"Maceió", "Aracaju" };
 
+
 char *sortedLista[100];
+char *sortedEstadoSigla[100];
+char *sortedEstadoCapital[100];
+char *sortedSiglaCapital[100];
 
 #pragma endregion

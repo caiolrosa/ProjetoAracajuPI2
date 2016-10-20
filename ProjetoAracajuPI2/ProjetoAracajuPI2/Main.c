@@ -6,6 +6,7 @@
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_image.h>
 #include <allegro5\allegro_primitives.h>
+#include <string.h>
 #include "Objects.h"
 
 #pragma endregion
@@ -24,8 +25,8 @@ const int TOTAL_DE_COLUNAS = 26;
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
 void InitSP(SaoPaulo *SP);
-void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista);
-void SortLista(char *sortedLista[]);
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista, int ScoreRandom);
+void SortLista(char *sortedLista[], char *sortedEstadoSigla[], char *sortedEstadoCapital[], char *sortedSiglaCapital[]);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
 int CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
 
@@ -36,6 +37,8 @@ int main() {
 	const int FPS = 60;
 	float mLines[26];
 	float mColumns[26];
+	srand(time(NULL));
+	int ScoreRandom = rand();
 
 	// Variaveis de objeto
 	Jogador jogador;
@@ -84,7 +87,7 @@ int main() {
 	InitJogador(&jogador);
 	InitLista(&lista);
 	InitSP(&SP);
-	SortLista(sortedLista);
+	SortLista(sortedLista, sortedEstadoSigla, sortedEstadoCapital, sortedSiglaCapital);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
@@ -118,7 +121,7 @@ int main() {
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-			UpdateLista(fontLista, &lista);
+			UpdateLista(fontLista, &jogador, &lista, ScoreRandom);
 			
 			al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 			al_flip_display();									// Muda para o back buffer
@@ -153,13 +156,14 @@ void InitSP(SaoPaulo *SP)
 	//SP->boundX
 }
 
-void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista)
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista, int ScoreRandom)
 {
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
 		lista->heightLista = 0;
 		lista->velocidade = 30;
+		jogador->pontos += 50;
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 	}
 
@@ -167,35 +171,77 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Lista *lista)
 	if (lista->heightLista < HEIGHTMAPA)
 	{
 		al_clear_to_color(al_map_rgb(255, 255, 255));
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", sortedLista[lista->posicao]);
-		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Siglas[lista->posicao]);
-		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
-		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
+		
+		if (jogador->pontos < 100)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", sortedLista[lista->posicao]);
+		}
+		if (jogador->pontos > 100 && ScoreRandom % 3 == 0)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Siglas[lista->posicao]);
+		}
+		if (jogador->pontos > 100 && ScoreRandom % 3 == 1)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
+		}
+		if (jogador->pontos > 100 && ScoreRandom % 3 == 2)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
+		}
+		
 		lista->heightLista = lista->velocidade + 10;
 		lista->velocidade += 5;
 		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, HEIGHTMAPA, 0, "%s", sortedLista[lista->posicao]);
-		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s	%s", Estados[lista->posicao], Siglas[lista->posicao]);
-		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
-		//al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
+		if (jogador->pontos < 100)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, HEIGHTMAPA, 0, "%s", sortedLista[lista->posicao]);
+		}
+		if (jogador->pontos > 100 && ScoreRandom % 3 == 0)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s	%s", Estados[lista->posicao], Siglas[lista->posicao]);
+		}
+		if (jogador->pontos > 100 && ScoreRandom % 3 == 1)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
+		}
+		if (jogador->pontos > 100 && ScoreRandom % 3 == 2)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
+		}
+
 		lista->isMaxHeight = true;
 		lista->posicao++;
 	}
 }
 
-void SortLista(char *sortedLista[])
+void SortLista(char *sortedLista[], char *sortedEstadoSigla[], char *sortedEstadoCapital[], char *sortedSiglaCapital[])
 {
 	int i;
 	srand(time(NULL));
-	
+	int multiSort = rand();
+
 	for (i = 0; i < 100; i++)
 	{
 		switch ((rand() * 5) % 3)
 		{
 		case 0:
 			sortedLista[i] = Estados[rand() % 27];
+
+			// TODO: ARRUMAR ISSO!!!
+			int size = strlen(Estados[multiSort % 27]);
+			int size2 = strlen(Siglas[multiSort % 27]);
+			char *teste = malloc((size + size2 + 1) * sizeof(char));
+			memcpy(teste, Estados[multiSort % 27], strlen(Estados[multiSort % 27]) + 1);
+			memcpy(teste + strlen(Estados[multiSort % 27] + 1), Siglas[multiSort % 27], strlen(Siglas[multiSort % 27]) + 1);
+			/*strcpy_s(teste, sizeof(teste), Estados[multiSort % 27]);
+			strcat_s(teste, sizeof(teste), Siglas[multiSort % 27]);*/
+
+			printf("%s", teste);
+
+			sortedEstadoSigla[i] = teste;
+
 			break;
 		case 1:
 			sortedLista[i] = Siglas[rand() % 27];
