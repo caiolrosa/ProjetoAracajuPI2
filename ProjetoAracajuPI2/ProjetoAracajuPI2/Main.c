@@ -1,12 +1,14 @@
 #pragma region Include
 
 #include <stdio.h>
+#include <string.h>
+#include <time.h>
+#include <stdlib.h>
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_font.h>
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_image.h>
 #include <allegro5\allegro_primitives.h>
-#include <string.h>
 #include "Objects.h"
 
 #pragma endregion
@@ -25,10 +27,11 @@ const int TOTAL_DE_COLUNAS = 26;
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
 void InitSP(SaoPaulo *SP);
-void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista, int ScoreRandom);
-void SortLista(char *sortedLista[], char *sortedEstadoSigla[], char *sortedEstadoCapital[], char *sortedSiglaCapital[]);
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista);
+char *SortLista();
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
 int CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
+int GetRandomNumber();
 
 int main() {
 	// Tipos Primitivos
@@ -87,7 +90,6 @@ int main() {
 	InitJogador(&jogador);
 	InitLista(&lista);
 	InitSP(&SP);
-	SortLista(sortedLista, sortedEstadoSigla, sortedEstadoCapital, sortedSiglaCapital);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
@@ -121,7 +123,7 @@ int main() {
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-			UpdateLista(fontLista, &jogador, &lista, ScoreRandom);
+			UpdateLista(fontLista, &jogador, &lista);
 			
 			al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 			al_flip_display();									// Muda para o back buffer
@@ -148,7 +150,7 @@ void InitLista(Lista *lista)
 {
 	lista->velocidade = 30;
 	lista->heightLista = 0;
-	lista->posicao = 0;
+	lista->randomNumber = 0;
 }
 
 void InitSP(SaoPaulo *SP)
@@ -156,37 +158,42 @@ void InitSP(SaoPaulo *SP)
 	//SP->boundX
 }
 
-void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista, int ScoreRandom)
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 {
+	srand(time(NULL));
+
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
 		lista->heightLista = 0;
 		lista->velocidade = 30;
+		lista->randomNumber = rand();
 		jogador->pontos += 50;
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 	}
 
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
 	if (lista->heightLista < HEIGHTMAPA)
-	{
+	{	
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 		
+		// Aumentamos a dificuldade do jogo de acordo com o score do jogador, colocando siglas, estados e capitais juntos
+		// TODO: Arrumar a chamada da função SortLista
 		if (jogador->pontos < 100)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", sortedLista[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", SortLista());
 		}
-		if (jogador->pontos > 100 && ScoreRandom % 3 == 0)
+		if (jogador->pontos >= 100 && lista->randomNumber % 3 == 0)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Siglas[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos > 100 && ScoreRandom % 3 == 1)
+		if (jogador->pontos >= 100 && lista->randomNumber % 3 == 1)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos > 100 && ScoreRandom % 3 == 2)
+		if (jogador->pontos >= 100 && lista->randomNumber % 3 == 2)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27]);
 		}
 		
 		lista->heightLista = lista->velocidade + 10;
@@ -196,63 +203,51 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista, int Sc
 	else {
 		if (jogador->pontos < 100)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, HEIGHTMAPA, 0, "%s", sortedLista[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", SortLista());
 		}
-		if (jogador->pontos > 100 && ScoreRandom % 3 == 0)
+		if (jogador->pontos > 100 && lista->randomNumber % 3 == 0)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s	%s", Estados[lista->posicao], Siglas[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos > 100 && ScoreRandom % 3 == 1)
+		if (jogador->pontos > 100 && lista->randomNumber % 3 == 1)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->posicao], Capitais[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos > 100 && ScoreRandom % 3 == 2)
+		if (jogador->pontos > 100 && lista->randomNumber % 3 == 2)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Siglas[lista->posicao], Capitais[lista->posicao]);
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27]);
 		}
 
 		lista->isMaxHeight = true;
-		lista->posicao++;
 	}
 }
 
-void SortLista(char *sortedLista[], char *sortedEstadoSigla[], char *sortedEstadoCapital[], char *sortedSiglaCapital[])
+char *SortLista()
 {
 	int i;
-	srand(time(NULL));
-	int multiSort = rand();
-
 	for (i = 0; i < 100; i++)
 	{
+		srand(time(NULL));
+		int multiSort = rand();
+
 		switch ((rand() * 5) % 3)
 		{
 		case 0:
-			sortedLista[i] = Estados[rand() % 27];
-
-			// TODO: ARRUMAR ISSO!!!
-			int size = strlen(Estados[multiSort % 27]);
-			int size2 = strlen(Siglas[multiSort % 27]);
-			char *teste = malloc((size + size2 + 1) * sizeof(char));
-			memcpy(teste, Estados[multiSort % 27], strlen(Estados[multiSort % 27]) + 1);
-			memcpy(teste + strlen(Estados[multiSort % 27] + 1), Siglas[multiSort % 27], strlen(Siglas[multiSort % 27]) + 1);
-			/*strcpy_s(teste, sizeof(teste), Estados[multiSort % 27]);
-			strcat_s(teste, sizeof(teste), Siglas[multiSort % 27]);*/
-
-			printf("%s", teste);
-
-			sortedEstadoSigla[i] = teste;
-
+			return Estados[rand() % 27];
 			break;
 		case 1:
-			sortedLista[i] = Siglas[rand() % 27];
+			return Siglas[rand() % 27];
 			break;
 		case 2:
-			sortedLista[i] = Capitais[rand() % 27];
+			return Capitais[rand() % 27];
 			break;
-		default:
+		default:	
+			printf("Deu Ruim");
 			break;
 		}
-	}	
+	}
+	printf("Deu Muito Ruim");
+	return "0";
 }
 
 // aqui crio a matriz sobre o bitmap do mapa
@@ -299,4 +294,10 @@ int CheckClickPosition(float lines[], float columns[], int totalLines, int total
 	}
 
 	return 0; //falso para quando esta fora do mapa
+}
+
+int GetRandomNumber()
+{
+	srand(time(NULL));
+	return rand();
 }
