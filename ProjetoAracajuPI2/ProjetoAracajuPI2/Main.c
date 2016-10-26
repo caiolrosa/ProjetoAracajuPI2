@@ -20,8 +20,8 @@ const int WIDTHMAPA = 650;
 const int HEIGHTMAPA = 650;
 
 //variaveis da matriz
-const int TOTAL_DE_LINHAS = 26;
-const int TOTAL_DE_COLUNAS = 26;
+const int TOTAL_DE_LINHAS = 36;
+const int TOTAL_DE_COLUNAS = 36;
 
 // Prototipos
 void InitJogador(Jogador *jogador);
@@ -36,8 +36,8 @@ int main() {
 	bool finished = false;
 	bool redraw = true;
 	const int FPS = 60;
-	float mLines[26];
-	float mColumns[26];
+	float mLines[36];
+	float mColumns[36];
 	srand(time(NULL));
 	int ScoreRandom = rand();
 
@@ -87,7 +87,7 @@ int main() {
 	CreateMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
 	InitJogador(&jogador);
 	InitLista(&lista);
-	InitSP(&SP);
+	//InitSP(&SP);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
