@@ -26,7 +26,6 @@ const int TOTAL_DE_COLUNAS = 26;
 // Prototipos
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
-void InitSP(SaoPaulo *SP);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista);
 char *SortLista();
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
@@ -139,12 +138,20 @@ int main() {
 }
 
 // Definicao de funcoes
+/// <summary>
+/// Inicializa o jogador
+/// </summary>
+/// <param name="jogador">Recebe o jogador</param>
 void InitJogador(Jogador *jogador)
 {
 	jogador->pontos = 0;
 	jogador->vidas = 5;
 }
 
+/// <summary>
+/// Inicializa a lista de palavras
+/// </summary>
+/// <param name="lista">Recebe a lista de palavras</param>
 void InitLista(Lista *lista)
 {
 	lista->velocidade = 30;
@@ -153,11 +160,13 @@ void InitLista(Lista *lista)
 	lista->palavraAtual = NULL;
 }
 
-void InitSP(SaoPaulo *SP)
-{
-	//SP->boundX
-}
-
+/// <summary>
+/// Altera o valor Y do elemento da lista de acordo velocidade
+/// da lista(lista->velocidade) para dar noção de animação
+/// </summary>
+/// <param name="fontLista">Fonte utilizada para escrever na tela</param>
+/// <param name="jogador">Struct do Jogador</param>
+/// <param name="lista">Struct da Lista</param>
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 {
 	srand(time(NULL));
@@ -238,7 +247,11 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	}
 }
 
-// Sorteia uma à uma as palavras simples (somente estado, sigla ou capital)
+
+/// <summary>
+/// Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
+/// </summary>
+/// <returns>Ponteiro para char (string) que representa o estado, sigla ou capital sorteado</returns>
 char *SortLista()
 {
 	srand(time(NULL));
@@ -264,7 +277,14 @@ char *SortLista()
 	return "0";
 }
 
-// aqui crio a matriz sobre o bitmap do mapa
+
+/// <summary>
+/// Cria matriz sob o Bitmap para poder identificar o click
+/// </summary>
+/// <param name="lines">Vetor contendo as linhas da matriz</param>
+/// <param name="columns">Vetor contendo as colunas da matriz</param>
+/// <param name="totalLines">Total de linhas da matriz</param>
+/// <param name="totalColumns">Total de colunas da matriz</param>
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns)
 {
 	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
@@ -281,8 +301,18 @@ void CreateMatrix(float lines[], float columns[], int totalLines, int totalColum
 	}
 }
 
-//retorna 0 caso não esteja dentro do gride, 1 caso esteja
-int CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev) //verifica em qual indice foi realizado o clique
+
+/// <summary>
+/// Retorna 0 caso não esteja dentro da matriz e 1 caso esteja
+/// e verifica em qual indice aconteceu o click
+/// </summary>
+/// <param name="lines">Vetor contendo as linhas da matriz</param>
+/// <param name="columns">Vetor contendo as colunas da matriz</param>
+/// <param name="totalLines">Total de linhas da matriz</param>
+/// <param name="totalColumns">Total de colunas da matriz</param>
+/// <param name="ev">Recebe o evento do allegro, no caso o click do mouse</param>
+/// <returns></returns>
+int CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev)
 {
 	int x = ev.mouse.x, y = ev.mouse.y;
 	printf("x = %d y - %d\n", x, y);
