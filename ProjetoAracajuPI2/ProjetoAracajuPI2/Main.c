@@ -31,7 +31,6 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista);
 char *SortLista();
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
 int CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
-int GetRandomNumber();
 
 int main() {
 	// Tipos Primitivos
@@ -151,6 +150,7 @@ void InitLista(Lista *lista)
 	lista->velocidade = 30;
 	lista->heightLista = 0;
 	lista->randomNumber = 0;
+	lista->palavraAtual = NULL;
 }
 
 void InitSP(SaoPaulo *SP)
@@ -167,9 +167,15 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	{
 		lista->heightLista = 0;
 		lista->velocidade = 30;
+		lista->palavraAtual = NULL;
 		lista->randomNumber = rand();
 		jogador->pontos += 50;
 		al_clear_to_color(al_map_rgb(255, 255, 255));
+	}
+
+	if (lista->palavraAtual == NULL)
+	{
+		lista->palavraAtual = SortLista();
 	}
 
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
@@ -178,24 +184,29 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 		
 		// Aumentamos a dificuldade do jogo de acordo com o score do jogador, colocando siglas, estados e capitais juntos
-		// TODO: Arrumar a chamada da função SortLista
 		if (jogador->pontos < 100)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", SortLista());
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 3 == 0)
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 0)
 		{
 			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 3 == 1)
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 1)
 		{
 			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 3 == 2)
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 2)
 		{
 			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27]);
 		}
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 3)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+		}
 		
+		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
+		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
 		lista->heightLista = lista->velocidade + 10;
 		lista->velocidade += 5;
 		lista->isMaxHeight = false;
@@ -203,49 +214,52 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	else {
 		if (jogador->pontos < 100)
 		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", SortLista());
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 		}
-		if (jogador->pontos > 100 && lista->randomNumber % 3 == 0)
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 0)
 		{
 			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos > 100 && lista->randomNumber % 3 == 1)
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 1)
 		{
 			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
 		}
-		if (jogador->pontos > 100 && lista->randomNumber % 3 == 2)
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 2)
 		{
 			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27]);
 		}
+		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 3)
+		{
+			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+		}
 
+		// Chegamos ao final da lista, então isMaxHeight é true
 		lista->isMaxHeight = true;
 	}
 }
 
+// Sorteia uma à uma as palavras simples (somente estado, sigla ou capital)
 char *SortLista()
 {
-	int i;
-	for (i = 0; i < 100; i++)
-	{
-		srand(time(NULL));
-		int multiSort = rand();
+	srand(time(NULL));
+	int multiSort = rand();
 
-		switch ((rand() * 5) % 3)
-		{
-		case 0:
-			return Estados[rand() % 27];
-			break;
-		case 1:
-			return Siglas[rand() % 27];
-			break;
-		case 2:
-			return Capitais[rand() % 27];
-			break;
-		default:	
-			printf("Deu Ruim");
-			break;
-		}
+	switch ((rand() * 5) % 3)
+	{
+	case 0:
+		return Estados[rand() % 27];
+		break;
+	case 1:
+		return Siglas[rand() % 27];
+		break;
+	case 2:
+		return Capitais[rand() % 27];
+		break;
+	default:	
+		printf("Deu Ruim");
+		break;
 	}
+
 	printf("Deu Muito Ruim");
 	return "0";
 }
@@ -294,10 +308,4 @@ int CheckClickPosition(float lines[], float columns[], int totalLines, int total
 	}
 
 	return 0; //falso para quando esta fora do mapa
-}
-
-int GetRandomNumber()
-{
-	srand(time(NULL));
-	return rand();
 }

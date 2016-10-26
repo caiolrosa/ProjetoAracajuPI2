@@ -10,6 +10,7 @@ typedef struct Lista {
 	int heightLista; // Altura do ultimo item da lista
 	int velocidade; // Velocidade em que caem os estados, capitais e siglas
 	int randomNumber;	// Usado para escolher aleatoriamente um item da lista
+	char *palavraAtual;
 	bool isMaxHeight;	// Verifica se a palavra chegou na altura maxima
 } Lista;
 
