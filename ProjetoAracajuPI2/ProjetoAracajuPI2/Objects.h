@@ -1,5 +1,37 @@
 #pragma region Jogador, Lista e Mapa
 
+//Definir quantas posicoes estao mapeadas por estado
+#pragma region DEFINICAO DE TAMANHO DO MAPEAMENTO DOS ESTADOS
+
+#define acreIndexSize 9
+#define alagoasIndexSize 3
+#define amapaIndexSize 0
+#define amazonasIndexSize 0
+#define bahiaIndexSize 34
+#define cearaIndexSize 12
+#define distritoFederalIndexSize 0
+#define espiritoSantoIndexSize 3
+#define goiasIndexSize 0
+#define maranhaoIndexSize 18	
+#define matoGrossoIndexSize 0
+#define matoGrossoDoSulIndexSize 0
+#define minasGeraisIndexSize 37
+#define paraIndexSize 0
+#define paraibaIndexSize 4
+#define paranaIndexSize 15
+#define pernambucoIndexSize 7
+#define piauiIndexSize 16
+#define rioDeJaneiroIndexSize 3
+#define rioGrandeDoNorteIndexSize 3
+#define rioGrandeDoSulIndexSize 23
+#define rondoniaIndexSize 0
+#define santaCatarinaIndexSize 8
+#define saoPauloIndexSize 14
+#define sergipeIndexSize 2
+#define tocantinsIndexSize 0
+
+#pragma endregion
+
 typedef struct Jogador {
 	int pontos;
 	int vidas;
@@ -21,216 +53,17 @@ typedef struct Mapa {
 	int height;
 } Mapa;
 
-#pragma endregion
-#pragma region Regiao Sul
+typedef struct ClickIndex {
+	int i, j;
+}ClickIndex;
 
-// Estados regiao Sul
-typedef struct RioGrandeDoSul {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} RioGrandeDoSul;
-
-typedef struct SantaCatarina {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} SantaCatarina;
-
-typedef struct Parana {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Parana;
+typedef struct EstadosPadrao {
+	int myIndexPosition;
+	ClickIndex index[bahiaIndexSize]; //rever depois
+} EstadosPadrao;
 
 #pragma endregion
-#pragma region Regiao Sudeste
 
-// Estados regiao Sudeste
-typedef struct SaoPaulo {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} SaoPaulo;
-
-typedef struct RioDeJaneiro {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} RioDeJaneiro;
-
-typedef struct EspiritoSanto {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} EspiritoSanto;
-
-typedef struct MinasGerais {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} MinasGerais;
-
-#pragma endregion
-#pragma region Regiao Centro-Oeste
-
-// Estados regiao Centro-Oeste
-typedef struct MatoGrossoDoSul {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} MatoGrossoDoSul;
-
-typedef struct Goias {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Goias;
-
-typedef struct MatoGrosso {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} MatoGrosso;
-
-typedef struct DistritoFederal {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} DistritoFederal;
-
-#pragma endregion
-#pragma region Regiao Nordeste
-
-// Estados regiao Nordeste
-typedef struct Bahia {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Bahia;
-
-typedef struct Sergipe {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Sergipe;
-
-typedef struct Alagoas {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Alagoas;
-
-typedef struct Pernambuco {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Pernambuco;
-
-typedef struct Paraiba {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Paraiba;
-
-typedef struct RioGrandeDoNorte {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} RioGrandeDoNorte;
-
-typedef struct Ceara {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Ceara;
-
-typedef struct Piaui {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Piaui;
-
-typedef struct Maranhao {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Maranhao;
-
-#pragma endregion
-#pragma region Regiao Norte
-
-// Estados regiao Norte
-typedef struct Tocantins {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Tocantins;
-
-typedef struct Para {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Para;
-
-typedef struct Amapa {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Amapa;
-
-typedef struct Roraima {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Roraima;
-
-typedef struct Amazonas {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Amazonas;
-
-typedef struct Rondonia {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Rondonia;
-
-typedef struct Acre {
-	char *nome;
-	char *capital;
-	int boundX;
-	int boundY;
-} Acre;
-
-#pragma endregion
 #pragma region Listas
 
 char *Estados[] = { "Rio Grande do Sul", "Santa Catarina", u8"Paraná", u8"São Paulo", "Mato Grosso do Sul",
