@@ -23,28 +23,30 @@ const int HEIGHTMAPA = 650;
 const int TOTAL_DE_LINHAS = 36;
 const int TOTAL_DE_COLUNAS = 36;
 
-//
-void InitializeStates(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
+// Prototipos
+void InitJogador(Jogador *jogador);
+void InitLista(Lista *lista);
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista);
+void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
+void ConcatenaLista(char *s1, char *s2, Lista *lista);
+void SortPalavra(Jogador *jogador, Lista *lista);
+ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
+
+void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
 	EstadosPadrao *Parana, EstadosPadrao *Pernambuco, EstadosPadrao *Piaui, EstadosPadrao *RioDeJaneiro, EstadosPadrao *RioGrandeDoNorte,
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins);
 
-void TestStates(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia, 
+void TestaEstados(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
-	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba, 
+	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
 	EstadosPadrao *Parana, EstadosPadrao *Pernambuco, EstadosPadrao *Piaui, EstadosPadrao *RioDeJaneiro, EstadosPadrao *RioGrandeDoNorte,
-	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe, 
+	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins);
 
-// Prototipos
-void InitJogador(Jogador *jogador);
-void InitLista(Lista *lista);
-void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista);
-char *SortLista();
-void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
-ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
+
 
 int main() {
 	// Tipos Primitivos
@@ -137,12 +139,11 @@ int main() {
 	InitJogador(&jogador);
 
 
-	InitializeStates(_Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
+	InitEstados(_Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 		_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 		_RioGrandeDoSul, _Rondonia, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 
 	InitLista(&lista);
-	//InitSP(&SP);
 
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
@@ -174,7 +175,7 @@ int main() {
 			printf("index %d, %d\n", t.i, t.j);
 
 			//TESTA o clique para ver qual estado foi clicado
-			TestStates(t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
+			TestaEstados(t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 		}
@@ -200,20 +201,15 @@ int main() {
 }
 
 // Definicao de funcoes
-/// <summary>
-/// Inicializa o jogador
-/// </summary>
-/// <param name="jogador">Recebe o jogador</param>
+
+// Inicializa o jogador
 void InitJogador(Jogador *jogador)
 {
 	jogador->pontos = 0;
 	jogador->vidas = 5;
 }
 
-/// <summary>
-/// Inicializa a lista de palavras
-/// </summary>
-/// <param name="lista">Recebe a lista de palavras</param>
+// Inicializa a lista de palavras
 void InitLista(Lista *lista)
 {
 	lista->velocidade = 30;
@@ -222,13 +218,8 @@ void InitLista(Lista *lista)
 	lista->palavraAtual = NULL;
 }
 
-/// <summary>
-/// Altera o valor Y do elemento da lista de acordo velocidade
-/// da lista(lista->velocidade) para dar noção de animação
-/// </summary>
-/// <param name="fontLista">Fonte utilizada para escrever na tela</param>
-/// <param name="jogador">Struct do Jogador</param>
-/// <param name="lista">Struct da Lista</param>
+// Altera o valor Y do elemento da lista de acordo velocidade
+// da lista(lista->velocidade) para dar noção de animação
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 {
 	srand(time(NULL));
@@ -241,12 +232,13 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		lista->palavraAtual = NULL;
 		lista->randomNumber = rand();
 		jogador->pontos += 50;
+		free(lista->palavraAtual);
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 	}
 
 	if (lista->palavraAtual == NULL)
 	{
-		lista->palavraAtual = SortLista();
+		SortPalavra(jogador, lista);
 	}
 
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
@@ -254,27 +246,7 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	{	
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 		
-		// Aumentamos a dificuldade do jogo de acordo com o score do jogador, colocando siglas, estados e capitais juntos
-		if (jogador->pontos < 100)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 0)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 1)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 2)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27]);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 3)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
-		}
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 		
 		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
@@ -283,70 +255,61 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		lista->isMaxHeight = false;
 	}
 	else {
-		if (jogador->pontos < 100)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 0)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 1)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27]);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 2)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s    %s", Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27]);
-		}
-		if (jogador->pontos >= 100 && lista->randomNumber % 4 == 3)
-		{
-			al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
-		}
+		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 
 		// Chegamos ao final da lista, então isMaxHeight é true
 		lista->isMaxHeight = true;
 	}
 }
 
-
-/// <summary>
-/// Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
-/// </summary>
-/// <returns>Ponteiro para char (string) que representa o estado, sigla ou capital sorteado</returns>
-char *SortLista()
+// Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
+void SortPalavra(Jogador *jogador, Lista *lista)
 {
 	srand(time(NULL));
-	int multiSort = rand();
+	int conjunto = (rand() * 5) % 3;
 
-	switch ((rand() * 5) % 3)
+	if (jogador->pontos >= 100)
 	{
-	case 0:
-		return Estados[rand() % 27];
-		break;
-	case 1:
-		return Siglas[rand() % 27];
-		break;
-	case 2:
-		return Capitais[rand() % 27];
-		break;
-	default:	
-		printf("Deu Ruim");
-		break;
+		if (conjunto == 0)
+		{
+			ConcatenaLista(Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27], lista);
+		}
+		else if (conjunto == 1) {
+			ConcatenaLista(Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27], lista);
+		}
+		else if (conjunto == 2) {
+			ConcatenaLista(Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27], lista);
+		}
 	}
-
-	printf("Deu Muito Ruim");
-	return "0";
+	else if (jogador->pontos < 100) {
+		switch ((rand() * 5) % 3)
+		{
+		case 0:
+			lista->palavraAtual = Estados[rand() % 27];
+			break;
+		case 1:
+			lista->palavraAtual = Siglas[rand() % 27];
+			break;
+		case 2:
+			lista->palavraAtual = Capitais[rand() % 27];
+			break;
+		default:
+			printf("Deu Ruim");
+			break;
+		}
+	}
 }
 
+// Concatena as palavras da lista
+void ConcatenaLista(char *s1, char *s2, Lista *lista)
+{
+	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 5);
+	strcpy(lista->palavraAtual, s1);
+	strcat(lista->palavraAtual, "    ");
+	strcat(lista->palavraAtual, s2);
+}
 
-/// <summary>
-/// Cria matriz sob o Bitmap para poder identificar o click
-/// </summary>
-/// <param name="lines">Vetor contendo as linhas da matriz</param>
-/// <param name="columns">Vetor contendo as colunas da matriz</param>
-/// <param name="totalLines">Total de linhas da matriz</param>
-/// <param name="totalColumns">Total de colunas da matriz</param>
+// Cria matriz sob o Bitmap para poder identificar o click
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns)
 {
 	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
@@ -363,17 +326,7 @@ void CreateMatrix(float lines[], float columns[], int totalLines, int totalColum
 	}
 }
 
-
-/// <summary>
-/// Retorna 0 caso não esteja dentro da matriz e 1 caso esteja
-/// e verifica em qual indice aconteceu o click
-/// </summary>
-/// <param name="lines">Vetor contendo as linhas da matriz</param>
-/// <param name="columns">Vetor contendo as colunas da matriz</param>
-/// <param name="totalLines">Total de linhas da matriz</param>
-/// <param name="totalColumns">Total de colunas da matriz</param>
-/// <param name="ev">Recebe o evento do allegro, no caso o click do mouse</param>
-/// <returns></returns>
+// Verifica a posicao do click
 ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev)
 {
 	ClickIndex temp;
@@ -401,7 +354,7 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 }
 
 //Aqui sera configurado o mapeamento dos estados
-void InitializeStates(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
+void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
 	EstadosPadrao *Parana, EstadosPadrao *Pernambuco, EstadosPadrao *Piaui, EstadosPadrao *RioDeJaneiro, EstadosPadrao *RioGrandeDoNorte,
@@ -692,7 +645,7 @@ void InitializeStates(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao
 }
 
 //Testa qual estado corresponde a posicao clicada
-void TestStates(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
+void TestaEstados(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
 	EstadosPadrao *Parana, EstadosPadrao *Pernambuco, EstadosPadrao *Piaui, EstadosPadrao *RioDeJaneiro, EstadosPadrao *RioGrandeDoNorte,
@@ -1019,3 +972,6 @@ void TestStates(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, E
 
 	//printf("nenhum estado mapeado foi clicado\n");
 }
+
+
+

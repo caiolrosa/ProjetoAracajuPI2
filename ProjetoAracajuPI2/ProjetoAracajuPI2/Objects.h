@@ -37,12 +37,11 @@ typedef struct Jogador {
 	int vidas;
 } Jogador;
 
-// TODO: Verificar como vamos implementar a lista
 typedef struct Lista {
 	int heightLista; // Altura do ultimo item da lista
 	int velocidade; // Velocidade em que caem os estados, capitais e siglas
 	int randomNumber;	// Usado para escolher aleatoriamente um item da lista
-	char *palavraAtual;
+	char *palavraAtual;	// Recebe o texto atual 
 	bool isMaxHeight;	// Verifica se a palavra chegou na altura maxima
 } Lista;
 
@@ -54,7 +53,8 @@ typedef struct Mapa {
 } Mapa;
 
 typedef struct ClickIndex {
-	int i, j;
+	int i;
+	int j;		
 }ClickIndex;
 
 typedef struct EstadosPadrao {
