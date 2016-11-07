@@ -4,6 +4,7 @@
 #include <string.h>
 #include <time.h>
 #include <stdlib.h>
+#include <locale.h>
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_font.h>
 #include <allegro5\allegro_ttf.h>
@@ -39,14 +40,12 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins);
 
-void TestaEstados(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
+void TestaEstados(Lista *lista, ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
 	EstadosPadrao *Parana, EstadosPadrao *Pernambuco, EstadosPadrao *Piaui, EstadosPadrao *RioDeJaneiro, EstadosPadrao *RioGrandeDoNorte,
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins);
-
-
 
 int main() {
 	// Tipos Primitivos
@@ -138,7 +137,6 @@ int main() {
 	CreateMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
 	InitJogador(&jogador);
 
-
 	InitEstados(_Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 		_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 		_RioGrandeDoSul, _Rondonia, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
@@ -175,7 +173,7 @@ int main() {
 			printf("index %d, %d\n", t.i, t.j);
 
 			//TESTA o clique para ver qual estado foi clicado
-			TestaEstados(t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
+			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 		}
@@ -207,6 +205,8 @@ void InitJogador(Jogador *jogador)
 {
 	jogador->pontos = 0;
 	jogador->vidas = 5;
+	jogador->acertos = 0;
+	jogador->erros = 0;
 }
 
 // Inicializa a lista de palavras
@@ -223,7 +223,6 @@ void InitLista(Lista *lista)
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 {
 	srand(time(NULL));
-
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
@@ -268,30 +267,32 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 	srand(time(NULL));
 	int conjunto = (rand() * 5) % 3;
 
+	lista->indexAtual = lista->randomNumber % 27;
+
 	if (jogador->pontos >= 100)
 	{
 		if (conjunto == 0)
 		{
-			ConcatenaLista(Estados[lista->randomNumber % 27], Siglas[lista->randomNumber % 27], lista);
+			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
 		}
 		else if (conjunto == 1) {
-			ConcatenaLista(Capitais[lista->randomNumber % 27], Siglas[lista->randomNumber % 27], lista);
+			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
 		}
 		else if (conjunto == 2) {
-			ConcatenaLista(Estados[lista->randomNumber % 27], Capitais[lista->randomNumber % 27], lista);
+			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
 		}
 	}
 	else if (jogador->pontos < 100) {
-		switch ((rand() * 5) % 3)
+		switch (conjunto)
 		{
 		case 0:
-			lista->palavraAtual = Estados[rand() % 27];
+			lista->palavraAtual = Estados[lista->indexAtual];
 			break;
 		case 1:
-			lista->palavraAtual = Siglas[rand() % 27];
+			lista->palavraAtual = Siglas[lista->indexAtual];
 			break;
 		case 2:
-			lista->palavraAtual = Capitais[rand() % 27];
+			lista->palavraAtual = Capitais[lista->indexAtual];
 			break;
 		default:
 			printf("Deu Ruim");
@@ -303,7 +304,7 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 // Concatena as palavras da lista
 void ConcatenaLista(char *s1, char *s2, Lista *lista)
 {
-	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 5);
+	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 6);
 	strcpy(lista->palavraAtual, s1);
 	strcat(lista->palavraAtual, "    ");
 	strcat(lista->palavraAtual, s2);
@@ -644,8 +645,8 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 }
 
-//Testa qual estado corresponde a posicao clicada
-void TestaEstados(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
+//Testa qual estado corresponde a posicao clicada e verifica acerto
+void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
 	EstadosPadrao *Parana, EstadosPadrao *Pernambuco, EstadosPadrao *Piaui, EstadosPadrao *RioDeJaneiro, EstadosPadrao *RioGrandeDoNorte,
@@ -902,6 +903,10 @@ void TestaEstados(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas,
 		ClickIndex temp = RioGrandeDoSul->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
+			if (lista->indexAtual == RioGrandeDoSul->myIndexPosition)
+			{
+				jogador->acertos++;
+			}
 			printf("%s \n", Estados[RioGrandeDoSul->myIndexPosition]);
 			return;
 		}
@@ -970,7 +975,6 @@ void TestaEstados(ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas,
 
 #pragma endregion
 
-	//printf("nenhum estado mapeado foi clicado\n");
 }
 
 
