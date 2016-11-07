@@ -226,14 +226,22 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
+		if (!jogador->acertou)
+		{
+			jogador->erros++;
+		}
+
 		lista->heightLista = 0;
 		lista->velocidade = 30;
 		lista->palavraAtual = NULL;
 		lista->randomNumber = rand();
 		jogador->pontos += 50;
+		
 		free(lista->palavraAtual);
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 	}
+
+	jogador->acertou = false;
 
 	if (lista->palavraAtual == NULL)
 	{
@@ -666,6 +674,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Acre->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Acre->myIndexPosition]);
@@ -683,6 +692,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Alagoas->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Alagoas->myIndexPosition]);
@@ -700,6 +710,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Amapa->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Amapa->myIndexPosition]);
@@ -717,6 +728,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Amazonas->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Amazonas->myIndexPosition]);
@@ -734,6 +746,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Bahia->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Bahia->myIndexPosition]);
@@ -751,6 +764,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Ceara->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Ceara->myIndexPosition]);
@@ -768,6 +782,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == DistritoFederal->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[DistritoFederal->myIndexPosition]);
@@ -785,6 +800,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == EspiritoSanto->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[EspiritoSanto->myIndexPosition]);
@@ -802,6 +818,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Goias->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Goias->myIndexPosition]);
@@ -819,6 +836,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Maranhao->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Maranhao->myIndexPosition]);
@@ -836,6 +854,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == MatoGrosso->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[MatoGrosso->myIndexPosition]);
@@ -853,6 +872,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == MatoGrossoDoSul->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[MatoGrossoDoSul->myIndexPosition]);
@@ -870,6 +890,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == MinasGerais->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[MinasGerais->myIndexPosition]);
@@ -887,6 +908,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Para->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Para->myIndexPosition]);
@@ -904,6 +926,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Paraiba->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Paraiba->myIndexPosition]);
@@ -921,6 +944,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Parana->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Parana->myIndexPosition]);
@@ -938,6 +962,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Pernambuco->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Pernambuco->myIndexPosition]);
@@ -955,6 +980,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Piaui->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Piaui->myIndexPosition]);
@@ -972,6 +998,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == RioDeJaneiro->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[RioDeJaneiro->myIndexPosition]);
@@ -989,6 +1016,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == RioGrandeDoNorte->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[RioGrandeDoNorte->myIndexPosition]);
@@ -1006,6 +1034,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == RioGrandeDoSul->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[RioGrandeDoSul->myIndexPosition]);
@@ -1023,6 +1052,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Rondonia->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Rondonia->myIndexPosition]);
@@ -1040,6 +1070,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == SantaCatarina->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[SantaCatarina->myIndexPosition]);
@@ -1057,6 +1088,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == SaoPaulo->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[SaoPaulo->myIndexPosition]);
@@ -1074,6 +1106,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Sergipe->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Sergipe->myIndexPosition]);
@@ -1091,6 +1124,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			if (lista->indexAtual == Tocantins->myIndexPosition)
 			{
 				jogador->acertos++;
+				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
 			printf("%s \n", Estados[Tocantins->myIndexPosition]);
