@@ -38,6 +38,7 @@ typedef struct Jogador {
 	int acertos;
 	int erros;
 	bool acertou;
+	bool jogando;
 } Jogador;
 
 typedef struct Lista {
@@ -58,7 +59,7 @@ typedef struct Mapa {
 
 typedef struct ClickIndex {
 	int i;
-	int j;		
+	int j;
 }ClickIndex;
 
 typedef struct EstadosPadrao {
@@ -67,6 +68,26 @@ typedef struct EstadosPadrao {
 } EstadosPadrao;
 
 #pragma endregion
+
+typedef struct BotaoJogar
+{
+	int boundXInicio;
+	int boundXFinal;
+
+	int boundYInicio;
+	int boundYFinal;
+
+}BotaoJogar;
+
+typedef struct BotaoTutorial
+{
+	int boundXInicio;
+	int boundXFinal;
+
+	int boundYInicio;
+	int boundYFinal;
+
+}BotaoTutorial;
 
 #pragma region Listas
 
@@ -84,3 +105,4 @@ char *Capitais[] = { "Porto Alegre", u8"Florianópolis", "Curitiba", u8"São Paulo
 "Fortaleza", "Natal", u8"João Pessoa", "Recife", u8"Maceió", "Aracaju" };
 
 #pragma endregion
+

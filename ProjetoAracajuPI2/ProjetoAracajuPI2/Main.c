@@ -55,6 +55,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins);
 
+//Menu
+void InitBotaoJogar(BotaoJogar *botaoJogar);
+void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
+
 int main() {
 	// Tipos Primitivos
 	bool finished = false;
@@ -69,6 +73,8 @@ int main() {
 	Jogador jogador;
 	Lista lista;
 	ClickIndex clickIndex;
+	BotaoJogar botaoJogar;
+	BotaoTutorial botaoTutorial;
 
 	//INICIALIZAÇAO DOS ESTADOS
 #pragma region INIT ESTADOS
@@ -109,6 +115,7 @@ int main() {
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
+	ALLEGRO_BITMAP *MENU = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 
 	// Inicializa o Allegro
@@ -132,11 +139,21 @@ int main() {
 	al_init_primitives_addon();									// Possibilita usar formas geometricas
 
 																// Carrega os bitmaps
-																//mapaBrasil = al_load_bitmap("imgs/Brasil-3D.png");			// Cria o bitmap com as medidas das variaveis passadas como parametros
+																// Cria o bitmap com as medidas das variaveis passadas como parametros
+																//bitmap do menu do jogo
+	MENU = al_load_bitmap("imgs/tela-inicial1.png");
+	int menuWidth = al_get_bitmap_width(MENU);
+	int menuHeight = al_get_bitmap_height(MENU);
+	al_draw_scaled_bitmap(MENU, -0, -0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);
+
+	//bitmap do mapa do jogo
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
 	al_draw_scaled_bitmap(mapaBrasil, -0, -0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
+
+
+
 
 	// Carrega as fonts
 	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
@@ -159,6 +176,10 @@ int main() {
 
 	InitLista(&lista);
 
+	//Inicialização dos Botões do Menu
+	InitBotaoJogar(&botaoJogar);
+	InitBotaoTutorial(&botaoTutorial);
+
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
 
@@ -169,6 +190,8 @@ int main() {
 
 	al_start_timer(timer);										// Inicia o timer
 																// Looping Principal
+
+
 	while (!finished) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
@@ -182,11 +205,23 @@ int main() {
 		{
 			finished = true;
 		}
-		else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) // Verifica se houve input de click na tela
+
+
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) //verifica se o jogador clicou em jogar
 		{
+			if (ev.mouse.x >= botaoJogar.boundXInicio && ev.mouse.x <= botaoJogar.boundXFinal && ev.mouse.y >= botaoJogar.boundYInicio && botaoJogar.boundYFinal)
+			{
+				jogador.jogando = true;
+			}
+		}
+
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click na tela
+		{
+
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
 			printf("index %d, %d\n", t.i, t.j);
+
 
 			//TESTA o clique para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
@@ -194,15 +229,31 @@ int main() {
 				_RioGrandeDoSul, _Rondonia, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 		}
 
+
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-			UpdateLista(fontLista, &jogador, &lista);
 
-			al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
-			al_flip_display();									// Muda para o back buffer
-			al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela			
+
+
+			if (jogador.jogando)   //verifica se o jogador passou a jogar
+			{
+
+				UpdateLista(fontLista, &jogador, &lista);
+				al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
+				al_flip_display();									// Muda para o back buffer
+				al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela
+			}
+			else
+			{
+				al_draw_scaled_bitmap(MENU, 0, 0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);		//coloca o menu na tela
+				al_flip_display();									// Muda para o back buffer
+				al_clear_to_color(al_map_rgb(255, 255, 255));
+			}
+
+
+
 		}
 	}
 
@@ -211,6 +262,7 @@ int main() {
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
+	al_destroy_bitmap(MENU);
 	al_destroy_font(fontLista);
 }
 
@@ -223,6 +275,7 @@ void InitJogador(Jogador *jogador)
 	jogador->vidas = 5;
 	jogador->acertos = 0;
 	jogador->erros = 0;
+	jogador->jogando = false;
 }
 
 // Inicializa a lista de palavras
@@ -1156,6 +1209,27 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 #pragma endregion
 
 }
+
+void
+InitBotaoJogar(BotaoJogar * botaoJogar)
+{
+	botaoJogar->boundXInicio = 435;
+	botaoJogar->boundXFinal = 850;
+
+	botaoJogar->boundYInicio = 420;
+	botaoJogar->boundYFinal = 485;
+}
+
+void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
+{
+
+	botaoTutorial->boundXInicio = 435;
+	botaoTutorial->boundXFinal = 850;
+
+	botaoTutorial->boundYInicio = 500;
+	botaoTutorial->boundYFinal = 570;
+}
+
 
 
 
