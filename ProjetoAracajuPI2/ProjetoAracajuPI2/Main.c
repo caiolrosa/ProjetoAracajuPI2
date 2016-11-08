@@ -20,6 +20,14 @@ const int HEIGHT = 720;
 const int WIDTHMAPA = 650;
 const int HEIGHTMAPA = 650;
 
+// Variaveis globais Allegro
+ALLEGRO_COLOR BLACK;
+ALLEGRO_COLOR BLUE;
+ALLEGRO_COLOR GREEN;
+ALLEGRO_COLOR RED;
+ALLEGRO_COLOR PURPLE;
+ALLEGRO_COLOR BEIGE;
+
 //variaveis da matriz
 const int TOTAL_DE_LINHAS = 36;
 const int TOTAL_DE_COLUNAS = 36;
@@ -27,7 +35,7 @@ const int TOTAL_DE_COLUNAS = 36;
 // Prototipos
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
-void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador,Lista *lista);
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
 void SortPalavra(Jogador *jogador, Lista *lista);
@@ -68,32 +76,32 @@ int main() {
 		*_MatoGrosso, *_MatoGrossoDoSul, *_MinasGerais, *_Para, *_Paraiba, *_Parana, *_Pernambuco, *_Piaui, *_RioDeJaneiro, *_RioGrandeDoNorte,
 		*_RioGrandeDoSul, *_Rondonia, *_SantaCatarina, *_SaoPaulo, *_Sergipe, *_Tocantins;
 
-	_Acre				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Alagoas			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Amapa				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Amazonas			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Bahia				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Ceara				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_DistritoFederal	= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_EspiritoSanto		= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Goias				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Maranhao			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_MatoGrosso			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_MatoGrossoDoSul	= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_MinasGerais		= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Para				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Paraiba			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Parana				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Pernambuco			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Piaui				= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_RioDeJaneiro		= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_RioGrandeDoNorte	= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_RioGrandeDoSul		= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Rondonia			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_SantaCatarina		= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_SaoPaulo			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Sergipe			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
-	_Tocantins			= (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Acre = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Alagoas = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Amapa = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Amazonas = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Bahia = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Ceara = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_DistritoFederal = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_EspiritoSanto = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Goias = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Maranhao = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_MatoGrosso = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_MatoGrossoDoSul = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_MinasGerais = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Para = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Paraiba = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Parana = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Pernambuco = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Piaui = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_RioDeJaneiro = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_RioGrandeDoNorte = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_RioGrandeDoSul = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Rondonia = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_SantaCatarina = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_SaoPaulo = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Sergipe = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
+	_Tocantins = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
 #pragma endregion
 
 	// Variaveis do Allegro
@@ -123,8 +131,8 @@ int main() {
 	al_init_image_addon();										// Possibilita usar varios formatos de imagem
 	al_init_primitives_addon();									// Possibilita usar formas geometricas
 
-	// Carrega os bitmaps
-	//mapaBrasil = al_load_bitmap("imgs/Brasil-3D.png");			// Cria o bitmap com as medidas das variaveis passadas como parametros
+																// Carrega os bitmaps
+																//mapaBrasil = al_load_bitmap("imgs/Brasil-3D.png");			// Cria o bitmap com as medidas das variaveis passadas como parametros
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
@@ -132,6 +140,14 @@ int main() {
 
 	// Carrega as fonts
 	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
+
+	// Inicializa cores
+	BLACK = al_map_rgb(0, 0, 0);
+	BLUE = al_map_rgb(0, 0, 255);
+	GREEN = al_map_rgb(0, 255, 0);
+	RED = al_map_rgb(255, 0, 0);
+	PURPLE = al_map_rgb(255, 0, 255);
+	// beige = al_map_rgb(0, 0, 0); ???
 
 	// Inicializacao dos nossos objetos
 	CreateMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
@@ -146,13 +162,13 @@ int main() {
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
 
-	// Registro de eventos para a lista de eventos
+																// Registro de eventos para a lista de eventos
 	al_register_event_source(event_queue, al_get_mouse_event_source());			// Registra o mouse na lista de eventos
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));			// Registra o timer na lista de eventos
 	al_register_event_source(event_queue, al_get_display_event_source(display));			// Registra o display na lista de eventos
 
 	al_start_timer(timer);										// Inicia o timer
-	// Looping Principal
+																// Looping Principal
 	while (!finished) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
@@ -161,7 +177,7 @@ int main() {
 		if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
 			redraw = true;
-		} 
+		}
 		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)			// Permite fechar a janela pelo X
 		{
 			finished = true;
@@ -169,7 +185,7 @@ int main() {
 		else if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) // Verifica se houve input de click na tela
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
-			
+
 			printf("index %d, %d\n", t.i, t.j);
 
 			//TESTA o clique para ver qual estado foi clicado
@@ -183,7 +199,7 @@ int main() {
 			redraw = false;
 
 			UpdateLista(fontLista, &jogador, &lista);
-			
+
 			al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 			al_flip_display();									// Muda para o back buffer
 			al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela			
@@ -236,7 +252,7 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		lista->palavraAtual = NULL;
 		lista->randomNumber = rand();
 		jogador->pontos += 50;
-		
+
 		free(lista->palavraAtual);
 		al_clear_to_color(al_map_rgb(255, 255, 255));
 	}
@@ -250,11 +266,11 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
 	if (lista->heightLista < HEIGHTMAPA)
-	{	
+	{
 		al_clear_to_color(al_map_rgb(255, 255, 255));
-		
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
-		
+
+		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+
 		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
 		lista->heightLista = lista->velocidade + 10;
@@ -262,7 +278,7 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_textf(fontLista, al_map_rgb(0, 0, 0), WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 
 		// Chegamos ao final da lista, então isMaxHeight é true
 		lista->isMaxHeight = true;
@@ -349,7 +365,7 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 	{
 		for (j = 0; j < totalColumns; j++) // percorre todas as colunas
 		{
-			if (x > ((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso está dentro do range desse quadrado
+			if (x >((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso está dentro do range desse quadrado
 			{
 				temp.i = i;
 				temp.j = j;
@@ -385,14 +401,14 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region SANTA CATARINA
 	SantaCatarina->myIndexPosition = 1;
-	SantaCatarina->index[0].i = 28;SantaCatarina->index[0].j = 18;
-	SantaCatarina->index[1].i = 28;SantaCatarina->index[1].j = 19;
-	SantaCatarina->index[2].i = 28;SantaCatarina->index[2].j = 20;
-	SantaCatarina->index[3].i = 28;SantaCatarina->index[3].j = 21;
-	SantaCatarina->index[4].i = 28;SantaCatarina->index[4].j = 22;
-	SantaCatarina->index[5].i = 28;SantaCatarina->index[5].j = 23;
-	SantaCatarina->index[6].i = 29;SantaCatarina->index[6].j = 22;
-	SantaCatarina->index[7].i = 29;SantaCatarina->index[7].j = 23;
+	SantaCatarina->index[0].i = 28; SantaCatarina->index[0].j = 18;
+	SantaCatarina->index[1].i = 28; SantaCatarina->index[1].j = 19;
+	SantaCatarina->index[2].i = 28; SantaCatarina->index[2].j = 20;
+	SantaCatarina->index[3].i = 28; SantaCatarina->index[3].j = 21;
+	SantaCatarina->index[4].i = 28; SantaCatarina->index[4].j = 22;
+	SantaCatarina->index[5].i = 28; SantaCatarina->index[5].j = 23;
+	SantaCatarina->index[6].i = 29; SantaCatarina->index[6].j = 22;
+	SantaCatarina->index[7].i = 29; SantaCatarina->index[7].j = 23;
 #pragma endregion
 
 #pragma region RIO GRANDE DO NORTE
@@ -492,16 +508,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region PIAUI
 	Piaui->myIndexPosition = 20; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Piaui->index[0].i = 8;   Piaui->index[0].j =  29;
-	Piaui->index[1].i = 9;   Piaui->index[1].j =  28;
-	Piaui->index[2].i = 9;   Piaui->index[2].j =  29;
-	Piaui->index[3].i = 10;  Piaui->index[3].j =  28;
-	Piaui->index[4].i = 10;  Piaui->index[4].j =  29;
-	Piaui->index[5].i = 11;  Piaui->index[5].j =  28;
-	Piaui->index[6].i = 11;  Piaui->index[6].j =  29;
-	Piaui->index[7].i = 12;  Piaui->index[7].j =  26;
-	Piaui->index[8].i = 12;  Piaui->index[8].j =  27;
-	Piaui->index[9].i = 12;  Piaui->index[9].j =  28;
+	Piaui->index[0].i = 8;   Piaui->index[0].j = 29;
+	Piaui->index[1].i = 9;   Piaui->index[1].j = 28;
+	Piaui->index[2].i = 9;   Piaui->index[2].j = 29;
+	Piaui->index[3].i = 10;  Piaui->index[3].j = 28;
+	Piaui->index[4].i = 10;  Piaui->index[4].j = 29;
+	Piaui->index[5].i = 11;  Piaui->index[5].j = 28;
+	Piaui->index[6].i = 11;  Piaui->index[6].j = 29;
+	Piaui->index[7].i = 12;  Piaui->index[7].j = 26;
+	Piaui->index[8].i = 12;  Piaui->index[8].j = 27;
+	Piaui->index[9].i = 12;  Piaui->index[9].j = 28;
 	Piaui->index[10].i = 12; Piaui->index[10].j = 29;
 	Piaui->index[11].i = 13; Piaui->index[11].j = 26;
 	Piaui->index[12].i = 13; Piaui->index[12].j = 27;
@@ -512,16 +528,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region MARANHAO
 	Maranhao->myIndexPosition = 19; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Maranhao->index[0].i = 7;   Maranhao->index[0].j =  26;
-	Maranhao->index[1].i = 7;   Maranhao->index[1].j =  27;
-	Maranhao->index[2].i = 8;   Maranhao->index[2].j =  25;
-	Maranhao->index[3].i = 8;   Maranhao->index[3].j =  26;
-	Maranhao->index[4].i = 8;   Maranhao->index[4].j =  27;
-	Maranhao->index[5].i = 8;   Maranhao->index[5].j =  28;
-	Maranhao->index[6].i = 9;   Maranhao->index[6].j =  24;
-	Maranhao->index[7].i = 9;   Maranhao->index[7].j =  25;
-	Maranhao->index[8].i = 9;   Maranhao->index[8].j =  26;
-	Maranhao->index[9].i = 9;   Maranhao->index[9].j =  27;
+	Maranhao->index[0].i = 7;   Maranhao->index[0].j = 26;
+	Maranhao->index[1].i = 7;   Maranhao->index[1].j = 27;
+	Maranhao->index[2].i = 8;   Maranhao->index[2].j = 25;
+	Maranhao->index[3].i = 8;   Maranhao->index[3].j = 26;
+	Maranhao->index[4].i = 8;   Maranhao->index[4].j = 27;
+	Maranhao->index[5].i = 8;   Maranhao->index[5].j = 28;
+	Maranhao->index[6].i = 9;   Maranhao->index[6].j = 24;
+	Maranhao->index[7].i = 9;   Maranhao->index[7].j = 25;
+	Maranhao->index[8].i = 9;   Maranhao->index[8].j = 26;
+	Maranhao->index[9].i = 9;   Maranhao->index[9].j = 27;
 	Maranhao->index[10].i = 10; Maranhao->index[10].j = 25;
 	Maranhao->index[11].i = 10; Maranhao->index[11].j = 26;
 	Maranhao->index[12].i = 10; Maranhao->index[12].j = 27;
@@ -548,16 +564,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region MINAS GERAIS
 	MinasGerais->myIndexPosition = 6; //posicao no vetor ESTADOS de nomes na classe objects.h
-	MinasGerais->index[0].i = 18;   MinasGerais->index[0].j =  25;
-	MinasGerais->index[1].i = 18;   MinasGerais->index[1].j =  26;
-	MinasGerais->index[2].i = 18;   MinasGerais->index[2].j =  27;
-	MinasGerais->index[3].i = 18;   MinasGerais->index[3].j =  28;
-	MinasGerais->index[4].i = 19;   MinasGerais->index[4].j =  25;
-	MinasGerais->index[5].i = 19;   MinasGerais->index[5].j =  26;
-	MinasGerais->index[6].i = 19;   MinasGerais->index[6].j =  27;
-	MinasGerais->index[7].i = 19;   MinasGerais->index[7].j =  28;
-	MinasGerais->index[8].i = 19;   MinasGerais->index[8].j =  29;
-	MinasGerais->index[9].i = 19;   MinasGerais->index[9].j =  30;
+	MinasGerais->index[0].i = 18;   MinasGerais->index[0].j = 25;
+	MinasGerais->index[1].i = 18;   MinasGerais->index[1].j = 26;
+	MinasGerais->index[2].i = 18;   MinasGerais->index[2].j = 27;
+	MinasGerais->index[3].i = 18;   MinasGerais->index[3].j = 28;
+	MinasGerais->index[4].i = 19;   MinasGerais->index[4].j = 25;
+	MinasGerais->index[5].i = 19;   MinasGerais->index[5].j = 26;
+	MinasGerais->index[6].i = 19;   MinasGerais->index[6].j = 27;
+	MinasGerais->index[7].i = 19;   MinasGerais->index[7].j = 28;
+	MinasGerais->index[8].i = 19;   MinasGerais->index[8].j = 29;
+	MinasGerais->index[9].i = 19;   MinasGerais->index[9].j = 30;
 	MinasGerais->index[10].i = 20;  MinasGerais->index[10].j = 25;
 	MinasGerais->index[11].i = 20;  MinasGerais->index[11].j = 26;
 	MinasGerais->index[12].i = 20;  MinasGerais->index[12].j = 27;
@@ -607,16 +623,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region PARANA
 	Parana->myIndexPosition = 2; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Parana->index[0].i =  25;   Parana->index[0].j =  19;
-	Parana->index[1].i =  25;   Parana->index[1].j =  20;
-	Parana->index[2].i =  25;   Parana->index[2].j =  21;
-	Parana->index[3].i =  25;   Parana->index[3].j =  22;
-	Parana->index[4].i =  25;   Parana->index[4].j =  23;
-	Parana->index[5].i =  26;   Parana->index[5].j =  19;
-	Parana->index[6].i =  26;   Parana->index[6].j =  20;
-	Parana->index[7].i =  26;   Parana->index[7].j =  21;
-	Parana->index[8].i =  26;   Parana->index[8].j =  22;
-	Parana->index[9].i =  26;   Parana->index[9].j =  23;
+	Parana->index[0].i = 25;   Parana->index[0].j = 19;
+	Parana->index[1].i = 25;   Parana->index[1].j = 20;
+	Parana->index[2].i = 25;   Parana->index[2].j = 21;
+	Parana->index[3].i = 25;   Parana->index[3].j = 22;
+	Parana->index[4].i = 25;   Parana->index[4].j = 23;
+	Parana->index[5].i = 26;   Parana->index[5].j = 19;
+	Parana->index[6].i = 26;   Parana->index[6].j = 20;
+	Parana->index[7].i = 26;   Parana->index[7].j = 21;
+	Parana->index[8].i = 26;   Parana->index[8].j = 22;
+	Parana->index[9].i = 26;   Parana->index[9].j = 23;
 	Parana->index[10].i = 27;   Parana->index[10].j = 19;
 	Parana->index[11].i = 27;   Parana->index[11].j = 20;
 	Parana->index[12].i = 27;   Parana->index[12].j = 21;
@@ -626,16 +642,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region RIO GRAND DO SUL
 	RioGrandeDoSul->myIndexPosition = 0; //posicao no vetor ESTADOS de nomes na classe objects.h
-	RioGrandeDoSul->index[0].i =  29;   RioGrandeDoSul->index[0].j =  17;
-	RioGrandeDoSul->index[1].i =  29;   RioGrandeDoSul->index[1].j =  18;
-	RioGrandeDoSul->index[2].i =  29;   RioGrandeDoSul->index[2].j =  19;
-	RioGrandeDoSul->index[3].i =  29;   RioGrandeDoSul->index[3].j =  20;
-	RioGrandeDoSul->index[4].i =  29;   RioGrandeDoSul->index[4].j =  21;
-	RioGrandeDoSul->index[5].i =  30;   RioGrandeDoSul->index[5].j =  16;
-	RioGrandeDoSul->index[6].i =  30;   RioGrandeDoSul->index[6].j =  17;
-	RioGrandeDoSul->index[7].i =  30;   RioGrandeDoSul->index[7].j =  18;
-	RioGrandeDoSul->index[8].i =  30;   RioGrandeDoSul->index[8].j =  19;
-	RioGrandeDoSul->index[9].i =  30;   RioGrandeDoSul->index[9].j =  20;
+	RioGrandeDoSul->index[0].i = 29;   RioGrandeDoSul->index[0].j = 17;
+	RioGrandeDoSul->index[1].i = 29;   RioGrandeDoSul->index[1].j = 18;
+	RioGrandeDoSul->index[2].i = 29;   RioGrandeDoSul->index[2].j = 19;
+	RioGrandeDoSul->index[3].i = 29;   RioGrandeDoSul->index[3].j = 20;
+	RioGrandeDoSul->index[4].i = 29;   RioGrandeDoSul->index[4].j = 21;
+	RioGrandeDoSul->index[5].i = 30;   RioGrandeDoSul->index[5].j = 16;
+	RioGrandeDoSul->index[6].i = 30;   RioGrandeDoSul->index[6].j = 17;
+	RioGrandeDoSul->index[7].i = 30;   RioGrandeDoSul->index[7].j = 18;
+	RioGrandeDoSul->index[8].i = 30;   RioGrandeDoSul->index[8].j = 19;
+	RioGrandeDoSul->index[9].i = 30;   RioGrandeDoSul->index[9].j = 20;
 	RioGrandeDoSul->index[10].i = 30;   RioGrandeDoSul->index[10].j = 21;
 	RioGrandeDoSul->index[11].i = 30;   RioGrandeDoSul->index[11].j = 22;
 	RioGrandeDoSul->index[12].i = 31;   RioGrandeDoSul->index[12].j = 17;
@@ -664,7 +680,11 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 	int i = 0;
 
 #pragma region ESTADOS
-
+	// Verificamos a posicao do click em relação à posição no mapa
+	// E verificamos se o index da palavra que esta caindo é igual ao
+	// indice da palavra que corresponde ao click do jogador
+	// caso seja a isMaxHeight é true para limpar as palavras caindo
+	// e acertou é igual a true para podermos sortear a próxima palavra
 #pragma region ACRE
 	for (i = 0; i < acreIndexSize; i++)
 	{
