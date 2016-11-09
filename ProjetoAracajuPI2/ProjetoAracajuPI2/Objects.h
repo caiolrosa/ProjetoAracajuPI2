@@ -69,6 +69,7 @@ typedef struct EstadosPadrao {
 
 #pragma endregion
 
+#pragma region Botoes
 typedef struct BotaoJogar
 {
 	int boundXInicio;
@@ -88,6 +89,7 @@ typedef struct BotaoTutorial
 	int boundYFinal;
 
 }BotaoTutorial;
+#pragma endregion
 
 #pragma region Listas
 

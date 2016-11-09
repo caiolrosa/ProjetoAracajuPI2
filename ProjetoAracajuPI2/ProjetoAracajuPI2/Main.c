@@ -10,6 +10,8 @@
 #include <allegro5\allegro_ttf.h>
 #include <allegro5\allegro_image.h>
 #include <allegro5\allegro_primitives.h>
+#include <allegro5\allegro_audio.h>
+#include <allegro5\allegro_acodec.h>
 #include "Objects.h"
 
 #pragma endregion
@@ -27,6 +29,14 @@ ALLEGRO_COLOR GREEN;
 ALLEGRO_COLOR RED;
 ALLEGRO_COLOR PURPLE;
 ALLEGRO_COLOR BEIGE;
+ALLEGRO_SAMPLE *menuAudioSample = NULL;
+ALLEGRO_SAMPLE *jogoAudioSample = NULL;
+ALLEGRO_SAMPLE *acertoAudioSample = NULL;
+ALLEGRO_SAMPLE *erroAudioSample = NULL;
+ALLEGRO_SAMPLE_INSTANCE *jogoAudioInstance = NULL;
+ALLEGRO_SAMPLE_INSTANCE *menuAudioInstance = NULL;
+ALLEGRO_SAMPLE_INSTANCE *acertoAudioInstance = NULL;
+ALLEGRO_SAMPLE_INSTANCE *erroAudioInstance = NULL;
 
 //variaveis da matriz
 const int TOTAL_DE_LINHAS = 36;
@@ -35,6 +45,8 @@ const int TOTAL_DE_COLUNAS = 36;
 // Prototipos
 void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
+void InitBotaoJogar(BotaoJogar *botaoJogar);
+void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
@@ -55,13 +67,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins);
 
-//Menu
-void InitBotaoJogar(BotaoJogar *botaoJogar);
-void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
-
 int main() {
 	// Tipos Primitivos
 	bool finished = false;
+	bool isGameOver = false;
 	bool redraw = true;
 	const int FPS = 60;
 	float mLines[36];
@@ -115,7 +124,7 @@ int main() {
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
-	ALLEGRO_BITMAP *MENU = NULL;
+	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 
 	// Inicializa o Allegro
@@ -133,27 +142,26 @@ int main() {
 
 	// Addons e instalações do allegro
 	al_install_mouse();											// Possibilita o uso do mouse
+	al_install_audio();											// Possibilita o uso de sons
+	al_init_acodec_addon();										// Possibilita diferentes formatos
 	al_init_font_addon();										// Possibilita escrever na tela
 	al_init_ttf_addon();										// Possibilita usar formato ttf
 	al_init_image_addon();										// Possibilita usar varios formatos de imagem
 	al_init_primitives_addon();									// Possibilita usar formas geometricas
 
-																// Carrega os bitmaps
-																// Cria o bitmap com as medidas das variaveis passadas como parametros
-																//bitmap do menu do jogo
-	MENU = al_load_bitmap("imgs/tela-inicial1.png");
-	int menuWidth = al_get_bitmap_width(MENU);
-	int menuHeight = al_get_bitmap_height(MENU);
-	al_draw_scaled_bitmap(MENU, -0, -0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);
+	// Carrega os bitmaps	
+
+	//bitmap do menu do jogo															
+	menu = al_load_bitmap("imgs/tela-inicial1.png");
+	int menuWidth = al_get_bitmap_width(menu);
+	int menuHeight = al_get_bitmap_height(menu);
+	al_draw_scaled_bitmap(menu, -0, -0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);
 
 	//bitmap do mapa do jogo
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
 	al_draw_scaled_bitmap(mapaBrasil, -0, -0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
-
-
-
 
 	// Carrega as fonts
 	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
@@ -165,6 +173,30 @@ int main() {
 	RED = al_map_rgb(255, 0, 0);
 	PURPLE = al_map_rgb(255, 0, 255);
 	// beige = al_map_rgb(0, 0, 0); ???
+
+	// Inicializa sons
+	al_reserve_samples(2);		// Quantidade de "canais" de audio ( 1 para cada audio )
+
+	// Audio do menu
+	menuAudioSample = al_load_sample("audio/Audio.wav");
+	menuAudioInstance = al_create_sample_instance(menuAudioSample);
+	al_attach_sample_instance_to_mixer(menuAudioInstance, al_get_default_mixer());
+
+	// Audio do fundo do jogo
+	jogoAudioSample = al_load_sample("audio/AudioJazz.wav");
+	jogoAudioInstance = al_create_sample_instance(jogoAudioSample);
+	al_attach_sample_instance_to_mixer(jogoAudioInstance, al_get_default_mixer());
+	al_set_sample_instance_gain(jogoAudioInstance, 0.3);
+
+	// Audio de acerto
+	acertoAudioSample = al_load_sample("audio/AcertoAudio.wav");
+	acertoAudioInstance = al_create_sample_instance(acertoAudioSample);
+	al_attach_sample_instance_to_mixer(acertoAudioInstance, al_get_default_mixer());
+
+	// Audio de erro
+	erroAudioSample = al_load_sample("audio/ErroAudio.wav");
+	erroAudioInstance = al_create_sample_instance(erroAudioSample);
+	al_attach_sample_instance_to_mixer(erroAudioInstance, al_get_default_mixer());
 
 	// Inicializacao dos nossos objetos
 	CreateMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
@@ -199,6 +231,13 @@ int main() {
 		// É invocado a cada frame "Função de update" 
 		if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
+			// Caso a quantidade de vidas do jogador for menor que zero
+			// isGameOver é falso para podermos mostrar a tela de pontuação
+			if (jogador.vidas <= 0)
+			{
+				isGameOver = true;
+			}
+
 			redraw = true;
 		}
 		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)			// Permite fechar a janela pelo X
@@ -206,53 +245,73 @@ int main() {
 			finished = true;
 		}
 
-
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) //verifica se o jogador clicou em jogar
 		{
+			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja o jogador começou a jogar
 			if (ev.mouse.x >= botaoJogar.boundXInicio && ev.mouse.x <= botaoJogar.boundXFinal && ev.mouse.y >= botaoJogar.boundYInicio && botaoJogar.boundYFinal)
 			{
 				jogador.jogando = true;
 			}
 		}
 
+		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click na tela
 		{
-
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
 			printf("index %d, %d\n", t.i, t.j);
-
 
 			//TESTA o clique para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
-		}
 
+			// Se o jogador acertou incrementa os pontos e 
+			// som de acerto toca
+			if (jogador.acertou)
+			{
+				al_play_sample_instance(acertoAudioInstance);
+				jogador.pontos += 50;
+			}
+			else
+			{
+				al_play_sample_instance(erroAudioInstance);
+			}
+		}
 
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-
-
-
 			if (jogador.jogando)   //verifica se o jogador passou a jogar
 			{
+				al_stop_sample_instance(menuAudioInstance);
+				al_play_sample_instance(jogoAudioInstance);
 
-				UpdateLista(fontLista, &jogador, &lista);
-				al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
-				al_flip_display();									// Muda para o back buffer
-				al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela
+				if (!isGameOver)
+				{
+					UpdateLista(fontLista, &jogador, &lista);
+					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
+					al_flip_display();									// Muda para o back buffer
+					al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela
+				}
+				else 
+				{
+					al_flip_display();
+					al_clear_to_color(al_map_rgb(0, 0, 0));		// Limpa a tela
+					al_draw_text(fontLista, RED, WIDTH / 2, HEIGHT / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+					al_draw_textf(fontLista, RED, WIDTH / 2, (HEIGHT / 2) + 30, ALLEGRO_ALIGN_CENTER, "Pontos: %d", jogador.pontos);
+					al_draw_textf(fontLista, RED, WIDTH / 2, (HEIGHT / 2) + 60, ALLEGRO_ALIGN_CENTER, "Acertos: %d", jogador.acertos);
+					al_draw_textf(fontLista, RED, WIDTH / 2, (HEIGHT / 2) + 90, ALLEGRO_ALIGN_CENTER, "Erros: %d", jogador.erros);
+				}
 			}
 			else
 			{
-				al_draw_scaled_bitmap(MENU, 0, 0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);		//coloca o menu na tela
+				al_play_sample_instance(menuAudioInstance);
+				al_draw_scaled_bitmap(menu, 0, 0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);		//coloca o menu na tela
 				al_flip_display();									// Muda para o back buffer
 				al_clear_to_color(al_map_rgb(255, 255, 255));
 			}
-
-
 
 		}
 	}
@@ -262,8 +321,16 @@ int main() {
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
-	al_destroy_bitmap(MENU);
+	al_destroy_bitmap(menu);
 	al_destroy_font(fontLista);
+	al_destroy_sample(menuAudioSample);
+	al_destroy_sample(jogoAudioSample);
+	al_destroy_sample(acertoAudioSample);
+	al_destroy_sample(erroAudioSample);
+	al_destroy_sample_instance(menuAudioInstance);
+	al_destroy_sample_instance(jogoAudioInstance);
+	al_destroy_sample_instance(acertoAudioInstance);
+	al_destroy_sample_instance(erroAudioInstance);
 }
 
 // Definicao de funcoes
@@ -285,150 +352,6 @@ void InitLista(Lista *lista)
 	lista->heightLista = 0;
 	lista->randomNumber = 0;
 	lista->palavraAtual = NULL;
-}
-
-// Altera o valor Y do elemento da lista de acordo velocidade
-// da lista(lista->velocidade) para dar noção de animação
-void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
-{
-	srand(time(NULL));
-	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
-	if (lista->isMaxHeight)
-	{
-		if (!jogador->acertou)
-		{
-			jogador->erros++;
-		}
-
-		lista->heightLista = 0;
-		lista->velocidade = 30;
-		lista->palavraAtual = NULL;
-		lista->randomNumber = rand();
-		jogador->pontos += 50;
-
-		free(lista->palavraAtual);
-		al_clear_to_color(al_map_rgb(255, 255, 255));
-	}
-
-	jogador->acertou = false;
-
-	if (lista->palavraAtual == NULL)
-	{
-		SortPalavra(jogador, lista);
-	}
-
-	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
-	if (lista->heightLista < HEIGHTMAPA)
-	{
-		al_clear_to_color(al_map_rgb(255, 255, 255));
-
-		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
-
-		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
-		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
-		lista->heightLista = lista->velocidade + 10;
-		lista->velocidade += 5;
-		lista->isMaxHeight = false;
-	}
-	else {
-		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
-
-		// Chegamos ao final da lista, então isMaxHeight é true
-		lista->isMaxHeight = true;
-	}
-}
-
-// Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
-void SortPalavra(Jogador *jogador, Lista *lista)
-{
-	srand(time(NULL));
-	int conjunto = (rand() * 5) % 3;
-
-	lista->indexAtual = lista->randomNumber % 27;
-
-	if (jogador->pontos >= 100)
-	{
-		if (conjunto == 0)
-		{
-			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
-		}
-		else if (conjunto == 1) {
-			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
-		}
-		else if (conjunto == 2) {
-			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
-		}
-	}
-	else if (jogador->pontos < 100) {
-		switch (conjunto)
-		{
-		case 0:
-			lista->palavraAtual = Estados[lista->indexAtual];
-			break;
-		case 1:
-			lista->palavraAtual = Siglas[lista->indexAtual];
-			break;
-		case 2:
-			lista->palavraAtual = Capitais[lista->indexAtual];
-			break;
-		default:
-			printf("Deu Ruim");
-			break;
-		}
-	}
-}
-
-// Concatena as palavras da lista
-void ConcatenaLista(char *s1, char *s2, Lista *lista)
-{
-	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 6);
-	strcpy(lista->palavraAtual, s1);
-	strcat(lista->palavraAtual, "    ");
-	strcat(lista->palavraAtual, s2);
-}
-
-// Cria matriz sob o Bitmap para poder identificar o click
-void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns)
-{
-	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
-	float pixelH = HEIGHTMAPA / (float)totalColumns; // mesma coisa de cima
-
-	int i = 0, j = 0;
-	for (i = 0; i < totalLines; i++)
-	{
-		lines[i] = pixelH + pixelH * i; // adiciono o valor em pixels onde ira comecar a matriz de Linhas
-	}
-	for (j = 0; j < totalColumns; j++)
-	{
-		columns[j] = pixelW + pixelW * j; // adiciono o valor em pixels onde ira comecar a matriz de colunas
-	}
-}
-
-// Verifica a posicao do click
-ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev)
-{
-	ClickIndex temp;
-	temp.i = -1;
-	temp.j = -1;
-
-	int x = ev.mouse.x, y = ev.mouse.y;
-
-	int i = 0, j = 0;
-	for (i = 0; i < totalLines; i++) // percorre todas as linhas
-	{
-		for (j = 0; j < totalColumns; j++) // percorre todas as colunas
-		{
-			if (x >((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso está dentro do range desse quadrado
-			{
-				temp.i = i;
-				temp.j = j;
-
-				return temp; //verdadeiro para quando o click estiver no mapa
-			}
-		}
-	}
-
-	return temp; //falso para quando esta fora do mapa
 }
 
 //Aqui sera configurado o mapeamento dos estados
@@ -722,6 +645,173 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 }
 
+// Inicializa o botao jogar
+void InitBotaoJogar(BotaoJogar * botaoJogar)
+{
+	botaoJogar->boundXInicio = 435;
+	botaoJogar->boundXFinal = 850;
+
+	botaoJogar->boundYInicio = 420;
+	botaoJogar->boundYFinal = 485;
+}
+
+// Inicializa o botao tutorial
+void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
+{
+
+	botaoTutorial->boundXInicio = 435;
+	botaoTutorial->boundXFinal = 850;
+
+	botaoTutorial->boundYInicio = 500;
+	botaoTutorial->boundYFinal = 570;
+}
+
+// Altera o valor Y do elemento da lista de acordo velocidade
+// da lista(lista->velocidade) para dar noção de animação
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
+{
+	srand(time(NULL));
+	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
+	if (lista->isMaxHeight)
+	{
+
+		if (!jogador->acertou)
+		{
+			al_play_sample_instance(erroAudioInstance);
+			jogador->erros++;
+			jogador->vidas--;
+		}
+
+		lista->heightLista = 0;
+		lista->velocidade = 30;
+		lista->palavraAtual = NULL;
+		lista->randomNumber = rand();
+
+		free(lista->palavraAtual);
+		al_clear_to_color(al_map_rgb(255, 255, 255));
+	}
+
+	jogador->acertou = false;
+
+	if (lista->palavraAtual == NULL)
+	{
+		SortPalavra(jogador, lista);
+	}
+
+	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
+	if (lista->heightLista < HEIGHTMAPA)
+	{
+		al_clear_to_color(al_map_rgb(255, 255, 255));
+
+		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+
+		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
+		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
+		lista->heightLista = lista->velocidade + 10;
+		lista->velocidade += 5;
+		lista->isMaxHeight = false;
+	}
+	else {
+		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+
+		// Chegamos ao final da lista, então isMaxHeight é true
+		lista->isMaxHeight = true;
+	}
+}
+
+// Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
+void SortPalavra(Jogador *jogador, Lista *lista)
+{
+	srand(time(NULL));
+	int conjunto = (rand() * 5) % 3;
+
+	lista->indexAtual = lista->randomNumber % 27;
+
+	if (jogador->pontos >= 100)
+	{
+		if (conjunto == 0)
+		{
+			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
+		}
+		else if (conjunto == 1) {
+			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
+		}
+		else if (conjunto == 2) {
+			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
+		}
+	}
+	else if (jogador->pontos < 100) {
+		switch (conjunto)
+		{
+		case 0:
+			lista->palavraAtual = Estados[lista->indexAtual];
+			break;
+		case 1:
+			lista->palavraAtual = Siglas[lista->indexAtual];
+			break;
+		case 2:
+			lista->palavraAtual = Capitais[lista->indexAtual];
+			break;
+		default:
+			printf("Deu Ruim");
+			break;
+		}
+	}
+}
+
+// Concatena as palavras da lista
+void ConcatenaLista(char *s1, char *s2, Lista *lista)
+{
+	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 6);
+	strcpy(lista->palavraAtual, s1);
+	strcat(lista->palavraAtual, "    ");
+	strcat(lista->palavraAtual, s2);
+}
+
+// Cria matriz sob o Bitmap para poder identificar o click
+void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns)
+{
+	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
+	float pixelH = HEIGHTMAPA / (float)totalColumns; // mesma coisa de cima
+
+	int i = 0, j = 0;
+	for (i = 0; i < totalLines; i++)
+	{
+		lines[i] = pixelH + pixelH * i; // adiciono o valor em pixels onde ira comecar a matriz de Linhas
+	}
+	for (j = 0; j < totalColumns; j++)
+	{
+		columns[j] = pixelW + pixelW * j; // adiciono o valor em pixels onde ira comecar a matriz de colunas
+	}
+}
+
+// Verifica a posicao do click
+ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev)
+{
+	ClickIndex temp;
+	temp.i = -1;
+	temp.j = -1;
+
+	int x = ev.mouse.x, y = ev.mouse.y;
+
+	int i = 0, j = 0;
+	for (i = 0; i < totalLines; i++) // percorre todas as linhas
+	{
+		for (j = 0; j < totalColumns; j++) // percorre todas as colunas
+		{
+			if (x >((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso está dentro do range desse quadrado
+			{
+				temp.i = i;
+				temp.j = j;
+
+				return temp; //verdadeiro para quando o click estiver no mapa
+			}
+		}
+	}
+
+	return temp; //falso para quando esta fora do mapa
+}
+
 //Testa qual estado corresponde a posicao clicada e verifica acerto
 void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
@@ -750,6 +840,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Acre->myIndexPosition]);
 			return;
 		}
@@ -767,6 +861,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Alagoas->myIndexPosition]);
 			return;
@@ -786,6 +884,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Amapa->myIndexPosition]);
 			return;
 		}
@@ -803,6 +905,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Amazonas->myIndexPosition]);
 			return;
@@ -822,6 +928,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Bahia->myIndexPosition]);
 			return;
 		}
@@ -839,6 +949,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Ceara->myIndexPosition]);
 			return;
@@ -858,6 +972,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[DistritoFederal->myIndexPosition]);
 			return;
 		}
@@ -875,6 +993,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[EspiritoSanto->myIndexPosition]);
 			return;
@@ -894,6 +1016,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Goias->myIndexPosition]);
 			return;
 		}
@@ -911,6 +1037,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Maranhao->myIndexPosition]);
 			return;
@@ -930,6 +1060,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[MatoGrosso->myIndexPosition]);
 			return;
 		}
@@ -947,6 +1081,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[MatoGrossoDoSul->myIndexPosition]);
 			return;
@@ -966,6 +1104,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[MinasGerais->myIndexPosition]);
 			return;
 		}
@@ -983,6 +1125,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Para->myIndexPosition]);
 			return;
@@ -1002,6 +1148,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Paraiba->myIndexPosition]);
 			return;
 		}
@@ -1019,6 +1169,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Parana->myIndexPosition]);
 			return;
@@ -1038,6 +1192,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Pernambuco->myIndexPosition]);
 			return;
 		}
@@ -1055,6 +1213,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Piaui->myIndexPosition]);
 			return;
@@ -1074,6 +1236,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[RioDeJaneiro->myIndexPosition]);
 			return;
 		}
@@ -1091,6 +1257,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[RioGrandeDoNorte->myIndexPosition]);
 			return;
@@ -1110,6 +1280,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[RioGrandeDoSul->myIndexPosition]);
 			return;
 		}
@@ -1127,6 +1301,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[Rondonia->myIndexPosition]);
 			return;
@@ -1146,6 +1324,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[SantaCatarina->myIndexPosition]);
 			return;
 		}
@@ -1163,6 +1345,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertos++;
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
+			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
 			}
 			printf("%s \n", Estados[SaoPaulo->myIndexPosition]);
 			return;
@@ -1182,6 +1368,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Sergipe->myIndexPosition]);
 			return;
 		}
@@ -1200,6 +1390,10 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 				jogador->acertou = true;
 				lista->isMaxHeight = true;
 			}
+			else {
+				jogador->acertou = false;
+				jogador->erros++;
+			}
 			printf("%s \n", Estados[Tocantins->myIndexPosition]);
 			return;
 		}
@@ -1210,25 +1404,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 
 }
 
-void
-InitBotaoJogar(BotaoJogar * botaoJogar)
-{
-	botaoJogar->boundXInicio = 435;
-	botaoJogar->boundXFinal = 850;
-
-	botaoJogar->boundYInicio = 420;
-	botaoJogar->boundYFinal = 485;
-}
-
-void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
-{
-
-	botaoTutorial->boundXInicio = 435;
-	botaoTutorial->boundXFinal = 850;
-
-	botaoTutorial->boundYInicio = 500;
-	botaoTutorial->boundYFinal = 570;
-}
 
 
 
