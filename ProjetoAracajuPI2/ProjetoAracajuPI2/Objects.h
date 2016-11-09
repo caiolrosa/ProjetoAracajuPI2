@@ -9,12 +9,12 @@
 #define amazonasIndexSize 0
 #define bahiaIndexSize 34
 #define cearaIndexSize 12
-#define distritoFederalIndexSize 0
+#define distritoFederalIndexSize 4
 #define espiritoSantoIndexSize 3
-#define goiasIndexSize 0
+#define goiasIndexSize 15
 #define maranhaoIndexSize 18	
 #define matoGrossoIndexSize 0
-#define matoGrossoDoSulIndexSize 0
+#define matoGrossoDoSulIndexSize 25
 #define minasGeraisIndexSize 37
 #define paraIndexSize 0
 #define paraibaIndexSize 4

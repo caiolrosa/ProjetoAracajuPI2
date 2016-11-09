@@ -365,7 +365,7 @@ int main() {
 void InitJogador(Jogador *jogador)
 {
 	jogador->pontos = 0;
-	jogador->vidas = 5;
+	jogador->vidas = 10;
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->jogando = false;
@@ -375,7 +375,7 @@ void InitJogador(Jogador *jogador)
 // Inicializa a lista de palavras
 void InitLista(Lista *lista)
 {
-	lista->velocidade = 30;
+	lista->velocidade = 20;
 	lista->heightLista = 0;
 	lista->randomNumber = 0;
 	lista->palavraAtual = NULL;
@@ -389,6 +389,34 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins)
 {
+#pragma region DISTRITO FEDERAL
+	DistritoFederal->myIndexPosition = 9; //posicao no vetor ESTADOS de nomes na classe objects.h
+	DistritoFederal->index[0].i = 18; DistritoFederal->index[0].j = 23;
+	DistritoFederal->index[1].i = 18; DistritoFederal->index[1].j = 24;
+	DistritoFederal->index[2].i = 19; DistritoFederal->index[2].j = 23;
+	DistritoFederal->index[3].i = 19; DistritoFederal->index[3].j = 24;
+#pragma endregion
+
+#pragma region GOIAS
+	Goias->myIndexPosition = 8; //posicao no vetor ESTADOS de nomes na classe objects.h
+	Goias->index[0].i = 17; Goias->index[0].j = 25;
+	Goias->index[1].i = 17; Goias->index[1].j = 24;
+	Goias->index[2].i = 17; Goias->index[2].j = 23;
+	Goias->index[3].i = 17; Goias->index[3].j = 22;
+	Goias->index[4].i = 18; Goias->index[4].j = 21;
+	Goias->index[5].i = 18; Goias->index[5].j = 21;
+	Goias->index[6].i = 19; Goias->index[6].j = 21;
+	Goias->index[7].i = 19; Goias->index[7].j = 20;
+	Goias->index[7].i = 20; Goias->index[7].j = 20;
+	Goias->index[8].i = 20; Goias->index[8].j = 24;
+	Goias->index[9].i = 20; Goias->index[9].j = 23;
+	Goias->index[10].i = 20; Goias->index[10].j = 22;
+	Goias->index[11].i = 20; Goias->index[11].j = 21;
+	Goias->index[12].i = 20; Goias->index[12].j = 20;
+	Goias->index[13].i = 21; Goias->index[13].j = 20;
+	Goias->index[14].i = 21; Goias->index[14].j = 21;
+#pragma endregion
+	
 #pragma region ACRE
 	Acre->myIndexPosition = 14; //posicao no vetor ESTADOS de nomes na classe objects.h
 	Acre->index[0].i = 12; Acre->index[0].j = 2;
