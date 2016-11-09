@@ -302,6 +302,8 @@ int main() {
 					al_play_sample_instance(erroAudioInstance);
 				}
 			}
+
+			clicouJogar = true;
 		}
 
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
@@ -365,7 +367,7 @@ int main() {
 void InitJogador(Jogador *jogador)
 {
 	jogador->pontos = 0;
-	jogador->vidas = 10;
+	jogador->vidas = 1;
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->jogando = false;
