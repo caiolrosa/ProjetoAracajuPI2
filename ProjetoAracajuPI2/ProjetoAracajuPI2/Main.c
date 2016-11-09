@@ -72,6 +72,7 @@ int main() {
 	bool finished = false;
 	bool isGameOver = false;
 	bool redraw = true;
+	bool clicouJogar = false;
 	const int FPS = 60;
 	float mLines[36];
 	float mColumns[36];
@@ -289,14 +290,17 @@ int main() {
 
 			// Se o jogador acertou incrementa os pontos e 
 			// som de acerto toca
-			if (jogador.acertou)
+			if (clicouJogar)
 			{
-				al_play_sample_instance(acertoAudioInstance);
-				jogador.pontos += 50;
-			}
-			else
-			{
-				al_play_sample_instance(erroAudioInstance);
+				if (jogador.acertou)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					jogador.pontos += 50;
+				}
+				else
+				{
+					al_play_sample_instance(erroAudioInstance);
+				}
 			}
 		}
 
