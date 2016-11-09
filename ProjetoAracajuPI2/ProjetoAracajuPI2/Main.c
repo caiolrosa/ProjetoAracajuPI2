@@ -125,6 +125,7 @@ int main() {
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
+	ALLEGRO_BITMAP *tutorial = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 
 	// Inicializa o Allegro
@@ -162,6 +163,12 @@ int main() {
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
 	al_draw_scaled_bitmap(mapaBrasil, -0, -0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
+
+	//bitmap do tutorial do jogo
+/*	tutorial = al_load_bitmap("imagem.png");
+	int tutorialWidth = al_get_bitmap_width(tutorial);
+	int tutorialHeight = al_get_bitmap_height(tutorial);
+	al_draw_scaled_bitmap(tutorial, -0, -0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0); */
 
 	// Carrega as fonts
 	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
@@ -247,21 +254,35 @@ int main() {
 
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) //verifica se o jogador clicou em jogar
 		{
-			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja o jogador começou a jogar
+			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja a variavel jogador.jogando fica verdadeira
 			if (ev.mouse.x >= botaoJogar.boundXInicio && ev.mouse.x <= botaoJogar.boundXFinal && ev.mouse.y >= botaoJogar.boundYInicio &&  ev.mouse.y <= botaoJogar.boundYFinal)
 			{
 				jogador.jogando = true;
 			}
+
+			//Verifica se o click está dentro dos bounds do botão tutorial, caso esteja variavel jogador.tutorial fica verdadeira 
+			if (ev.mouse.x >= botaoTutorial.boundXInicio && ev.mouse.x <= botaoTutorial.boundXFinal && ev.mouse.y >= botaoTutorial.boundYInicio &&  ev.mouse.y <= botaoTutorial.boundYFinal)
+			{
+				jogador.tutorial = true;
+			}
 		}
 
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.tutorial) // Verifica se houve input de click no botão tutorial
+		{
+	/*		al_draw_scaled_bitmap(tutorial, 0, 0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0);		//coloca o tutorial na tela
+			al_flip_display();									// Muda para o back buffer
+			al_clear_to_color(al_map_rgb(255, 255, 255));  */ 
+			if (jogador.tutorial)
+			printf("funcionando\n");
+		}
 		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click na tela
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click no botão jogar
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
 			printf("index %d, %d\n", t.i, t.j);
 
-			//TESTA o clique para ver qual estado foi clicado
+			//TESTA o click para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
@@ -322,6 +343,7 @@ int main() {
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
+	//al_destroy_bitmap(tutorial);
 	al_destroy_font(fontLista);
 	al_destroy_sample(menuAudioSample);
 	al_destroy_sample(jogoAudioSample);
@@ -343,6 +365,7 @@ void InitJogador(Jogador *jogador)
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->jogando = false;
+	jogador->tutorial = false;
 }
 
 // Inicializa a lista de palavras

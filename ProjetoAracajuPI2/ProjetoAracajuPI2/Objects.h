@@ -39,6 +39,7 @@ typedef struct Jogador {
 	int erros;
 	bool acertou;
 	bool jogando;
+	bool tutorial;
 } Jogador;
 
 typedef struct Lista {
