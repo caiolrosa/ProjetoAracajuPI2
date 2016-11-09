@@ -248,7 +248,7 @@ int main() {
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) //verifica se o jogador clicou em jogar
 		{
 			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja o jogador começou a jogar
-			if (ev.mouse.x >= botaoJogar.boundXInicio && ev.mouse.x <= botaoJogar.boundXFinal && ev.mouse.y >= botaoJogar.boundYInicio && botaoJogar.boundYFinal)
+			if (ev.mouse.x >= botaoJogar.boundXInicio && ev.mouse.x <= botaoJogar.boundXFinal && ev.mouse.y >= botaoJogar.boundYInicio &&  ev.mouse.y <= botaoJogar.boundYFinal)
 			{
 				jogador.jogando = true;
 			}
