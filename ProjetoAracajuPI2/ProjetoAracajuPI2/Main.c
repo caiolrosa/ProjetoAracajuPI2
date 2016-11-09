@@ -241,10 +241,10 @@ int main() {
 		{
 			// Caso a quantidade de vidas do jogador for menor que zero
 			// isGameOver é falso para podermos mostrar a tela de pontuação
-			if (jogador.vidas <= 0)
+			/*if (jogador.vidas <= 0)
 			{
 				isGameOver = true;
-			}
+			}*/
 
 			redraw = true;
 		}
@@ -700,6 +700,86 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	RioGrandeDoSul->index[22].i = 33;   RioGrandeDoSul->index[22].j = 20;
 #pragma endregion
 
+#pragma region MATO GROSSO DO SUL
+	MatoGrossoDoSul->index[1].i=20 ; 		MatoGrossoDoSul->index[1].j=17 ; 
+	MatoGrossoDoSul->index[2].i=20 ; 		MatoGrossoDoSul->index[2].j=18 ;
+	MatoGrossoDoSul->index[3].i=21 ; 		MatoGrossoDoSul->index[3].j=16 ;
+	MatoGrossoDoSul->index[4].i=21 ; 		MatoGrossoDoSul->index[4].j=17 ;
+	MatoGrossoDoSul->index[5].i=21 ; 		MatoGrossoDoSul->index[5].j=18 ;
+	MatoGrossoDoSul->index[6].i=21 ; 		MatoGrossoDoSul->index[6].j=19 ;
+	MatoGrossoDoSul->index[7].i=22 ; 		MatoGrossoDoSul->index[7].j=16 ;
+	MatoGrossoDoSul->index[8].i=22 ; 		MatoGrossoDoSul->index[8].j=17 ;
+	MatoGrossoDoSul->index[9].i=22 ; 		MatoGrossoDoSul->index[9].j=18 ;
+	MatoGrossoDoSul->index[10].i=22 ; 		MatoGrossoDoSul->index[10].j=19 ;
+	MatoGrossoDoSul->index[11].i=22 ; 		MatoGrossoDoSul->index[11].j=20 ;
+	MatoGrossoDoSul->index[12].i=22 ; 		MatoGrossoDoSul->index[12].j=21 ;
+	MatoGrossoDoSul->index[13].i=23 ; 		MatoGrossoDoSul->index[13].j=15 ;
+	MatoGrossoDoSul->index[14].i=23 ; 		MatoGrossoDoSul->index[14].j=15 ;
+	MatoGrossoDoSul->index[15].i=23 ; 		MatoGrossoDoSul->index[15].j=16 ;
+	MatoGrossoDoSul->index[16].i=23 ; 		MatoGrossoDoSul->index[16].j=17 ;
+	MatoGrossoDoSul->index[17].i=23 ; 		MatoGrossoDoSul->index[17].j=18 ;
+	MatoGrossoDoSul->index[18].i=23 ; 		MatoGrossoDoSul->index[18].j=19 ;
+	MatoGrossoDoSul->index[19].i=23 ; 		MatoGrossoDoSul->index[19].j=20 ;
+	MatoGrossoDoSul->index[20].i=24 ; 		MatoGrossoDoSul->index[20].j=15 ;
+	MatoGrossoDoSul->index[21].i=24 ; 		MatoGrossoDoSul->index[21].j=16 ;
+	MatoGrossoDoSul->index[22].i=24 ; 		MatoGrossoDoSul->index[22].j=17 ;
+	MatoGrossoDoSul->index[23].i=24 ; 		MatoGrossoDoSul->index[23].j=18;
+	MatoGrossoDoSul->index[24].i=24 ; 		MatoGrossoDoSul->index[24].j=19 ;
+	MatoGrossoDoSul->index[25].i=25 ; 		MatoGrossoDoSul->index[25].j=18 ;
+	
+#pragma endregion 
+
+/*#pragma region MATO GROSSO
+	MatoGrosso->index[1].i =13 ; 		MatoGrosso->index[1].j =12 ;
+	MatoGrosso->index[2].i =13 ; 		MatoGrosso->index[2].j =13 ;
+	MatoGrosso->index[3].i =13 ; 		MatoGrosso->index[3].j =14 ;
+	MatoGrosso->index[4].i =13 ; 		MatoGrosso->index[4].j =15 ;
+	MatoGrosso->index[5].i =13 ; 		MatoGrosso->index[5].j =16 ;
+	MatoGrosso->index[6].i =14 ; 		MatoGrosso->index[6].j =12 ;
+	MatoGrosso->index[7].i =14 ; 		MatoGrosso->index[7].j =13 ;
+	MatoGrosso->index[8].i =14 ; 		MatoGrosso->index[8].j =14 ;
+	MatoGrosso->index[9].i =14 ; 		MatoGrosso->index[9].j =15 ;
+	MatoGrosso->index[10].i =14 ; 		MatoGrosso->index[10].j =16 ;
+	MatoGrosso->index[11].i =14 ; 		MatoGrosso->index[11].j =17 ;
+	MatoGrosso->index[12].i =14 ; 		MatoGrosso->index[12].j =18 ;
+	MatoGrosso->index[13].i =14 ; 		MatoGrosso->index[13].j =19 ;
+	MatoGrosso->index[14].i =14 ; 		MatoGrosso->index[14].j =20 ;
+	MatoGrosso->index[15].i =14 ; 		MatoGrosso->index[15].j =21 ;
+	MatoGrosso->index[16].i =15 ; 		MatoGrosso->index[16].j =14 ;
+	MatoGrosso->index[17].i =15 ; 		MatoGrosso->index[17].j =15 ;
+	MatoGrosso->index[18].i =15 ; 		MatoGrosso->index[18].j =16 ;
+	MatoGrosso->index[19].i =15 ; 		MatoGrosso->index[19].j =17 ;
+	MatoGrosso->index[20].i =15 ; 		MatoGrosso->index[20].j =18 ;
+	MatoGrosso->index[21].i =15 ; 		MatoGrosso->index[21].j =19 ;
+	MatoGrosso->index[22].i =15 ; 		MatoGrosso->index[22].j =20 ;
+	MatoGrosso->index[23].i =15 ; 		MatoGrosso->index[23].j =21 ;
+	MatoGrosso->index[24].i =16 ; 		MatoGrosso->index[24].j =13 ;
+	MatoGrosso->index[25].i =16 ; 		MatoGrosso->index[25].j =14 ;
+	MatoGrosso->index[26].i =16 ; 		MatoGrosso->index[26].j =15 ;
+	MatoGrosso->index[27].i =16 ; 		MatoGrosso->index[27].j =16 ;
+	MatoGrosso->index[28].i =16 ; 		MatoGrosso->index[28].j =17 ;
+	MatoGrosso->index[29].i =16 ; 		MatoGrosso->index[29].j =18 ;
+	MatoGrosso->index[30].i =16 ; 		MatoGrosso->index[30].j =19 ;
+	MatoGrosso->index[31].i =16 ; 		MatoGrosso->index[31].j =20 ;
+	MatoGrosso->index[32].i =16 ; 		MatoGrosso->index[32].j =21 ;
+	MatoGrosso->index[33].i =17 ; 		MatoGrosso->index[33].j =13 ;
+	MatoGrosso->index[34].i =17 ; 		MatoGrosso->index[34].j =14 ;
+	MatoGrosso->index[35].i =17 ; 		MatoGrosso->index[35].j =15 ;
+	MatoGrosso->index[36].i =17 ; 		MatoGrosso->index[36].j =16 ;
+	MatoGrosso->index[37].i =17 ; 		MatoGrosso->index[37].j = 17;
+	MatoGrosso->index[38].i =17 ; 		MatoGrosso->index[38].j =18 ;
+	MatoGrosso->index[39].i =17 ; 		MatoGrosso->index[39].j =19 ;
+	MatoGrosso->index[40].i =17 ; 		MatoGrosso->index[40].j =20 ;
+	MatoGrosso->index[41].i =17 ; 		MatoGrosso->index[41].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+	MatoGrosso->index[42].i =18 ; 		MatoGrosso->index[42].j =21 ;
+#pragma endregion */
 }
 
 // Inicializa o botao jogar
@@ -865,7 +945,7 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 			}
 		}
 	}
-
+#pragma region RIO GRAND DO SUL
 	return temp; //falso para quando esta fora do mapa
 }
 
