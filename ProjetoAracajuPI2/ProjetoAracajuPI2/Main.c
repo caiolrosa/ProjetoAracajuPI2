@@ -157,13 +157,13 @@ int main() {
 	menu = al_load_bitmap("imgs/tela-inicial1.png");
 	int menuWidth = al_get_bitmap_width(menu);
 	int menuHeight = al_get_bitmap_height(menu);
-	al_draw_scaled_bitmap(menu, -0, -0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);
+	al_draw_scaled_bitmap(menu, 0, 0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);
 
 	//bitmap do mapa do jogo
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
-	al_draw_scaled_bitmap(mapaBrasil, -0, -0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
+	al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
 
 	//bitmap do tutorial do jogo
 /*	tutorial = al_load_bitmap("imagem.png");
@@ -241,10 +241,10 @@ int main() {
 		{
 			// Caso a quantidade de vidas do jogador for menor que zero
 			// isGameOver é falso para podermos mostrar a tela de pontuação
-			/*if (jogador.vidas <= 0)
+			if (jogador.vidas <= 0)
 			{
 				isGameOver = true;
-			}*/
+			}
 
 			redraw = true;
 		}
@@ -300,6 +300,8 @@ int main() {
 				else
 				{
 					al_play_sample_instance(erroAudioInstance);
+					jogador.erros++;
+					jogador.vidas--;
 				}
 			}
 
@@ -407,16 +409,17 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	Goias->index[3].i = 17; Goias->index[3].j = 22;
 	Goias->index[4].i = 18; Goias->index[4].j = 21;
 	Goias->index[5].i = 18; Goias->index[5].j = 21;
-	Goias->index[6].i = 19; Goias->index[6].j = 21;
-	Goias->index[7].i = 19; Goias->index[7].j = 20;
-	Goias->index[7].i = 20; Goias->index[7].j = 20;
-	Goias->index[8].i = 20; Goias->index[8].j = 24;
-	Goias->index[9].i = 20; Goias->index[9].j = 23;
-	Goias->index[10].i = 20; Goias->index[10].j = 22;
-	Goias->index[11].i = 20; Goias->index[11].j = 21;
-	Goias->index[12].i = 20; Goias->index[12].j = 20;
-	Goias->index[13].i = 21; Goias->index[13].j = 20;
-	Goias->index[14].i = 21; Goias->index[14].j = 21;
+	Goias->index[6].i = 19; Goias->index[6].j = 22;
+	Goias->index[7].i = 19; Goias->index[7].j = 21;
+	Goias->index[8].i = 19; Goias->index[8].j = 20;
+	Goias->index[9].i = 20; Goias->index[9].j = 20;
+	Goias->index[10].i = 20; Goias->index[10].j = 24;
+	Goias->index[11].i = 20; Goias->index[11].j = 23;
+	Goias->index[12].i = 20; Goias->index[12].j = 22;
+	Goias->index[13].i = 20; Goias->index[13].j = 21;
+	Goias->index[14].i = 20; Goias->index[14].j = 20;
+	Goias->index[15].i = 21; Goias->index[15].j = 20;
+	Goias->index[16].i = 21; Goias->index[16].j = 21;
 #pragma endregion
 	
 #pragma region ACRE
@@ -701,6 +704,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 #pragma endregion
 
 #pragma region MATO GROSSO DO SUL
+	MatoGrossoDoSul->myIndexPosition = 4; //posicao no vetor ESTADOS de nomes na classe objects.h
 	MatoGrossoDoSul->index[1].i=20 ; 		MatoGrossoDoSul->index[1].j=17 ; 
 	MatoGrossoDoSul->index[2].i=20 ; 		MatoGrossoDoSul->index[2].j=18 ;
 	MatoGrossoDoSul->index[3].i=21 ; 		MatoGrossoDoSul->index[3].j=16 ;
@@ -793,7 +797,7 @@ void InitBotaoJogar(BotaoJogar * botaoJogar)
 }
 
 // Inicializa o botao tutorial
-void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
+void InitBotaoTutorial(BotaoTutorial *botaoTutorial)
 {
 
 	botaoTutorial->boundXInicio = 435;
@@ -811,14 +815,6 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
-
-		if (!jogador->acertou)
-		{
-			al_play_sample_instance(erroAudioInstance);
-			jogador->erros++;
-			jogador->vidas--;
-		}
-
 		lista->heightLista = 0;
 		lista->velocidade = 30;
 		lista->palavraAtual = NULL;
