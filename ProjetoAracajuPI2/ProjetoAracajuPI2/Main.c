@@ -169,7 +169,7 @@ int main() {
 	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
 	int tocantinsWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int tocantinsHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
-	al_draw_scaled_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
+	al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
 
 
 	//bitmap do tutorial do jogo
@@ -331,9 +331,7 @@ int main() {
 					al_flip_display();									// Muda para o back buffer
 					al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela
 
-					al_draw_scaled_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
-					al_flip_display();									// Muda para o back buffer
-					al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela
+					al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 				}
 				else 
 				{
