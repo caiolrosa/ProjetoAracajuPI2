@@ -20,7 +20,7 @@
 const int WIDTH = 1280;
 const int HEIGHT = 720;
 const int WIDTHMAPA = 650;
-const int HEIGHTMAPA = 650;
+const int HEIGHTMAPA = 700;
 
 // Variaveis globais Allegro
 ALLEGRO_COLOR BLACK;
@@ -178,7 +178,7 @@ int main() {
 	al_draw_scaled_bitmap(tutorial, -0, -0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0); */
 
 	// Carrega as fonts
-	fontLista = al_load_font("fonts/Magnificent.ttf", 20, 0);
+	fontLista = al_load_font("fonts/Magnificent.ttf", 23, 0);
 
 	// Inicializa cores
 	BLACK = al_map_rgb(0, 0, 0);
@@ -186,7 +186,7 @@ int main() {
 	GREEN = al_map_rgb(0, 255, 0);
 	RED = al_map_rgb(255, 0, 0);
 	PURPLE = al_map_rgb(255, 0, 255);
-	// beige = al_map_rgb(0, 0, 0); ???
+	BEIGE = al_map_rgb(255, 230, 187);
 
 	// Inicializa sons
 	al_reserve_samples(2);		// Quantidade de "canais" de audio ( 1 para cada audio )
@@ -869,15 +869,13 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 void SortPalavra(Jogador *jogador, Lista *lista)
 {
 	srand(time(NULL));
-	int conjunto = (rand() * 5) % 6;
-	int conjunto1 = (rand() * 5) % 3;
-
 	lista->indexAtual = lista->randomNumber % 27;
 
 	if (jogador->pontos < 500)
 	{
-		printf("Score: %d\n", jogador->pontos);
-		switch (conjunto1)
+		int conjuntoEasy = (rand() * 5) % 3;
+
+		switch (conjuntoEasy)
 		{
 		case 0:
 			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
@@ -893,9 +891,11 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 			break;
 		}
 	}
-	else if (jogador->pontos >= 500) {
-		printf("Score: %d\n", jogador->pontos);
-		switch (conjunto)
+	else if (jogador->pontos >= 500 && jogador->pontos < 1000) 
+	{
+		int conjuntoMedium = (rand() * 5) % 6;
+
+		switch (conjuntoMedium)
 		{
 		case 0:
 			lista->palavraAtual = Estados[lista->indexAtual];
@@ -914,6 +914,29 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 			break;
 		case 5:
 			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
+			break;
+		default:
+			printf("Deu Ruim");
+			break;
+		}
+	}
+	else if (jogador->pontos >= 1000)
+	{
+		int conjuntoHard = (rand() * 5) % 4;
+
+		switch (conjuntoHard)
+		{
+		case 0:
+			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			break;
+		case 1:
+			lista->palavraAtual = Siglas[lista->indexAtual];
+			break;
+		case 2:
+			lista->palavraAtual = Capitais[lista->indexAtual];
+			break;
+		case 3:
+			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
 			break;
 		default:
 			printf("Deu Ruim");

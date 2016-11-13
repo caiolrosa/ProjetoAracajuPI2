@@ -49,6 +49,7 @@ typedef struct Lista {
 	int indexAtual;		// Recebe o index atual da palavra sorteada
 	char *palavraAtual;	// Recebe o texto atual 
 	bool isMaxHeight;	// Verifica se a palavra chegou na altura maxima
+	ALLEGRO_COLOR cor;
 } Lista;
 
 typedef struct Mapa {
