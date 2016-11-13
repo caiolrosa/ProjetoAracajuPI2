@@ -127,6 +127,7 @@ int main() {
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
+	ALLEGRO_BITMAP *estadoCinza = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 
 	// Inicializa o Allegro
@@ -157,13 +158,18 @@ int main() {
 	menu = al_load_bitmap("imgs/tela-inicial1.png");
 	int menuWidth = al_get_bitmap_width(menu);
 	int menuHeight = al_get_bitmap_height(menu);
-	al_draw_scaled_bitmap(menu, 0, 0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);
 
 	//bitmap do mapa do jogo
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
-	al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
+
+	//bitmap estado cinza
+	estadoCinza = al_load_bitmap("imgs/EstadosCinzas/TocantinsCinza.png");
+	int estadoWidth = al_get_bitmap_width(estadoCinza);			// Recebe o tamanho X da imagem
+	int estadoHeight = al_get_bitmap_height(estadoCinza);			// Recebe o tamanho Y da imagem
+
+	//al_draw_scaled_bitmap(estadoCinza, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
 
 	//bitmap do tutorial do jogo
 /*	tutorial = al_load_bitmap("imagem.png");
@@ -241,10 +247,10 @@ int main() {
 		{
 			// Caso a quantidade de vidas do jogador for menor que zero
 			// isGameOver é falso para podermos mostrar a tela de pontuação
-			if (jogador.vidas <= 0)
+			/*if (jogador.vidas <= 0)
 			{
 				isGameOver = true;
-			}
+			}*/
 
 			redraw = true;
 		}
@@ -283,6 +289,8 @@ int main() {
 
 			printf("index %d, %d\n", t.i, t.j);
 
+			printf("POS MOUSE X: %d\n", ev.mouse.x);
+			printf("POS MOUSE Y: %d\n", ev.mouse.y);
 			//TESTA o click para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
@@ -341,7 +349,6 @@ int main() {
 				al_flip_display();									// Muda para o back buffer
 				al_clear_to_color(al_map_rgb(255, 255, 255));
 			}
-
 		}
 	}
 
@@ -815,6 +822,11 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
+		if (!jogador->acertou)
+		{
+			al_play_sample_instance(erroAudioInstance);
+		}
+
 		lista->heightLista = 0;
 		lista->velocidade = 30;
 		lista->palavraAtual = NULL;
