@@ -129,6 +129,7 @@ int main() {
 	ALLEGRO_BITMAP *tutorial = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 
+	ALLEGRO_BITMAP *tocantins = NULL;
 	// Inicializa o Allegro
 	if (!al_init())
 	{
@@ -162,6 +163,12 @@ int main() {
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
+
+	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
+	int tocantinsWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
+	int tocantinsHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
+	al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
+
 
 	//bitmap do tutorial do jogo
 /*	tutorial = al_load_bitmap("imagem.png");
@@ -323,6 +330,8 @@ int main() {
 					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 					al_flip_display();									// Muda para o back buffer
 					al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela
+
+					al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 				}
 				else 
 				{
@@ -350,6 +359,8 @@ int main() {
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
+
+	al_destroy_bitmap(tocantins);
 	//al_destroy_bitmap(tutorial);
 	al_destroy_font(fontLista);
 	al_destroy_sample(menuAudioSample);
