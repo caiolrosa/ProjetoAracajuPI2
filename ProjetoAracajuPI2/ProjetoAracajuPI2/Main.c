@@ -85,7 +85,7 @@ int main() {
 	ClickIndex clickIndex;
 	BotaoJogar botaoJogar;
 	BotaoTutorial botaoTutorial;
-
+	
 	//INICIALIZAÇAO DOS ESTADOS
 #pragma region INIT ESTADOS
 	EstadosPadrao *_Acre, *_Alagoas, *_Amapa, *_Amazonas, *_Bahia, *_Ceara, *_DistritoFederal, *_EspiritoSanto, *_Goias, *_Maranhao,
@@ -119,17 +119,19 @@ int main() {
 	_Sergipe = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
 	_Tocantins = (EstadosPadrao*)malloc(sizeof(EstadosPadrao));
 #pragma endregion
-
+	
 	// Variaveis do Allegro
 	ALLEGRO_DISPLAY *display = NULL;
 	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
+	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
+	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
-
 	ALLEGRO_BITMAP *tocantins = NULL;
+
 	// Inicializa o Allegro
 	if (!al_init())
 	{
@@ -154,21 +156,20 @@ int main() {
 
 	// Carrega os bitmaps	
 
-	//bitmap do menu do jogo															
-	menu = al_load_bitmap("imgs/tela-inicial1.png");
-	int menuWidth = al_get_bitmap_width(menu);
-	int menuHeight = al_get_bitmap_height(menu);
+	// Bitmaps do menu do jogo															
+	menu = al_load_bitmap("imgs/Telas/telaInicial.png");
+	//jogarBotaoNormal = al_load_bitmap("imgs/Botoes/jogarNormal.png");
+	//jogarBotaoOver = al_load_bitmap("imgs/Botoes/jogarOver.png");
 
-	//bitmap do mapa do jogo
-	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
-	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
-	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
+	// Bitmap do mapa do jogo
+	mapaBrasil = al_load_bitmap("imgs/Mapas/BrasilOldGrid.png"); // bmp de testes para encontrar o indice correto
+	int mapaWidth = al_get_bitmap_width(mapaBrasil);			 // Recebe o tamanho X da imagem
+	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 
+	// Estados cinza bitmap
 	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
 	int tocantinsWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int tocantinsHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
-	al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
-
 
 	//bitmap do tutorial do jogo
 /*	tutorial = al_load_bitmap("imagem.png");
@@ -257,7 +258,7 @@ int main() {
 		{
 			finished = true;
 		}
-
+		
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) //verifica se o jogador clicou em jogar
 		{
 			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja a variavel jogador.jogando fica verdadeira
@@ -327,11 +328,11 @@ int main() {
 				if (!isGameOver)
 				{
 					UpdateLista(fontLista, &jogador, &lista);
-					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
-					al_flip_display();									// Muda para o back buffer
-					al_clear_to_color(al_map_rgb(255, 255, 255));		// Limpa a tela
-
-					al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
+					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);	// Coloca o mapa na tela
+					al_flip_display();	
+					al_clear_to_color(al_map_rgb(255, 184, 40));
+					
+					//al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
 				}
 				else 
 				{
@@ -346,8 +347,8 @@ int main() {
 			else
 			{
 				al_play_sample_instance(menuAudioInstance);
-				al_draw_scaled_bitmap(menu, 0, 0, menuWidth, menuHeight, 0, 0, WIDTH, HEIGHT, 0);		//coloca o menu na tela
-				al_flip_display();									// Muda para o back buffer
+				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela
+				al_flip_display();					// Muda para o back buffer
 				al_clear_to_color(al_map_rgb(255, 255, 255));
 			}
 		}
@@ -359,7 +360,8 @@ int main() {
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
-
+	//al_destroy_bitmap(jogarBotaoNormal);
+	//al_destroy_bitmap(jogarBotaoOver);
 	al_destroy_bitmap(tocantins);
 	//al_destroy_bitmap(tutorial);
 	al_destroy_font(fontLista);
@@ -836,21 +838,17 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		lista->randomNumber = rand();
 
 		free(lista->palavraAtual);
-		al_clear_to_color(al_map_rgb(255, 255, 255));
 	}
-
-	jogador->acertou = false;
 
 	if (lista->palavraAtual == NULL)
 	{
 		SortPalavra(jogador, lista);
 	}
+	jogador->acertou = false;
 
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
 	if (lista->heightLista < HEIGHTMAPA)
 	{
-		al_clear_to_color(al_map_rgb(255, 255, 255));
-
 		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 
 		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
@@ -871,24 +869,32 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 void SortPalavra(Jogador *jogador, Lista *lista)
 {
 	srand(time(NULL));
-	int conjunto = (rand() * 5) % 3;
+	int conjunto = (rand() * 5) % 6;
+	int conjunto1 = (rand() * 5) % 3;
 
 	lista->indexAtual = lista->randomNumber % 27;
 
-	if (jogador->pontos >= 100)
+	if (jogador->pontos < 500)
 	{
-		if (conjunto == 0)
+		printf("Score: %d\n", jogador->pontos);
+		switch (conjunto1)
 		{
+		case 0:
 			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
-		}
-		else if (conjunto == 1) {
+			break;
+		case 1:
 			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
-		}
-		else if (conjunto == 2) {
+			break;
+		case 2:
 			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
+			break;
+		default:
+			printf("Deu Ruim");
+			break;
 		}
 	}
-	else if (jogador->pontos < 100) {
+	else if (jogador->pontos >= 500) {
+		printf("Score: %d\n", jogador->pontos);
 		switch (conjunto)
 		{
 		case 0:
@@ -899,6 +905,15 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 			break;
 		case 2:
 			lista->palavraAtual = Capitais[lista->indexAtual];
+			break;
+		case 3:
+			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			break;
+		case 4:
+			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			break;
+		case 5:
+			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
 			break;
 		default:
 			printf("Deu Ruim");
