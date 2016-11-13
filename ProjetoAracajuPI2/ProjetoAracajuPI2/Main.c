@@ -127,7 +127,6 @@ int main() {
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
-	ALLEGRO_BITMAP *estadoCinza = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 
 	// Inicializa o Allegro
@@ -163,13 +162,6 @@ int main() {
 	mapaBrasil = al_load_bitmap("imgs/Brasil-3D grid.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
-
-	//bitmap estado cinza
-	estadoCinza = al_load_bitmap("imgs/EstadosCinzas/TocantinsCinza.png");
-	int estadoWidth = al_get_bitmap_width(estadoCinza);			// Recebe o tamanho X da imagem
-	int estadoHeight = al_get_bitmap_height(estadoCinza);			// Recebe o tamanho Y da imagem
-
-	//al_draw_scaled_bitmap(estadoCinza, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);
 
 	//bitmap do tutorial do jogo
 /*	tutorial = al_load_bitmap("imagem.png");
