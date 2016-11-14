@@ -48,6 +48,7 @@ void InitLista(Lista *lista);
 void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
+void GetColor(Lista *lista);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
 void SortPalavra(Jogador *jogador, Lista *lista);
@@ -235,9 +236,8 @@ int main() {
 	al_register_event_source(event_queue, al_get_display_event_source(display));			// Registra o display na lista de eventos
 
 	al_start_timer(timer);										// Inicia o timer
-																// Looping Principal
 
-
+	// Looping Principal
 	while (!finished) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
@@ -849,7 +849,7 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
 	if (lista->heightLista < HEIGHTMAPA)
 	{
-		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 
 		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
@@ -858,10 +858,30 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_textf(fontLista, BLACK, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 
 		// Chegamos ao final da lista, então isMaxHeight é true
 		lista->isMaxHeight = true;
+	}
+}
+
+void GetColor(Lista * lista)
+{
+	if (lista->indexAtual >= 0 && lista->indexAtual <= 2)
+	{
+		lista->cor = BEIGE;
+	}
+	else if (lista->indexAtual >= 3 && lista->indexAtual <= 6) {
+		lista->cor = RED;
+	}
+	else if (lista->indexAtual >= 7 && lista->indexAtual <= 10) {
+		lista->cor = PURPLE;
+	}
+	else if (lista->indexAtual >= 11 && lista->indexAtual <= 18) {
+		lista->cor = GREEN;
+	}
+	else if (lista->indexAtual >= 19 && lista->indexAtual <= 27) {
+		lista->cor = BLUE;
 	}
 }
 
@@ -879,12 +899,15 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 		{
 		case 0:
 			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			GetColor(lista);
 			break;
 		case 1:
 			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			GetColor(lista);
 			break;
 		case 2:
 			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
+			GetColor(lista);
 			break;
 		default:
 			printf("Deu Ruim");
@@ -899,21 +922,27 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 		{
 		case 0:
 			lista->palavraAtual = Estados[lista->indexAtual];
+			GetColor(lista);
 			break;
 		case 1:
 			lista->palavraAtual = Siglas[lista->indexAtual];
+			GetColor(lista);
 			break;
 		case 2:
 			lista->palavraAtual = Capitais[lista->indexAtual];
+			GetColor(lista);
 			break;
 		case 3:
 			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			GetColor(lista);
 			break;
 		case 4:
 			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			GetColor(lista);
 			break;
 		case 5:
 			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
+			GetColor(lista);
 			break;
 		default:
 			printf("Deu Ruim");

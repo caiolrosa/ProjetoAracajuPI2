@@ -47,9 +47,9 @@ typedef struct Lista {
 	int velocidade; // Velocidade em que caem os estados, capitais e siglas
 	int randomNumber;	// Usado para escolher aleatoriamente um item da lista
 	int indexAtual;		// Recebe o index atual da palavra sorteada
-	char *palavraAtual;	// Recebe o texto atual 
+	char *palavraAtual;	// Recebe o texto atual
+	ALLEGRO_COLOR cor; // Cor da palavra caindo na lista
 	bool isMaxHeight;	// Verifica se a palavra chegou na altura maxima
-	ALLEGRO_COLOR cor;
 } Lista;
 
 typedef struct Mapa {
@@ -95,18 +95,17 @@ typedef struct BotaoTutorial
 
 #pragma region Listas
 
-char *Estados[] = { "Rio Grande do Sul", "Santa Catarina", u8"Paraná", u8"São Paulo", "Mato Grosso do Sul",
-"Rio de Janeiro", "Minas Gerais", u8"Espírito Santo", u8"Goiás", "Distrito Federal", "Mato Grosso", "Bahia",
-"Tocantins", u8"Rondônia", "Acre", "Amazonas", "Roraima", u8"Pará", u8"Amapá", u8"Maranhão", u8"Piauí", u8"Ceará",
+char *Estados[] = { "Rio Grande do Sul", "Santa Catarina", u8"Paraná", u8"São Paulo", 
+"Rio de Janeiro", "Minas Gerais", u8"Espírito Santo", "Mato Grosso do Sul", u8"Goiás", "Distrito Federal", "Mato Grosso", 
+"Tocantins", u8"Rondônia", "Acre", "Amazonas", "Roraima", u8"Pará", u8"Amapá", "Bahia", u8"Maranhão", u8"Piauí", u8"Ceará",
 "Rio Grande do Norte", u8"Paraíba", "Pernambuco", "Alagoas", "Sergipe" };
 
-char *Siglas[] = { "RS", "SC", "PR", "SP", "MS", "RJ", "MG", "ES", "GO", "DF", "MT", "BA", "TO", "RO",
-"AC", "AM", "RR", "PA", "AP", "MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE" };
+char *Siglas[] = { "RS", "SC", "PR", "SP", "RJ", "MG", "ES", "MS", "GO", "DF", "MT", "TO", "RO",
+"AC", "AM", "RR", "PA", "AP", "BA", "MA", "PI", "CE", "RN", "PB", "PE", "AL", "SE" };
 
-char *Capitais[] = { "Porto Alegre", u8"Florianópolis", "Curitiba", u8"São Paulo", "Campo Grande",
-"Rio de Janeiro", "Belo Horizonte", u8"Vitória", u8"Goiânia", "Brasilia", u8"Cuiabá", "Salvador",
-"Palmas", "Porto Velho", "Rio Branco", "Manaus", "Boa Vista", u8"Belém", u8"Macapá", u8"São Luis", "Teresina",
-"Fortaleza", "Natal", u8"João Pessoa", "Recife", u8"Maceió", "Aracaju" };
+char *Capitais[] = { "Porto Alegre", u8"Florianópolis", "Curitiba", u8"São Paulo", "Rio de Janeiro", "Belo Horizonte", u8"Vitória", 
+"Campo Grande", u8"Goiânia", "Brasilia", u8"Cuiabá", "Palmas", "Porto Velho", "Rio Branco", "Manaus", "Boa Vista", u8"Belém", 
+u8"Macapá", "Salvador", u8"São Luis", "Teresina","Fortaleza", "Natal", u8"João Pessoa", "Recife", u8"Maceió", "Aracaju" };
 
 #pragma endregion
 
