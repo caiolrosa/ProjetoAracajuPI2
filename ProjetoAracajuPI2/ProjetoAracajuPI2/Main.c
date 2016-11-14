@@ -20,7 +20,9 @@
 const int WIDTH = 1280;
 const int HEIGHT = 720;
 const int WIDTHMAPA = 650;
-const int HEIGHTMAPA = 700;
+const int HEIGHTMAPA = 650;
+const int HEIGHTCINZA = 650;
+const int WIDTHCINZA = 650;
 
 // Variaveis globais Allegro
 ALLEGRO_COLOR BLACK;
@@ -169,8 +171,8 @@ int main() {
 
 	// Estados cinza bitmap
 	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
-	int tocantinsWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
-	int tocantinsHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
+	int tocantinsWidth = al_get_bitmap_width(tocantins);			// Recebe o tamanho X da imagem
+	int tocantinsHeight = al_get_bitmap_height(tocantins);			// Recebe o tamanho Y da imagem
 
 	//bitmap do tutorial do jogo
 /*	tutorial = al_load_bitmap("imagem.png");
@@ -329,10 +331,11 @@ int main() {
 				{
 					UpdateLista(fontLista, &jogador, &lista);
 					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);	// Coloca o mapa na tela
+					al_draw_scaled_bitmap(tocantins,-15, -3, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
 					al_flip_display();	
 					al_clear_to_color(al_map_rgb(255, 184, 40));
 					
-					//al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
+
 				}
 				else 
 				{
