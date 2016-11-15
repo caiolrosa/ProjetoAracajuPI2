@@ -20,7 +20,7 @@
 const int WIDTH = 1280;
 const int HEIGHT = 720;
 const int WIDTHMAPA = 650;
-const int HEIGHTMAPA = 700;
+const int HEIGHTMAPA = 650;
 
 // Variaveis globais Allegro
 ALLEGRO_COLOR BLACK;
@@ -163,10 +163,10 @@ int main() {
 	//jogarBotaoOver = al_load_bitmap("imgs/Botoes/jogarOver.png");
 
 	// Bitmap do mapa do jogo
-	mapaBrasil = al_load_bitmap("imgs/Mapas/BrasilOldGrid.png"); // bmp de testes para encontrar o indice correto
+	mapaBrasil = al_load_bitmap("imgs/Mapas/mapaEscuro1.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			 // Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
-
+	
 	// Estados cinza bitmap
 	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
 	int tocantinsWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
@@ -435,7 +435,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 #pragma endregion
 	
 #pragma region ACRE
-	Acre->myIndexPosition = 14; //posicao no vetor ESTADOS de nomes na classe objects.h
+	Acre->myIndexPosition = 13; //posicao no vetor ESTADOS de nomes na classe objects.h
 	Acre->index[0].i = 12; Acre->index[0].j = 2;
 	Acre->index[1].i = 12; Acre->index[1].j = 3;
 	Acre->index[2].i = 13; Acre->index[2].j = 3;
@@ -517,7 +517,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 #pragma endregion
 
 #pragma region BAHIA
-	Bahia->myIndexPosition = 11; //posicao no vetor ESTADOS de nomes na classe objects.h
+	Bahia->myIndexPosition = 18; //posicao no vetor ESTADOS de nomes na classe objects.h
 	Bahia->index[0].i = 13;   Bahia->index[0].j = 29;
 	Bahia->index[1].i = 13;   Bahia->index[1].j = 31;
 	Bahia->index[2].i = 13;   Bahia->index[2].j = 32;
@@ -597,21 +597,21 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 #pragma endregion
 
 #pragma region ESPIRITO SANTO
-	EspiritoSanto->myIndexPosition = 7; //posicao no vetor ESTADOS de nomes na classe objects.h
+	EspiritoSanto->myIndexPosition = 6; //posicao no vetor ESTADOS de nomes na classe objects.h
 	EspiritoSanto->index[0].i = 21; EspiritoSanto->index[0].j = 30;
 	EspiritoSanto->index[1].i = 22; EspiritoSanto->index[1].j = 30;
 	EspiritoSanto->index[2].i = 23; EspiritoSanto->index[2].j = 29;
 #pragma endregion
 
 #pragma region RIO DE JANEIRO
-	RioDeJaneiro->myIndexPosition = 5; //posicao no vetor ESTADOS de nomes na classe objects.h
+	RioDeJaneiro->myIndexPosition = 4; //posicao no vetor ESTADOS de nomes na classe objects.h
 	RioDeJaneiro->index[0].i = 24; RioDeJaneiro->index[0].j = 27;
 	RioDeJaneiro->index[1].i = 24; RioDeJaneiro->index[1].j = 28;
 	RioDeJaneiro->index[2].i = 24; RioDeJaneiro->index[2].j = 29;
 #pragma endregion
 
 #pragma region MINAS GERAIS
-	MinasGerais->myIndexPosition = 6; //posicao no vetor ESTADOS de nomes na classe objects.h
+	MinasGerais->myIndexPosition = 5; //posicao no vetor ESTADOS de nomes na classe objects.h
 	MinasGerais->index[0].i = 18;   MinasGerais->index[0].j = 25;
 	MinasGerais->index[1].i = 18;   MinasGerais->index[1].j = 26;
 	MinasGerais->index[2].i = 18;   MinasGerais->index[2].j = 27;
@@ -716,7 +716,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 #pragma endregion
 
 #pragma region MATO GROSSO DO SUL
-	MatoGrossoDoSul->myIndexPosition = 4; //posicao no vetor ESTADOS de nomes na classe objects.h
+	MatoGrossoDoSul->myIndexPosition = 7; //posicao no vetor ESTADOS de nomes na classe objects.h
 	MatoGrossoDoSul->index[1].i=20 ; 		MatoGrossoDoSul->index[1].j=17 ; 
 	MatoGrossoDoSul->index[2].i=20 ; 		MatoGrossoDoSul->index[2].j=18 ;
 	MatoGrossoDoSul->index[3].i=21 ; 		MatoGrossoDoSul->index[3].j=16 ;
@@ -865,7 +865,7 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	}
 }
 
-void GetColor(Lista * lista)
+void GetColor(Lista *lista)
 {
 	if (lista->indexAtual >= 0 && lista->indexAtual <= 2)
 	{
