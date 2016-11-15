@@ -16,6 +16,8 @@
 
 #pragma endregion
 
+enum TELAS{MENU, CREDITS, GAME, PAUSE, ENDGAME}currentScreen; //Enum define em qual tela o jogo esta
+
 // Variaveis globais
 const int WIDTH = 1280;
 const int HEIGHT = 720;
@@ -43,6 +45,8 @@ ALLEGRO_SAMPLE_INSTANCE *erroAudioInstance = NULL;
 //variaveis da matriz
 const int TOTAL_DE_LINHAS = 36;
 const int TOTAL_DE_COLUNAS = 36;
+const int OFFSET_X = 15;
+const int OFFSET_Y = 30;
 
 // Prototipos
 void InitJogador(Jogador *jogador);
@@ -51,7 +55,7 @@ void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
 void GetColor(Lista *lista, int pontos);
-void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
+void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns, int offsetX, int offsetY);
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
 void SortPalavra(Jogador *jogador, Lista *lista);
 ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
@@ -217,7 +221,7 @@ int main() {
 	al_attach_sample_instance_to_mixer(erroAudioInstance, al_get_default_mixer());
 
 	// Inicializacao dos nossos objetos
-	CreateMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS);
+	CreateMatrix(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, OFFSET_X, OFFSET_Y);
 	InitJogador(&jogador);
 
 	InitEstados(_Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
@@ -331,8 +335,8 @@ int main() {
 				if (!isGameOver)
 				{
 					UpdateLista(fontLista, &jogador, &lista);
-					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);	// Coloca o mapa na tela
-					al_draw_scaled_bitmap(tocantins,-15, -3, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
+					al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
+					al_draw_scaled_bitmap(tocantins,-15 - OFFSET_X, -3 - OFFSET_Y, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
 					al_flip_display();	
 					al_clear_to_color(al_map_rgb(255, 184, 40));
 					
@@ -1284,7 +1288,7 @@ void ConcatenaLista(char *s1, char *s2, Lista *lista)
 }
 
 // Cria matriz sob o Bitmap para poder identificar o click
-void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns)
+void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns, int offsetX, int offsetY)
 {
 	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
 	float pixelH = HEIGHTMAPA / (float)totalColumns; // mesma coisa de cima
@@ -1292,11 +1296,11 @@ void CreateMatrix(float lines[], float columns[], int totalLines, int totalColum
 	int i = 0, j = 0;
 	for (i = 0; i < totalLines; i++)
 	{
-		lines[i] = pixelH + pixelH * i; // adiciono o valor em pixels onde ira comecar a matriz de Linhas
+		lines[i] = (pixelH + pixelH * i) + offsetY; // adiciono o valor em pixels onde ira comecar a matriz de Linhas
 	}
 	for (j = 0; j < totalColumns; j++)
 	{
-		columns[j] = pixelW + pixelW * j; // adiciono o valor em pixels onde ira comecar a matriz de colunas
+		columns[j] = (pixelW + pixelW * j) + offsetX; // adiciono o valor em pixels onde ira comecar a matriz de colunas
 	}
 }
 
@@ -1323,7 +1327,7 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 			}
 		}
 	}
-#pragma region RIO GRAND DO SUL
+
 	return temp; //falso para quando esta fora do mapa
 }
 
@@ -1827,8 +1831,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 	}
 #pragma endregion
 
-
-	// adicionado diego
 #pragma region RORAIMA
 	for (i = 0; i < roraimaIndexSize; i++)
 	{
