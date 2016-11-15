@@ -5,18 +5,18 @@
 
 #define acreIndexSize 9
 #define alagoasIndexSize 3
-#define amapaIndexSize 0
-#define amazonasIndexSize 0
+#define amapaIndexSize 14
+#define amazonasIndexSize 87
 #define bahiaIndexSize 34
 #define cearaIndexSize 12
 #define distritoFederalIndexSize 4
 #define espiritoSantoIndexSize 3
 #define goiasIndexSize 15
 #define maranhaoIndexSize 18	
-#define matoGrossoIndexSize 0
+#define matoGrossoIndexSize 54
 #define matoGrossoDoSulIndexSize 25
 #define minasGeraisIndexSize 37
-#define paraIndexSize 0
+#define paraIndexSize 72
 #define paraibaIndexSize 4
 #define paranaIndexSize 15
 #define pernambucoIndexSize 7
@@ -24,11 +24,12 @@
 #define rioDeJaneiroIndexSize 3
 #define rioGrandeDoNorteIndexSize 3
 #define rioGrandeDoSulIndexSize 23
-#define rondoniaIndexSize 0
+#define rondoniaIndexSize 20
+#define roraimaIndexSize 20 //diego adicionou
 #define santaCatarinaIndexSize 8
 #define saoPauloIndexSize 14
 #define sergipeIndexSize 2
-#define tocantinsIndexSize 0
+#define tocantinsIndexSize 20
 
 #pragma endregion
 
@@ -66,7 +67,7 @@ typedef struct ClickIndex {
 
 typedef struct EstadosPadrao {
 	int myIndexPosition;
-	ClickIndex index[bahiaIndexSize]; //rever depois
+	ClickIndex index[amazonasIndexSize]; //rever depois
 } EstadosPadrao;
 
 #pragma endregion
