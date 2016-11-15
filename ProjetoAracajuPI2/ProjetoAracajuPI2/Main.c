@@ -21,6 +21,8 @@ const int WIDTH = 1280;
 const int HEIGHT = 720;
 const int WIDTHMAPA = 650;
 const int HEIGHTMAPA = 650;
+const int HEIGHTCINZA = 650;
+const int WIDTHCINZA = 650;
 
 // Variaveis globais Allegro
 ALLEGRO_COLOR BLACK;
@@ -87,7 +89,7 @@ int main() {
 	BotaoJogar botaoJogar;
 	BotaoTutorial botaoTutorial;
 	
-	//INICIALIZAÇAO DOS ESTADOS
+	//INICIALIZAï¿½AO DOS ESTADOS
 #pragma region INIT ESTADOS
 	EstadosPadrao *_Acre, *_Alagoas, *_Amapa, *_Amazonas, *_Bahia, *_Ceara, *_DistritoFederal, *_EspiritoSanto, *_Goias, *_Maranhao,
 		*_MatoGrosso, *_MatoGrossoDoSul, *_MinasGerais, *_Para, *_Paraiba, *_Parana, *_Pernambuco, *_Piaui, *_RioDeJaneiro, *_RioGrandeDoNorte,
@@ -146,7 +148,7 @@ int main() {
 		return -1;
 	}
 
-	// Addons e instalações do allegro
+	// Addons e instalaï¿½ï¿½es do allegro
 	al_install_mouse();											// Possibilita o uso do mouse
 	al_install_audio();											// Possibilita o uso de sons
 	al_init_acodec_addon();										// Possibilita diferentes formatos
@@ -169,8 +171,8 @@ int main() {
 	
 	// Estados cinza bitmap
 	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
-	int tocantinsWidth = al_get_bitmap_width(mapaBrasil);			// Recebe o tamanho X da imagem
-	int tocantinsHeight = al_get_bitmap_height(mapaBrasil);			// Recebe o tamanho Y da imagem
+	int tocantinsWidth = al_get_bitmap_width(tocantins);			// Recebe o tamanho X da imagem
+	int tocantinsHeight = al_get_bitmap_height(tocantins);			// Recebe o tamanho Y da imagem
 
 	//bitmap do tutorial do jogo
 /*	tutorial = al_load_bitmap("imagem.png");
@@ -223,7 +225,7 @@ int main() {
 
 	InitLista(&lista);
 
-	//Inicialização dos Botões do Menu
+	//Inicializaï¿½ï¿½o dos Botï¿½es do Menu
 	InitBotaoJogar(&botaoJogar);
 	InitBotaoTutorial(&botaoTutorial);
 
@@ -242,11 +244,11 @@ int main() {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
 
-		// É invocado a cada frame "Função de update" 
+		// ï¿½ invocado a cada frame "Funï¿½ï¿½o de update" 
 		if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
 			// Caso a quantidade de vidas do jogador for menor que zero
-			// isGameOver é falso para podermos mostrar a tela de pontuação
+			// isGameOver ï¿½ falso para podermos mostrar a tela de pontuaï¿½ï¿½o
 			/*if (jogador.vidas <= 0)
 			{
 				isGameOver = true;
@@ -267,14 +269,14 @@ int main() {
 				jogador.jogando = true;
 			}
 
-			//Verifica se o click está dentro dos bounds do botão tutorial, caso esteja variavel jogador.tutorial fica verdadeira 
+			//Verifica se o click estï¿½ dentro dos bounds do botï¿½o tutorial, caso esteja variavel jogador.tutorial fica verdadeira 
 			if (ev.mouse.x >= botaoTutorial.boundXInicio && ev.mouse.x <= botaoTutorial.boundXFinal && ev.mouse.y >= botaoTutorial.boundYInicio &&  ev.mouse.y <= botaoTutorial.boundYFinal)
 			{
 				jogador.tutorial = true;
 			}
 		}
 
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.tutorial) // Verifica se houve input de click no botão tutorial
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.tutorial) // Verifica se houve input de click no botï¿½o tutorial
 		{
 	/*		al_draw_scaled_bitmap(tutorial, 0, 0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0);		//coloca o tutorial na tela
 			al_flip_display();									// Muda para o back buffer
@@ -283,7 +285,7 @@ int main() {
 			printf("funcionando\n");
 		}
 		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click no botão jogar
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click no botï¿½o jogar
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
@@ -329,10 +331,11 @@ int main() {
 				{
 					UpdateLista(fontLista, &jogador, &lista);
 					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);	// Coloca o mapa na tela
+					al_draw_scaled_bitmap(tocantins,-15, -3, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
 					al_flip_display();	
 					al_clear_to_color(al_map_rgb(255, 184, 40));
 					
-					//al_draw_bitmap(tocantins, 0, 0, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);		// Coloca o mapa na tela
+
 				}
 				else 
 				{
@@ -820,7 +823,7 @@ void InitBotaoTutorial(BotaoTutorial *botaoTutorial)
 }
 
 // Altera o valor Y do elemento da lista de acordo velocidade
-// da lista(lista->velocidade) para dar noção de animação
+// da lista(lista->velocidade) para dar noï¿½ï¿½o de animaï¿½ï¿½o
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 {
 	srand(time(NULL));
@@ -846,12 +849,12 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	}
 	jogador->acertou = false;
 
-	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animação de "queda"
+	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a animaï¿½ï¿½o de "queda"
 	if (lista->heightLista < HEIGHTMAPA)
 	{
 		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 
-		// Aumentamos a altura da lista de acordo com a velocidade para dar noção de animação
+		// Aumentamos a altura da lista de acordo com a velocidade para dar noï¿½ï¿½o de animaï¿½ï¿½o
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
 		lista->heightLista = lista->velocidade + 10;
 		lista->velocidade += 5;
@@ -860,7 +863,7 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	else {
 		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
 
-		// Chegamos ao final da lista, então isMaxHeight é true
+		// Chegamos ao final da lista, entï¿½o isMaxHeight ï¿½ true
 		lista->isMaxHeight = true;
 	}
 }
@@ -1014,7 +1017,7 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 	{
 		for (j = 0; j < totalColumns; j++) // percorre todas as colunas
 		{
-			if (x >((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso está dentro do range desse quadrado
+			if (x >((j != 0) ? columns[j - 1] : 0) && x < columns[j] && y < lines[i]) //nesse caso estï¿½ dentro do range desse quadrado
 			{
 				temp.i = i;
 				temp.j = j;
@@ -1038,11 +1041,11 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 	int i = 0;
 
 #pragma region ESTADOS
-	// Verificamos a posicao do click em relação à posição no mapa
-	// E verificamos se o index da palavra que esta caindo é igual ao
+	// Verificamos a posicao do click em relaï¿½ï¿½o ï¿½ posiï¿½ï¿½o no mapa
+	// E verificamos se o index da palavra que esta caindo ï¿½ igual ao
 	// indice da palavra que corresponde ao click do jogador
-	// caso seja a isMaxHeight é true para limpar as palavras caindo
-	// e acertou é igual a true para podermos sortear a próxima palavra
+	// caso seja a isMaxHeight ï¿½ true para limpar as palavras caindo
+	// e acertou ï¿½ igual a true para podermos sortear a prï¿½xima palavra
 #pragma region ACRE
 	for (i = 0; i < acreIndexSize; i++)
 	{
