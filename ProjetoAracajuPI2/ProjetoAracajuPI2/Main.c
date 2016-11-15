@@ -50,7 +50,7 @@ void InitLista(Lista *lista);
 void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
-void GetColor(Lista *lista);
+void GetColor(Lista *lista, int pontos);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns);
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
 void SortPalavra(Jogador *jogador, Lista *lista);
@@ -282,7 +282,7 @@ int main() {
 			al_flip_display();									// Muda para o back buffer
 			al_clear_to_color(al_map_rgb(255, 255, 255));  */ 
 			if (jogador.tutorial)
-			printf("funcionando\n");
+				printf("funcionando\n");
 		}
 		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click no bot�o jogar
@@ -868,24 +868,52 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 	}
 }
 
-void GetColor(Lista *lista)
+void GetColor(Lista *lista, int pontos)
 {
-	if (lista->indexAtual >= 0 && lista->indexAtual <= 2)
+	if (pontos >= 1000)
 	{
-		lista->cor = BEIGE;
+		srand(time(NULL));
+		int conjuntoCores = rand() % 5;
+
+		switch (conjuntoCores)
+		{
+		case 0:
+			lista->cor = BEIGE;
+			break;
+		case 1:
+			lista->cor = RED;
+			break;
+		case 2:
+			lista->cor = PURPLE;
+			break;
+		case 3:
+			lista->cor = GREEN;
+			break;
+		case 4:
+			lista->cor = BLUE;
+			break;
+		default:
+			break;
+		}
 	}
-	else if (lista->indexAtual >= 3 && lista->indexAtual <= 6) {
-		lista->cor = RED;
-	}
-	else if (lista->indexAtual >= 7 && lista->indexAtual <= 10) {
-		lista->cor = PURPLE;
-	}
-	else if (lista->indexAtual >= 11 && lista->indexAtual <= 18) {
-		lista->cor = GREEN;
-	}
-	else if (lista->indexAtual >= 19 && lista->indexAtual <= 27) {
-		lista->cor = BLUE;
-	}
+	else {
+		if (lista->indexAtual >= 0 && lista->indexAtual <= 2)
+		{
+			lista->cor = BEIGE;
+		}
+		else if (lista->indexAtual >= 3 && lista->indexAtual <= 6) {
+			lista->cor = RED;
+		}
+		else if (lista->indexAtual >= 7 && lista->indexAtual <= 10) {
+			lista->cor = PURPLE;
+		}
+		else if (lista->indexAtual >= 11 && lista->indexAtual <= 17) {
+			lista->cor = GREEN;
+		}
+		else if (lista->indexAtual >= 18 && lista->indexAtual <= 26) {
+			lista->cor = BLUE;
+		}
+	}	
 }
 
 // Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
@@ -902,15 +930,15 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 		{
 		case 0:
 			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 1:
 			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 2:
 			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		default:
 			printf("Deu Ruim");
@@ -925,27 +953,27 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 		{
 		case 0:
 			lista->palavraAtual = Estados[lista->indexAtual];
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 1:
 			lista->palavraAtual = Siglas[lista->indexAtual];
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 2:
 			lista->palavraAtual = Capitais[lista->indexAtual];
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 3:
 			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 4:
 			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 5:
 			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
-			GetColor(lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		default:
 			printf("Deu Ruim");
@@ -960,15 +988,19 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 		{
 		case 0:
 			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		case 1:
 			lista->palavraAtual = Siglas[lista->indexAtual];
+			GetColor(lista, jogador->pontos);
 			break;
 		case 2:
 			lista->palavraAtual = Capitais[lista->indexAtual];
+			GetColor(lista, jogador->pontos);
 			break;
 		case 3:
 			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
+			GetColor(lista, jogador->pontos);
 			break;
 		default:
 			printf("Deu Ruim");
