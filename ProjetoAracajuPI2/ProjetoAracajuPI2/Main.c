@@ -5,6 +5,7 @@
 #include <time.h>
 #include <stdlib.h>
 #include <locale.h>
+#include <stdbool.h>
 #include <allegro5\allegro.h>
 #include <allegro5\allegro_font.h>
 #include <allegro5\allegro_ttf.h>
@@ -58,6 +59,8 @@ void GetColor(Lista *lista, int pontos);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns, int offsetX, int offsetY);
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
 void SortPalavra(Jogador *jogador, Lista *lista);
+void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev);
+
 ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
 
 void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
@@ -80,6 +83,7 @@ int main() {
 	bool isGameOver = false;
 	bool redraw = true;
 	bool clicouJogar = false;
+	bool digitouNome = false;
 	const int FPS = 60;
 	float mLines[36];
 	float mColumns[36];
@@ -138,9 +142,11 @@ int main() {
 	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
-	ALLEGRO_FONT *fontLista = NULL;
 	ALLEGRO_BITMAP *tocantins = NULL;
-
+	ALLEGRO_BITMAP *pretoTransparente = NULL;
+	ALLEGRO_FONT *fontLista = NULL;
+	
+	
 	// Inicializa o Allegro
 	if (!al_init())
 	{
@@ -153,9 +159,11 @@ int main() {
 	{
 		return -1;
 	}
+	al_set_window_title(display, "Clica Brasil");				// Coloca o titulo da janela "Clica Brasil"
 
 	// Addons e instala��es do allegro
 	al_install_mouse();											// Possibilita o uso do mouse
+	al_install_keyboard();
 	al_install_audio();											// Possibilita o uso de sons
 	al_init_acodec_addon();										// Possibilita diferentes formatos
 	al_init_font_addon();										// Possibilita escrever na tela
@@ -167,9 +175,8 @@ int main() {
 
 	// Bitmaps do menu do jogo															
 	menu = al_load_bitmap("imgs/Telas/telaInicial.jpg");
-	//jogarBotaoNormal = al_load_bitmap("imgs/Botoes/jogarNormal.png");
-	//jogarBotaoOver = al_load_bitmap("imgs/Botoes/jogarOver.png");
 
+	pretoTransparente = al_create_bitmap(WIDTH, HEIGHT);
 	// Bitmap do mapa do jogo
 	mapaBrasil = al_load_bitmap("imgs/Mapas/mapaEscuro1.png"); // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			 // Recebe o tamanho X da imagem
@@ -190,7 +197,7 @@ int main() {
 	al_draw_scaled_bitmap(tutorial, -0, -0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0); */
 
 	// Carrega as fonts
-	fontLista = al_load_font("fonts/Code.otf", 23, 0);
+	fontLista = al_load_font("fonts/Neou.otf", 23, 0);
 
 	// Inicializa cores
 	BLACK = al_map_rgb(0, 0, 0);
@@ -243,16 +250,16 @@ int main() {
 
 																// Registro de eventos para a lista de eventos
 	al_register_event_source(event_queue, al_get_mouse_event_source());			// Registra o mouse na lista de eventos
+	al_register_event_source(event_queue, al_get_keyboard_event_source());
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));			// Registra o timer na lista de eventos
 	al_register_event_source(event_queue, al_get_display_event_source(display));			// Registra o display na lista de eventos
 
 	al_start_timer(timer);										// Inicia o timer
-
 	// Looping Principal
 	while (!finished) {
 		ALLEGRO_EVENT ev;
 		al_wait_for_event(event_queue, &ev);
-
+		
 		// � invocado a cada frame "Fun��o de update" 
 		if (ev.type == ALLEGRO_EVENT_TIMER)
 		{
@@ -269,7 +276,7 @@ int main() {
 		{
 			finished = true;
 		}
-		
+
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) //verifica se o jogador clicou em jogar
 		{
 			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja a variavel jogador.jogando fica verdadeira
@@ -294,7 +301,7 @@ int main() {
 				printf("funcionando\n");
 		}
 		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando) // Verifica se houve input de click no bot�o jogar
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando && !isGameOver /*&& digitouNome*/) // Verifica se houve input de click no bot�o jogar
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
@@ -327,11 +334,20 @@ int main() {
 			clicouJogar = true;
 		}
 
+		//if (jogador.jogando && !digitouNome)
+		//{
+		//	if (ev.type == ALLEGRO_EVENT_KEY_CHAR)
+		//	{
+		//		GetUserInput(&jogador, ev);
+		//		al_draw_textf(fontLista, BLACK, 20, 20, 0, "NOME: %s", jogador.nome);
+		//	}
+		//}
+
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-			if (jogador.jogando)   //verifica se o jogador passou a jogar
+			if (jogador.jogando /*&& digitouNome*/)   //verifica se o jogador passou a jogar
 			{
 				al_stop_sample_instance(menuAudioInstance);
 				al_play_sample_instance(jogoAudioInstance);
@@ -339,14 +355,11 @@ int main() {
 				if (!isGameOver)
 				{
 					al_draw_bitmap(jogoBG, 0, 0, 0);
-					al_draw_textf(fontLista, BLACK, WIDTH - 300, 10, 0, "Pontos: %d", jogador.pontos);
 					UpdateLista(fontLista, &jogador, &lista);
 					al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
 					al_draw_scaled_bitmap(tocantins,-15 - OFFSET_X, -3 - OFFSET_Y, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
 					al_flip_display();	
 					al_clear_to_color(al_map_rgb(255, 184, 40));
-					
-
 				}
 				else 
 				{
@@ -361,9 +374,9 @@ int main() {
 			else
 			{
 				al_play_sample_instance(menuAudioInstance);
-				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela
+				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela	
 				al_flip_display();					// Muda para o back buffer
-				al_clear_to_color(al_map_rgb(255, 255, 255));
+				al_clear_to_color(al_map_rgb(255, 184, 40));
 			}
 		}
 	}
@@ -375,6 +388,7 @@ int main() {
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
 	al_destroy_bitmap(jogoBG);
+	al_destroy_bitmap(pretoTransparente);
 	//al_destroy_bitmap(jogarBotaoNormal);
 	//al_destroy_bitmap(jogarBotaoOver);
 	al_destroy_bitmap(tocantins);
@@ -395,8 +409,9 @@ int main() {
 // Inicializa o jogador
 void InitJogador(Jogador *jogador)
 {
+	strcpy(jogador->nome, "");
 	jogador->pontos = 0;
-	jogador->vidas = 30;
+	jogador->vidas = 20;
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->jogando = false;
@@ -1109,6 +1124,8 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		if (!jogador->acertou)
 		{
 			al_play_sample_instance(erroAudioInstance);
+			jogador->erros++;
+			jogador->vidas--;
 		}
 
 		lista->heightLista = 0;
@@ -1285,6 +1302,130 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 	}
 }
 
+void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev)
+{
+	int test = strlen(jogador->nome);
+	if (strlen(jogador->nome) <= 25)
+	{
+		switch (ev.keyboard.keycode)
+		{
+		case ALLEGRO_KEY_A:
+			strcat(jogador->nome, "a");
+			break;
+		case ALLEGRO_KEY_B:
+			strcat(jogador->nome, "b");
+			break;
+		case ALLEGRO_KEY_C:
+			strcat(jogador->nome, "c");
+			break;
+		case ALLEGRO_KEY_D:
+			strcat(jogador->nome, "d");
+			break;
+		case ALLEGRO_KEY_E:
+			strcat(jogador->nome, "e");
+			break;
+		case ALLEGRO_KEY_F:
+			strcat(jogador->nome, "f");
+			break;
+		case ALLEGRO_KEY_G:
+			strcat(jogador->nome, "g");
+			break;
+		case ALLEGRO_KEY_H:
+			strcat(jogador->nome, "h");
+			break;
+		case ALLEGRO_KEY_I:
+			strcat(jogador->nome, "i");
+			break;
+		case ALLEGRO_KEY_J:
+			strcat(jogador->nome, "j");
+			break;
+		case ALLEGRO_KEY_K:
+			strcat(jogador->nome, "k");
+			break;
+		case ALLEGRO_KEY_L:
+			strcat(jogador->nome, "l");
+			break;
+		case ALLEGRO_KEY_M:
+			strcat(jogador->nome, "m");
+			break;
+		case ALLEGRO_KEY_N:
+			strcat(jogador->nome, "n");
+			break;
+		case ALLEGRO_KEY_O:
+			strcat(jogador->nome, "o");
+			break;
+		case ALLEGRO_KEY_P:
+			strcat(jogador->nome, "p");
+			break;
+		case ALLEGRO_KEY_Q:
+			strcat(jogador->nome, "q");
+			break;
+		case ALLEGRO_KEY_R:
+			strcat(jogador->nome, "r");
+			break;
+		case ALLEGRO_KEY_S:
+			strcat(jogador->nome, "s");
+			break;
+		case ALLEGRO_KEY_T:
+			strcat(jogador->nome, "t");
+			break;
+		case ALLEGRO_KEY_U:
+			strcat(jogador->nome, "u");
+			break;
+		case ALLEGRO_KEY_V:
+			strcat(jogador->nome, "v");
+			break;
+		case ALLEGRO_KEY_W:
+			strcat(jogador->nome, "w");
+			break;
+		case ALLEGRO_KEY_X:
+			strcat(jogador->nome, "x");
+			break;
+		case ALLEGRO_KEY_Y:
+			strcat(jogador->nome, "y");
+			break;
+		case ALLEGRO_KEY_Z:
+			strcat(jogador->nome, "z");
+			break;
+		case ALLEGRO_KEY_0:
+			strcat(jogador->nome, "0");
+			break;
+		case ALLEGRO_KEY_1:
+			strcat(jogador->nome, "1");
+			break;
+		case ALLEGRO_KEY_2:
+			strcat(jogador->nome, "2");
+			break;
+		case ALLEGRO_KEY_3:
+			strcat(jogador->nome, "3");
+			break;
+		case ALLEGRO_KEY_4:
+			strcat(jogador->nome, "4");
+			break;
+		case ALLEGRO_KEY_5:
+			strcat(jogador->nome, "5");
+			break;
+		case ALLEGRO_KEY_6:
+			strcat(jogador->nome, "6");
+			break;
+		case ALLEGRO_KEY_7:
+			strcat(jogador->nome, "7");
+			break;
+		case ALLEGRO_KEY_8:
+			strcat(jogador->nome, "8");
+			break;
+		case ALLEGRO_KEY_9:
+			strcat(jogador->nome, "9");
+			break;
+		case ALLEGRO_KEY_BACKSPACE:
+			jogador->nome[strlen(jogador->nome) - 1] = '\0';
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 // Concatena as palavras da lista
 void ConcatenaLista(char *s1, char *s2, Lista *lista)
 {
@@ -1368,7 +1509,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Acre->myIndexPosition]);
 			return;
@@ -1390,7 +1530,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Alagoas->myIndexPosition]);
 			return;
@@ -1412,7 +1551,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Amapa->myIndexPosition]);
 			return;
@@ -1434,7 +1572,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Amazonas->myIndexPosition]);
 			return;
@@ -1456,7 +1593,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Bahia->myIndexPosition]);
 			return;
@@ -1478,7 +1614,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Ceara->myIndexPosition]);
 			return;
@@ -1500,7 +1635,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[DistritoFederal->myIndexPosition]);
 			return;
@@ -1522,7 +1656,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[EspiritoSanto->myIndexPosition]);
 			return;
@@ -1544,7 +1677,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Goias->myIndexPosition]);
 			return;
@@ -1566,7 +1698,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Maranhao->myIndexPosition]);
 			return;
@@ -1588,7 +1719,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[MatoGrosso->myIndexPosition]);
 			return;
@@ -1610,7 +1740,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[MatoGrossoDoSul->myIndexPosition]);
 			return;
@@ -1632,7 +1761,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[MinasGerais->myIndexPosition]);
 			return;
@@ -1654,7 +1782,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Para->myIndexPosition]);
 			return;
@@ -1676,7 +1803,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Paraiba->myIndexPosition]);
 			return;
@@ -1698,7 +1824,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Parana->myIndexPosition]);
 			return;
@@ -1720,7 +1845,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Pernambuco->myIndexPosition]);
 			return;
@@ -1742,7 +1866,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Piaui->myIndexPosition]);
 			return;
@@ -1764,7 +1887,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[RioDeJaneiro->myIndexPosition]);
 			return;
@@ -1786,7 +1908,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[RioGrandeDoNorte->myIndexPosition]);
 			return;
@@ -1808,7 +1929,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[RioGrandeDoSul->myIndexPosition]);
 			return;
@@ -1830,7 +1950,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Rondonia->myIndexPosition]);
 			return;
@@ -1852,7 +1971,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Roraima->myIndexPosition]);
 			return;
@@ -1874,7 +1992,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[SantaCatarina->myIndexPosition]);
 			return;
@@ -1896,7 +2013,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[SaoPaulo->myIndexPosition]);
 			return;
@@ -1918,7 +2034,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Sergipe->myIndexPosition]);
 			return;
@@ -1940,7 +2055,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			}
 			else {
 				jogador->acertou = false;
-				jogador->erros++;
 			}
 			printf("%s \n", Estados[Tocantins->myIndexPosition]);
 			return;
