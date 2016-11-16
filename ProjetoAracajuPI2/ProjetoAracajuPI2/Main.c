@@ -28,9 +28,9 @@ const int WIDTHCINZA = 650;
 ALLEGRO_COLOR BLACK;
 ALLEGRO_COLOR BLUE;
 ALLEGRO_COLOR GREEN;
-ALLEGRO_COLOR RED;
+ALLEGRO_COLOR PINK;
 ALLEGRO_COLOR PURPLE;
-ALLEGRO_COLOR BEIGE;
+ALLEGRO_COLOR ORANGE;
 ALLEGRO_SAMPLE *menuAudioSample = NULL;
 ALLEGRO_SAMPLE *jogoAudioSample = NULL;
 ALLEGRO_SAMPLE *acertoAudioSample = NULL;
@@ -130,6 +130,7 @@ int main() {
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
+	ALLEGRO_BITMAP *jogoBG = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
@@ -161,7 +162,7 @@ int main() {
 	// Carrega os bitmaps	
 
 	// Bitmaps do menu do jogo															
-	menu = al_load_bitmap("imgs/Telas/telaInicial.png");
+	menu = al_load_bitmap("imgs/Telas/telaInicial.jpg");
 	//jogarBotaoNormal = al_load_bitmap("imgs/Botoes/jogarNormal.png");
 	//jogarBotaoOver = al_load_bitmap("imgs/Botoes/jogarOver.png");
 
@@ -170,6 +171,9 @@ int main() {
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			 // Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
+	// Bitmap teste do fundo
+	jogoBG = al_load_bitmap("imgs/Telas/jogoBG.jpg");
+
 	// Estados cinza bitmap
 	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
 	int tocantinsWidth = al_get_bitmap_width(tocantins);			// Recebe o tamanho X da imagem
@@ -182,15 +186,15 @@ int main() {
 	al_draw_scaled_bitmap(tutorial, -0, -0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0); */
 
 	// Carrega as fonts
-	fontLista = al_load_font("fonts/Magnificent.ttf", 23, 0);
+	fontLista = al_load_font("fonts/Code.otf", 23, 0);
 
 	// Inicializa cores
 	BLACK = al_map_rgb(0, 0, 0);
-	BLUE = al_map_rgb(0, 0, 255);
-	GREEN = al_map_rgb(0, 255, 0);
-	RED = al_map_rgb(255, 0, 0);
-	PURPLE = al_map_rgb(255, 0, 255);
-	BEIGE = al_map_rgb(255, 230, 187);
+	BLUE = al_map_rgb(45, 103, 151);
+	GREEN = al_map_rgb(110, 156, 45);
+	PINK = al_map_rgb(163, 9, 81);
+	PURPLE = al_map_rgb(123, 71, 144);
+	ORANGE = al_map_rgb(167, 98, 5);
 
 	// Inicializa sons
 	al_reserve_samples(2);		// Quantidade de "canais" de audio ( 1 para cada audio )
@@ -226,7 +230,7 @@ int main() {
 
 	InitLista(&lista);
 
-	//Inicializa��o dos Bot�es do Menu
+	//Inicializacao dos Bot�es do Menu
 	InitBotaoJogar(&botaoJogar);
 	InitBotaoTutorial(&botaoTutorial);
 
@@ -250,10 +254,10 @@ int main() {
 		{
 			// Caso a quantidade de vidas do jogador for menor que zero
 			// isGameOver � falso para podermos mostrar a tela de pontua��o
-			/*if (jogador.vidas <= 0)
+			if (jogador.vidas <= 0)
 			{
 				isGameOver = true;
-			}*/
+			}
 
 			redraw = true;
 		}
@@ -330,9 +334,11 @@ int main() {
 
 				if (!isGameOver)
 				{
+					al_draw_bitmap(jogoBG, 0, 0, 0);
+					al_draw_textf(fontLista, BLACK, WIDTH - 300, 10, 0, "Pontos: %d", jogador.pontos);
 					UpdateLista(fontLista, &jogador, &lista);
 					al_draw_scaled_bitmap(mapaBrasil, 0, 0, mapaWidth, mapaHeight, 0, 0, WIDTHMAPA, HEIGHTMAPA, 0);	// Coloca o mapa na tela
-					al_draw_scaled_bitmap(tocantins,-15, -3, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
+					//al_draw_scaled_bitmap(tocantins,-15, -3, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
 					al_flip_display();	
 					al_clear_to_color(al_map_rgb(255, 184, 40));
 					
@@ -342,10 +348,10 @@ int main() {
 				{
 					al_flip_display();
 					al_clear_to_color(al_map_rgb(0, 0, 0));		// Limpa a tela
-					al_draw_text(fontLista, RED, WIDTH / 2, HEIGHT / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
-					al_draw_textf(fontLista, RED, WIDTH / 2, (HEIGHT / 2) + 30, ALLEGRO_ALIGN_CENTER, "Pontos: %d", jogador.pontos);
-					al_draw_textf(fontLista, RED, WIDTH / 2, (HEIGHT / 2) + 60, ALLEGRO_ALIGN_CENTER, "Acertos: %d", jogador.acertos);
-					al_draw_textf(fontLista, RED, WIDTH / 2, (HEIGHT / 2) + 90, ALLEGRO_ALIGN_CENTER, "Erros: %d", jogador.erros);
+					al_draw_text(fontLista, PINK, WIDTH / 2, HEIGHT / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
+					al_draw_textf(fontLista, PINK, WIDTH / 2, (HEIGHT / 2) + 30, ALLEGRO_ALIGN_CENTER, "Pontos: %d", jogador.pontos);
+					al_draw_textf(fontLista, PINK, WIDTH / 2, (HEIGHT / 2) + 60, ALLEGRO_ALIGN_CENTER, "Acertos: %d", jogador.acertos);
+					al_draw_textf(fontLista, PINK, WIDTH / 2, (HEIGHT / 2) + 90, ALLEGRO_ALIGN_CENTER, "Erros: %d", jogador.erros);
 				}
 			}
 			else
@@ -364,6 +370,7 @@ int main() {
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
+	al_destroy_bitmap(jogoBG);
 	//al_destroy_bitmap(jogarBotaoNormal);
 	//al_destroy_bitmap(jogarBotaoOver);
 	al_destroy_bitmap(tocantins);
@@ -385,7 +392,7 @@ int main() {
 void InitJogador(Jogador *jogador)
 {
 	jogador->pontos = 0;
-	jogador->vidas = 1;
+	jogador->vidas = 30;
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->jogando = false;
@@ -395,7 +402,7 @@ void InitJogador(Jogador *jogador)
 // Inicializa a lista de palavras
 void InitLista(Lista *lista)
 {
-	lista->velocidade = 20;
+	lista->velocidade = 3;
 	lista->heightLista = 0;
 	lista->randomNumber = 0;
 	lista->palavraAtual = NULL;
@@ -1101,7 +1108,7 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 		}
 
 		lista->heightLista = 0;
-		lista->velocidade = 30;
+		lista->velocidade = 3;
 		lista->palavraAtual = NULL;
 		lista->randomNumber = rand();
 
@@ -1143,10 +1150,10 @@ void GetColor(Lista *lista, int pontos)
 		switch (conjuntoCores)
 		{
 		case 0:
-			lista->cor = BEIGE;
+			lista->cor = ORANGE;
 			break;
 		case 1:
-			lista->cor = RED;
+			lista->cor = PINK;
 			break;
 		case 2:
 			lista->cor = PURPLE;
@@ -1164,19 +1171,19 @@ void GetColor(Lista *lista, int pontos)
 	else {
 		if (lista->indexAtual >= 0 && lista->indexAtual <= 2)
 		{
-			lista->cor = BEIGE;
+			lista->cor = BLUE;
 		}
 		else if (lista->indexAtual >= 3 && lista->indexAtual <= 6) {
-			lista->cor = RED;
+			lista->cor = PINK;
 		}
 		else if (lista->indexAtual >= 7 && lista->indexAtual <= 10) {
-			lista->cor = PURPLE;
+			lista->cor = ORANGE;
 		}
 		else if (lista->indexAtual >= 11 && lista->indexAtual <= 17) {
 			lista->cor = GREEN;
 		}
 		else if (lista->indexAtual >= 18 && lista->indexAtual <= 26) {
-			lista->cor = BLUE;
+			lista->cor = PURPLE;
 		}
 	}	
 }
