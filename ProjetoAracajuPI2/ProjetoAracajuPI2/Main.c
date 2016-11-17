@@ -28,6 +28,7 @@ const int HEIGHTCINZA = 650;
 const int WIDTHCINZA = 650;
 
 // Variaveis globais Allegro
+ALLEGRO_COLOR WHITE;
 ALLEGRO_COLOR BLACK;
 ALLEGRO_COLOR BLUE;
 ALLEGRO_COLOR GREEN;
@@ -55,6 +56,7 @@ void InitLista(Lista *lista);
 void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
+void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP *estrela);
 void GetColor(Lista *lista, int pontos);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns, int offsetX, int offsetY);
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
@@ -140,6 +142,8 @@ int main() {
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_BITMAP *jogoBG = NULL;
+	ALLEGRO_BITMAP *gameOver = NULL;
+	ALLEGRO_BITMAP *estrelaPontos = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
@@ -186,6 +190,14 @@ int main() {
 	char *jogoBGPath = GetFolderPath("/imgs/Telas/jogoBG.jpg");
 	jogoBG = al_load_bitmap(jogoBGPath);
 
+	// Bitmap da tela de Game Over
+	char *gameOverPath = GetFolderPath("/imgs/Telas/gameOver.jpg");
+	gameOver = al_load_bitmap(gameOverPath);
+
+	// Bitmap da estrelas de pontuação
+	char *estrelaPontosPath = GetFolderPath("/imgs/HUDItens/star.png");
+	estrelaPontos = al_load_bitmap(estrelaPontosPath);
+
 	// Estados cinza bitmap
 	char *tocantinsPath = GetFolderPath("/imgs/EstadosCinzas/tocantins.png");
 	tocantins = al_load_bitmap(tocantinsPath); // bmp de testes para encontrar o indice correto
@@ -203,6 +215,7 @@ int main() {
 	fontLista = al_load_font(fontPath, 23, 0);
 
 	// Inicializa cores
+	WHITE = al_map_rgb(255, 255, 255);
 	BLACK = al_map_rgb(0, 0, 0);
 	BLUE = al_map_rgb(45, 103, 151);
 	GREEN = al_map_rgb(110, 156, 45);
@@ -360,7 +373,7 @@ int main() {
 				al_play_sample_instance(jogoAudioInstance);
 
 				if (!isGameOver)
-				{
+				{					
 					al_draw_bitmap(jogoBG, 0, 0, 0);
 					UpdateLista(fontLista, &jogador, &lista);
 					al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
@@ -371,11 +384,11 @@ int main() {
 				else 
 				{
 					al_flip_display();
-					al_clear_to_color(al_map_rgb(0, 0, 0));		// Limpa a tela
-					al_draw_text(fontLista, PINK, WIDTH / 2, HEIGHT / 2, ALLEGRO_ALIGN_CENTER, "GAME OVER");
-					al_draw_textf(fontLista, PINK, WIDTH / 2, (HEIGHT / 2) + 30, ALLEGRO_ALIGN_CENTER, "Pontos: %d", jogador.pontos);
-					al_draw_textf(fontLista, PINK, WIDTH / 2, (HEIGHT / 2) + 60, ALLEGRO_ALIGN_CENTER, "Acertos: %d", jogador.acertos);
-					al_draw_textf(fontLista, PINK, WIDTH / 2, (HEIGHT / 2) + 90, ALLEGRO_ALIGN_CENTER, "Erros: %d", jogador.erros);
+					al_draw_bitmap(gameOver, 0, 0, 0);
+					DesenhaEstrelas(jogador.pontos, estrelaPontos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 14, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 41, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 70, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
 				}
 			}
 			else
@@ -392,6 +405,8 @@ int main() {
 	free(menuPath);
 	free(mapaPath);
 	free(jogoBGPath);
+	free(gameOverPath);
+	free(estrelaPontosPath);
 	free(tocantinsPath);
 	free(fontPath);
 	free(menuAudioSamplePath);
@@ -406,8 +421,8 @@ int main() {
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
 	al_destroy_bitmap(jogoBG);
-	//al_destroy_bitmap(jogarBotaoNormal);
-	//al_destroy_bitmap(jogarBotaoOver);
+	al_destroy_bitmap(gameOver);
+	al_destroy_bitmap(estrelaPontos);
 	al_destroy_bitmap(tocantins);
 	//al_destroy_bitmap(tutorial);
 	al_destroy_font(fontLista);
@@ -428,7 +443,7 @@ void InitJogador(Jogador *jogador)
 {
 	strcpy(jogador->nome, "");
 	jogador->pontos = 0;
-	jogador->vidas = 20;
+	jogador->vidas = 5;
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->jogando = false;
@@ -1175,6 +1190,23 @@ void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
 
 		// Chegamos ao final da lista, ent�o isMaxHeight � true
 		lista->isMaxHeight = true;
+	}
+}
+
+void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP * estrela)
+{
+	if (pontos <= 500)
+	{
+		al_draw_bitmap(estrela, (WIDTH / 2) - 15, (HEIGHT / 2) - 60, 0);		
+	}
+	else if (pontos >= 500 && pontos <= 1000) {
+		al_draw_bitmap(estrela, (WIDTH / 2) - 40, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 10, (HEIGHT / 2) - 60, 0);
+	}
+	else if (pontos > 1000) {
+		al_draw_bitmap(estrela, (WIDTH / 2) - 65, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) - 17, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 30, (HEIGHT / 2) - 60, 0);
 	}
 }
 
