@@ -1199,7 +1199,7 @@ void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP * estrela)
 	{
 		al_draw_bitmap(estrela, (WIDTH / 2) - 15, (HEIGHT / 2) - 60, 0);		
 	}
-	else if (pontos >= 500 && pontos <= 1000) {
+	else if (pontos > 500 && pontos <= 1000) {
 		al_draw_bitmap(estrela, (WIDTH / 2) - 40, (HEIGHT / 2) - 60, 0);
 		al_draw_bitmap(estrela, (WIDTH / 2) + 10, (HEIGHT / 2) - 60, 0);
 	}
@@ -1530,7 +1530,7 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 
 char *GetFolderPath(char *path)
 {
-	char *formatedPath = malloc(al_get_current_directory() + strlen(path) + 1);
+	char *formatedPath = malloc(strlen(al_get_current_directory()) + strlen(path) + 1);
 	strcpy(formatedPath, "");
 	strcat(formatedPath, al_get_current_directory());
 	strcat(formatedPath, path);
