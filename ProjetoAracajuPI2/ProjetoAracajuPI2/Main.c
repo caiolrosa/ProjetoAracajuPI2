@@ -62,6 +62,7 @@ void SortPalavra(Jogador *jogador, Lista *lista);
 void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev);
 
 ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
+char *GetFolderPath(char *path);
 
 void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
@@ -143,7 +144,6 @@ int main() {
 	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
 	ALLEGRO_BITMAP *tocantins = NULL;
-	ALLEGRO_BITMAP *pretoTransparente = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 	
 	
@@ -172,21 +172,23 @@ int main() {
 	al_init_primitives_addon();									// Possibilita usar formas geometricas
 
 	// Carrega os bitmaps	
+	// Bitmaps do menu do jogo
+	char *menuPath = GetFolderPath("/imgs/Telas/telaInicial.jpg");
+	menu = al_load_bitmap(menuPath);
 
-	// Bitmaps do menu do jogo															
-	menu = al_load_bitmap("imgs/Telas/telaInicial.jpg");
-
-	pretoTransparente = al_create_bitmap(WIDTH, HEIGHT);
 	// Bitmap do mapa do jogo
-	mapaBrasil = al_load_bitmap("imgs/Mapas/mapaEscuro1.png"); // bmp de testes para encontrar o indice correto
+	char *mapaPath = GetFolderPath("/imgs/Mapas/mapaEscuro1.png");
+	mapaBrasil = al_load_bitmap(mapaPath);	 // bmp de testes para encontrar o indice correto
 	int mapaWidth = al_get_bitmap_width(mapaBrasil);			 // Recebe o tamanho X da imagem
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
 	// Bitmap teste do fundo
-	jogoBG = al_load_bitmap("imgs/Telas/jogoBG.jpg");
+	char *jogoBGPath = GetFolderPath("/imgs/Telas/jogoBG.jpg");
+	jogoBG = al_load_bitmap(jogoBGPath);
 
 	// Estados cinza bitmap
-	tocantins = al_load_bitmap("imgs/EstadosCinzas/tocantins.png"); // bmp de testes para encontrar o indice correto
+	char *tocantinsPath = GetFolderPath("/imgs/EstadosCinzas/tocantins.png");
+	tocantins = al_load_bitmap(tocantinsPath); // bmp de testes para encontrar o indice correto
 	int tocantinsWidth = al_get_bitmap_width(tocantins);			// Recebe o tamanho X da imagem
 	int tocantinsHeight = al_get_bitmap_height(tocantins);			// Recebe o tamanho Y da imagem
 
@@ -197,7 +199,8 @@ int main() {
 	al_draw_scaled_bitmap(tutorial, -0, -0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0); */
 
 	// Carrega as fonts
-	fontLista = al_load_font("fonts/Neou.otf", 23, 0);
+	char *fontPath = GetFolderPath("/fonts/Neou.otf");
+	fontLista = al_load_font(fontPath, 23, 0);
 
 	// Inicializa cores
 	BLACK = al_map_rgb(0, 0, 0);
@@ -211,23 +214,27 @@ int main() {
 	al_reserve_samples(2);		// Quantidade de "canais" de audio ( 1 para cada audio )
 
 	// Audio do menu
-	menuAudioSample = al_load_sample("audio/Audio.wav");
+	char *menuAudioSamplePath = GetFolderPath("/audio/Audio.wav");
+	menuAudioSample = al_load_sample(menuAudioSamplePath);
 	menuAudioInstance = al_create_sample_instance(menuAudioSample);
 	al_attach_sample_instance_to_mixer(menuAudioInstance, al_get_default_mixer());
 
 	// Audio do fundo do jogo
-	jogoAudioSample = al_load_sample("audio/AudioJazz.wav");
+	char *jogoAudioSamplePath = GetFolderPath("/audio/AudioJazz.wav");
+	jogoAudioSample = al_load_sample(jogoAudioSamplePath);
 	jogoAudioInstance = al_create_sample_instance(jogoAudioSample);
 	al_attach_sample_instance_to_mixer(jogoAudioInstance, al_get_default_mixer());
 	al_set_sample_instance_gain(jogoAudioInstance, 0.3);
 
 	// Audio de acerto
-	acertoAudioSample = al_load_sample("audio/AcertoAudio.wav");
+	char *acertoAudioSamplePath = GetFolderPath("/audio/AcertoAudio.wav");
+	acertoAudioSample = al_load_sample(acertoAudioSamplePath);
 	acertoAudioInstance = al_create_sample_instance(acertoAudioSample);
 	al_attach_sample_instance_to_mixer(acertoAudioInstance, al_get_default_mixer());
 
 	// Audio de erro
-	erroAudioSample = al_load_sample("audio/ErroAudio.wav");
+	char *erroAudioSamplePath = GetFolderPath("/audio/ErroAudio.wav");
+	erroAudioSample = al_load_sample(erroAudioSamplePath);
 	erroAudioInstance = al_create_sample_instance(erroAudioSample);
 	al_attach_sample_instance_to_mixer(erroAudioInstance, al_get_default_mixer());
 
@@ -381,6 +388,17 @@ int main() {
 		}
 	}
 
+	// Libera memoria dos paths utilizados
+	free(menuPath);
+	free(mapaPath);
+	free(jogoBGPath);
+	free(tocantinsPath);
+	free(fontPath);
+	free(menuAudioSamplePath);
+	free(jogoAudioSamplePath);
+	free(acertoAudioSamplePath);
+	free(erroAudioSamplePath);
+
 	// Libera a memoria alocada para variaveis Allegro
 	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
@@ -388,7 +406,6 @@ int main() {
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
 	al_destroy_bitmap(jogoBG);
-	al_destroy_bitmap(pretoTransparente);
 	//al_destroy_bitmap(jogarBotaoNormal);
 	//al_destroy_bitmap(jogarBotaoOver);
 	al_destroy_bitmap(tocantins);
@@ -1477,6 +1494,16 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 	}
 
 	return temp; //falso para quando esta fora do mapa
+}
+
+char *GetFolderPath(char *path)
+{
+	char *formatedPath = malloc(al_get_current_directory() + strlen(path) + 1);
+	strcpy(formatedPath, "");
+	strcat(formatedPath, al_get_current_directory());
+	strcat(formatedPath, path);
+
+	return formatedPath;
 }
 
 //Testa qual estado corresponde a posicao clicada e verifica acerto
