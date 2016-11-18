@@ -61,6 +61,12 @@ typedef struct Mapa {
 	int height;
 } Mapa;
 
+typedef struct Ranking {
+	char *nomesTxt[100];
+	int pontosTxt[100];
+	int totalLinhas;
+} Ranking;
+
 typedef struct ClickIndex {
 	int i;
 	int j;

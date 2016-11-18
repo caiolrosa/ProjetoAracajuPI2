@@ -62,6 +62,11 @@ void CreateMatrix(float lines[], float columns[], int totalLines, int totalColum
 void ConcatenaLista(char *s1, char *s2, Lista *lista);
 void SortPalavra(Jogador *jogador, Lista *lista);
 void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev);
+void SalvaPontuacao(FILE *rankingData, Jogador *jogador);
+void GetPontuacao(FILE *rankingData, Ranking *ranking);
+void SortPontos(Ranking * ranking, int size);
+void freeNomeJogadores(Ranking * ranking);
+int GetTotalLinhas(FILE * rankingData);
 
 ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
 char *GetFolderPath(char *path);
@@ -87,14 +92,13 @@ int main() {
 	bool isInMenu = true;
 	bool redraw = true;
 	bool clicouJogar = false;
+	bool clicouRanking = false;
 	bool digitouNome = false;
 	bool salvouPontuacao = false;
 
 	const int FPS = 60;
 	float mLines[36];
 	float mColumns[36];
-	srand(time(NULL));
-	int ScoreRandom = rand();
 
 	// Variaveis de objeto
 	Jogador jogador;
@@ -102,7 +106,8 @@ int main() {
 	ClickIndex clickIndex;
 	BotaoJogar botaoJogar;
 	BotaoTutorial botaoTutorial;
-	FILE *rankingData;
+	Ranking ranking;
+	FILE *rankingData = NULL;
 
 	//INICIALIZA�AO DOS ESTADOS
 #pragma region INIT ESTADOS
@@ -320,6 +325,11 @@ int main() {
 				jogador.tutorial = true;
 			}
 
+			if (ev.mouse.x >= 1090 && ev.mouse.x <= 1163 && ev.mouse.y >= 622 && ev.mouse.y <= 891)
+			{
+				clicouRanking = true;
+			}
+
 			//Verifica se o click est� dentro dos bounds do continuar para verificar se o usuario digitou o nome, caso tenha digitado a variavel digitouNome é verdadeira 
 			if (ev.mouse.x >= 742 && ev.mouse.x <= 904 && ev.mouse.y >= 446 && ev.mouse.y <= 486 && strlen(jogador.nome) >= 1)
 			{
@@ -341,9 +351,6 @@ int main() {
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
 			printf("index %d, %d\n", t.i, t.j);
-
-			printf("POS MOUSE X: %d\n", ev.mouse.x);
-			printf("POS MOUSE Y: %d\n", ev.mouse.y);
 
 			//TESTA o click para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
@@ -410,15 +417,9 @@ int main() {
 						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 41, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
 						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 70, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
 						
-						
 						if (!salvouPontuacao)
 						{
-							char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
-							rankingData = fopen(rankingDataPath, "a");
-							fprintf(rankingData, "%s\n%d\n", jogador.nome, jogador.pontos);
-							fclose(rankingData);
-							free(rankingDataPath);
-
+							SalvaPontuacao(rankingData, &jogador);
 							salvouPontuacao = true;
 						}
 					}
@@ -427,7 +428,20 @@ int main() {
 			else
 			{
 				al_play_sample_instance(menuAudioInstance);
-				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela	
+				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela
+				if (clicouRanking)
+				{
+					// TERMINAR DE ARRUMAR ISSO
+					GetPontuacao(rankingData, &ranking);
+
+					int i;
+
+					for (i = 0; i < ranking.totalLinhas / 2; i++)
+					{
+						al_draw_textf(fontLista, BLACK, 30, 30 * (i + 1), 0, "%s    %d", ranking.nomesTxt[i], ranking.pontosTxt[i]);
+					}
+				}
+				
 				al_flip_display();					// Muda para o back buffer
 				al_clear_to_color(al_map_rgb(255, 184, 40));
 			}
@@ -447,6 +461,7 @@ int main() {
 	free(jogoAudioSamplePath);
 	free(acertoAudioSamplePath);
 	free(erroAudioSamplePath);
+	freeNomeJogadores(&ranking);
 
 	// Libera a memoria alocada para variaveis Allegro
 	al_destroy_display(display);
@@ -476,7 +491,7 @@ int main() {
 // Definicao de funcoes
 
 // Inicializa o jogador
-void InitJogador(Jogador *jogador)
+void InitJogador(Jogador * jogador)
 {
 	strcpy(jogador->nome, "");
 	jogador->pontos = 0;
@@ -488,7 +503,7 @@ void InitJogador(Jogador *jogador)
 }
 
 // Inicializa a lista de palavras
-void InitLista(Lista *lista)
+void InitLista(Lista * lista)
 {
 	lista->velocidade = 3;
 	lista->heightLista = 0;
@@ -1172,10 +1187,10 @@ void InitBotaoJogar(BotaoJogar * botaoJogar)
 }
 
 // Inicializa o botao tutorial
-void InitBotaoTutorial(BotaoTutorial *botaoTutorial)
+void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
 {
 
-	botaoTutorial->boundXInicio = 435;
+	botaoTutorial->boundXInicio = 431;
 	botaoTutorial->boundXFinal = 850;
 
 	botaoTutorial->boundYInicio = 500;
@@ -1184,7 +1199,7 @@ void InitBotaoTutorial(BotaoTutorial *botaoTutorial)
 
 // Altera o valor Y do elemento da lista de acordo velocidade
 // da lista(lista->velocidade) para dar no��o de anima��o
-void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista)
+void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 {
 	srand(time(NULL));
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
@@ -1247,7 +1262,7 @@ void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP * estrela)
 	}
 }
 
-void GetColor(Lista *lista, int pontos)
+void GetColor(Lista * lista, int pontos)
 {
 	if (pontos >= 1000)
 	{
@@ -1296,7 +1311,7 @@ void GetColor(Lista *lista, int pontos)
 }
 
 // Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
-void SortPalavra(Jogador *jogador, Lista *lista)
+void SortPalavra(Jogador * jogador, Lista * lista)
 {
 	srand(time(NULL));
 	lista->indexAtual = lista->randomNumber % 27;
@@ -1388,7 +1403,7 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 	}
 }
 
-void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev)
+void GetUserInput(Jogador * jogador, ALLEGRO_EVENT ev)
 {
 	if (strlen(jogador->nome) <= 20)
 	{
@@ -1517,8 +1532,79 @@ void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev)
 	}
 }
 
+void SalvaPontuacao(FILE * rankingData, Jogador * jogador)
+{
+	char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
+	rankingData = fopen(rankingDataPath, "a");
+	fprintf(rankingData, "%s\n%d\n", jogador->nome, jogador->pontos);
+	fclose(rankingData);
+	free(rankingDataPath);
+}
+
+void GetPontuacao(FILE * rankingData, Ranking * ranking)
+{
+	char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
+
+	int i;
+	int j = 0;
+	int k = 0;	
+	ranking->totalLinhas = GetTotalLinhas(rankingData);
+
+	rankingData = fopen(rankingDataPath, "r");
+
+	for (i = 0; i < ranking->totalLinhas; i++)
+	{
+		if (i % 2 == 1)
+		{
+			fscanf(rankingData, "%d", &ranking->pontosTxt[j]);
+			j++;
+		}
+		else {
+			ranking->nomesTxt[k] = malloc(25 * sizeof(char));
+			fscanf(rankingData, "%s", ranking->nomesTxt[k]);
+			k++;
+		}
+	}
+
+	fclose(rankingData);
+	free(rankingDataPath);
+
+	SortPontos(ranking, ranking->totalLinhas / 2);
+}
+
+void SortPontos(Ranking * ranking, int size)
+{
+	int i;
+
+	for (i = 0; i < size; i++)
+	{
+		int temp = ranking->pontosTxt[i];
+		char *tempString = ranking->nomesTxt[i];
+		int j = i;
+
+		while (j > 0 && temp > ranking->pontosTxt[j - 1])
+		{
+			ranking->pontosTxt[j] = ranking->pontosTxt[j - 1];
+			ranking->nomesTxt[j] = ranking->nomesTxt[j - 1];
+			j--;
+		}
+
+		ranking->pontosTxt[j] = temp;
+		ranking->nomesTxt[j] = tempString;
+	}
+}
+
+void freeNomeJogadores(Ranking * ranking)
+{
+	int i;
+	for (i = 0; i < ranking->totalLinhas / 2; i++)
+	{
+		free(ranking->nomesTxt[i]);
+	}
+}
+
 // Concatena as palavras da lista
-void ConcatenaLista(char *s1, char *s2, Lista *lista)
+void ConcatenaLista(char * s1, char * s2, Lista * lista)
 {
 	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 6);
 	strcpy(lista->palavraAtual, s1);
@@ -1570,7 +1656,7 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 	return temp; //falso para quando esta fora do mapa
 }
 
-char *GetFolderPath(char *path)
+char *GetFolderPath(char * path)
 {
 	char *formatedPath = malloc(strlen(al_get_current_directory()) + strlen(path) + 1);
 	strcpy(formatedPath, "");
@@ -2165,6 +2251,25 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 
 #pragma endregion
 
+}
+
+int GetTotalLinhas(FILE * rankingData)
+{
+	char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
+	int linhas = 0;
+
+	rankingData = fopen(rankingDataPath, "r");
+
+	while (!feof(rankingData)) {
+		char enter = fgetc(rankingData);
+		if (enter == '\n')
+		{
+			linhas++;
+		}
+	}
+	fclose(rankingData);
+
+	return linhas;
 }
 
 
