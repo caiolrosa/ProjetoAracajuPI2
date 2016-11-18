@@ -34,13 +34,13 @@
 #pragma endregion
 
 typedef struct Jogador {
-	char nome[25];
+	char nome[21];
 	int pontos;
 	int vidas;
 	int acertos;
 	int erros;
 	bool acertou;
-	bool jogando;
+	bool pronto;
 	bool tutorial;
 } Jogador;
 

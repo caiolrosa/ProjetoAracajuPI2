@@ -84,9 +84,12 @@ int main() {
 	// Tipos Primitivos
 	bool finished = false;
 	bool isGameOver = false;
+	bool isInMenu = true;
 	bool redraw = true;
 	bool clicouJogar = false;
 	bool digitouNome = false;
+	bool salvouPontuacao = false;
+
 	const int FPS = 60;
 	float mLines[36];
 	float mColumns[36];
@@ -99,7 +102,8 @@ int main() {
 	ClickIndex clickIndex;
 	BotaoJogar botaoJogar;
 	BotaoTutorial botaoTutorial;
-	
+	FILE *rankingData;
+
 	//INICIALIZA�AO DOS ESTADOS
 #pragma region INIT ESTADOS
 	EstadosPadrao *_Acre, *_Alagoas, *_Amapa, *_Amazonas, *_Bahia, *_Ceara, *_DistritoFederal, *_EspiritoSanto, *_Goias, *_Maranhao,
@@ -141,6 +145,7 @@ int main() {
 	ALLEGRO_TIMER *timer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
+	ALLEGRO_BITMAP *inputPopup = NULL;
 	ALLEGRO_BITMAP *jogoBG = NULL;
 	ALLEGRO_BITMAP *gameOver = NULL;
 	ALLEGRO_BITMAP *estrelaPontos = NULL;
@@ -149,8 +154,7 @@ int main() {
 	ALLEGRO_BITMAP *tutorial = NULL;
 	ALLEGRO_BITMAP *tocantins = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
-	
-	
+
 	// Inicializa o Allegro
 	if (!al_init())
 	{
@@ -175,10 +179,15 @@ int main() {
 	al_init_image_addon();										// Possibilita usar varios formatos de imagem
 	al_init_primitives_addon();									// Possibilita usar formas geometricas
 
-	// Carrega os bitmaps	
-	// Bitmaps do menu do jogo
+	// Carrega os bitmaps
+
+	// Bitmap do menu do jogo
 	char *menuPath = GetFolderPath("/imgs/Telas/telaInicial.jpg");
 	menu = al_load_bitmap(menuPath);
+
+	// Bitmap do popup de input de nome do jogador
+	char *inputPopupPath = GetFolderPath("/imgs/Telas/nomeJogador.jpg");
+	inputPopup = al_load_bitmap(inputPopupPath);
 
 	// Bitmap do mapa do jogo
 	char *mapaPath = GetFolderPath("/imgs/Mapas/mapaEscuro1.png");
@@ -270,7 +279,7 @@ int main() {
 
 																// Registro de eventos para a lista de eventos
 	al_register_event_source(event_queue, al_get_mouse_event_source());			// Registra o mouse na lista de eventos
-	al_register_event_source(event_queue, al_get_keyboard_event_source());
+	al_register_event_source(event_queue, al_get_keyboard_event_source());		// Registra o teclado na lista de eventos
 	al_register_event_source(event_queue, al_get_timer_event_source(timer));			// Registra o timer na lista de eventos
 	al_register_event_source(event_queue, al_get_display_event_source(display));			// Registra o display na lista de eventos
 
@@ -292,23 +301,29 @@ int main() {
 
 			redraw = true;
 		}
-		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)			// Permite fechar a janela pelo X
+		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)	// Permite fechar a janela pelo X
 		{
 			finished = true;
-		}
+		}	
 
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN) //verifica se o jogador clicou em jogar
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && isInMenu) //verifica se o jogador clicou em jogar
 		{
-			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja a variavel jogador.jogando fica verdadeira
+			// Verifica se o click esta dentro dos bounds do botao jogar, caso esteja a variavel jogador.jogando é verdadeira
 			if (ev.mouse.x >= botaoJogar.boundXInicio && ev.mouse.x <= botaoJogar.boundXFinal && ev.mouse.y >= botaoJogar.boundYInicio &&  ev.mouse.y <= botaoJogar.boundYFinal)
 			{
-				jogador.jogando = true;
+				jogador.pronto = true;
 			}
 
-			//Verifica se o click est� dentro dos bounds do bot�o tutorial, caso esteja variavel jogador.tutorial fica verdadeira 
+			//Verifica se o click est� dentro dos bounds do bot�o tutorial, caso esteja variavel jogador.tutorial é verdadeira 
 			if (ev.mouse.x >= botaoTutorial.boundXInicio && ev.mouse.x <= botaoTutorial.boundXFinal && ev.mouse.y >= botaoTutorial.boundYInicio &&  ev.mouse.y <= botaoTutorial.boundYFinal)
 			{
 				jogador.tutorial = true;
+			}
+
+			//Verifica se o click est� dentro dos bounds do continuar para verificar se o usuario digitou o nome, caso tenha digitado a variavel digitouNome é verdadeira 
+			if (ev.mouse.x >= 742 && ev.mouse.x <= 904 && ev.mouse.y >= 446 && ev.mouse.y <= 486 && strlen(jogador.nome) >= 1)
+			{
+				digitouNome = true;
 			}
 		}
 
@@ -321,7 +336,7 @@ int main() {
 				printf("funcionando\n");
 		}
 		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.jogando && !isGameOver /*&& digitouNome*/) // Verifica se houve input de click no bot�o jogar
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.pronto && !isGameOver && digitouNome) // Verifica se houve input de click no bot�o jogar
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
@@ -329,6 +344,7 @@ int main() {
 
 			printf("POS MOUSE X: %d\n", ev.mouse.x);
 			printf("POS MOUSE Y: %d\n", ev.mouse.y);
+
 			//TESTA o click para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
@@ -354,42 +370,59 @@ int main() {
 			clicouJogar = true;
 		}
 
-		//if (jogador.jogando && !digitouNome)
-		//{
-		//	if (ev.type == ALLEGRO_EVENT_KEY_CHAR)
-		//	{
-		//		GetUserInput(&jogador, ev);
-		//		al_draw_textf(fontLista, BLACK, 20, 20, 0, "NOME: %s", jogador.nome);
-		//	}
-		//}
+		if (ev.type == ALLEGRO_EVENT_KEY_DOWN && !digitouNome)
+		{
+			GetUserInput(&jogador, ev);
+		}
 
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-			if (jogador.jogando /*&& digitouNome*/)   //verifica se o jogador passou a jogar
+			if (jogador.pronto)   //verifica se o jogador passou a jogar
 			{
-				al_stop_sample_instance(menuAudioInstance);
-				al_play_sample_instance(jogoAudioInstance);
-
-				if (!isGameOver)
-				{					
-					al_draw_bitmap(jogoBG, 0, 0, 0);
-					UpdateLista(fontLista, &jogador, &lista);
-					al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
-					al_draw_scaled_bitmap(tocantins,-15 - OFFSET_X, -3 - OFFSET_Y, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
-					al_flip_display();	
-					al_clear_to_color(al_map_rgb(255, 184, 40));
+				if (!digitouNome)
+				{
+					al_flip_display();
+					al_draw_bitmap(inputPopup, 0, 0, 0);
+					al_draw_textf(fontLista, BLACK, 635, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);					
 				}
 				else 
 				{
-					al_flip_display();
-					al_draw_bitmap(gameOver, 0, 0, 0);
-					DesenhaEstrelas(jogador.pontos, estrelaPontos);
-					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 14, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
-					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 41, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
-					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 70, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
-				}
+					al_stop_sample_instance(menuAudioInstance);
+					al_play_sample_instance(jogoAudioInstance);
+
+					if (!isGameOver)
+					{
+						al_draw_bitmap(jogoBG, 0, 0, 0);
+						UpdateLista(fontLista, &jogador, &lista);
+						al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
+						al_draw_scaled_bitmap(tocantins, -15 - OFFSET_X, -3 - OFFSET_Y, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
+						al_flip_display();
+						al_clear_to_color(al_map_rgb(255, 184, 40));
+					}
+					else
+					{
+						al_flip_display();
+						al_draw_bitmap(gameOver, 0, 0, 0);
+						DesenhaEstrelas(jogador.pontos, estrelaPontos);
+						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 14, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
+						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 41, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
+						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 70, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
+						
+						
+						if (!salvouPontuacao)
+						{
+							char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
+							rankingData = fopen(rankingDataPath, "a");
+							fprintf(rankingData, "%s\n%d\n", jogador.nome, jogador.pontos);
+							fclose(rankingData);
+							free(rankingDataPath);
+
+							salvouPontuacao = true;
+						}
+					}
+				}				
 			}
 			else
 			{
@@ -403,6 +436,7 @@ int main() {
 
 	// Libera memoria dos paths utilizados
 	free(menuPath);
+	free(inputPopupPath);
 	free(mapaPath);
 	free(jogoBGPath);
 	free(gameOverPath);
@@ -420,6 +454,7 @@ int main() {
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
+	al_destroy_bitmap(inputPopup);
 	al_destroy_bitmap(jogoBG);
 	al_destroy_bitmap(gameOver);
 	al_destroy_bitmap(estrelaPontos);
@@ -434,6 +469,8 @@ int main() {
 	al_destroy_sample_instance(jogoAudioInstance);
 	al_destroy_sample_instance(acertoAudioInstance);
 	al_destroy_sample_instance(erroAudioInstance);
+
+	return 0;
 }
 
 // Definicao de funcoes
@@ -446,7 +483,7 @@ void InitJogador(Jogador *jogador)
 	jogador->vidas = 5;
 	jogador->acertos = 0;
 	jogador->erros = 0;
-	jogador->jogando = false;
+	jogador->pronto = false;
 	jogador->tutorial = false;
 }
 
@@ -1353,88 +1390,88 @@ void SortPalavra(Jogador *jogador, Lista *lista)
 
 void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev)
 {
-	int test = strlen(jogador->nome);
-	if (strlen(jogador->nome) <= 25)
+	if (strlen(jogador->nome) <= 20)
 	{
+		printf("Nome tamnaho: %d", strlen(jogador->nome));
 		switch (ev.keyboard.keycode)
 		{
 		case ALLEGRO_KEY_A:
-			strcat(jogador->nome, "a");
+			strcat(jogador->nome, "A");
 			break;
 		case ALLEGRO_KEY_B:
-			strcat(jogador->nome, "b");
+			strcat(jogador->nome, "B");
 			break;
 		case ALLEGRO_KEY_C:
-			strcat(jogador->nome, "c");
+			strcat(jogador->nome, "C");
 			break;
 		case ALLEGRO_KEY_D:
-			strcat(jogador->nome, "d");
+			strcat(jogador->nome, "D");
 			break;
 		case ALLEGRO_KEY_E:
-			strcat(jogador->nome, "e");
+			strcat(jogador->nome, "E");
 			break;
 		case ALLEGRO_KEY_F:
-			strcat(jogador->nome, "f");
+			strcat(jogador->nome, "F");
 			break;
 		case ALLEGRO_KEY_G:
-			strcat(jogador->nome, "g");
+			strcat(jogador->nome, "G");
 			break;
 		case ALLEGRO_KEY_H:
-			strcat(jogador->nome, "h");
+			strcat(jogador->nome, "H");
 			break;
 		case ALLEGRO_KEY_I:
-			strcat(jogador->nome, "i");
+			strcat(jogador->nome, "I");
 			break;
 		case ALLEGRO_KEY_J:
-			strcat(jogador->nome, "j");
+			strcat(jogador->nome, "J");
 			break;
 		case ALLEGRO_KEY_K:
-			strcat(jogador->nome, "k");
+			strcat(jogador->nome, "K");
 			break;
 		case ALLEGRO_KEY_L:
-			strcat(jogador->nome, "l");
+			strcat(jogador->nome, "L");
 			break;
 		case ALLEGRO_KEY_M:
-			strcat(jogador->nome, "m");
+			strcat(jogador->nome, "M");
 			break;
 		case ALLEGRO_KEY_N:
-			strcat(jogador->nome, "n");
+			strcat(jogador->nome, "N");
 			break;
 		case ALLEGRO_KEY_O:
-			strcat(jogador->nome, "o");
+			strcat(jogador->nome, "O");
 			break;
 		case ALLEGRO_KEY_P:
-			strcat(jogador->nome, "p");
+			strcat(jogador->nome, "P");
 			break;
 		case ALLEGRO_KEY_Q:
-			strcat(jogador->nome, "q");
+			strcat(jogador->nome, "Q");
 			break;
 		case ALLEGRO_KEY_R:
-			strcat(jogador->nome, "r");
+			strcat(jogador->nome, "R");
 			break;
 		case ALLEGRO_KEY_S:
-			strcat(jogador->nome, "s");
+			strcat(jogador->nome, "S");
 			break;
 		case ALLEGRO_KEY_T:
-			strcat(jogador->nome, "t");
+			strcat(jogador->nome, "T");
 			break;
 		case ALLEGRO_KEY_U:
-			strcat(jogador->nome, "u");
+			strcat(jogador->nome, "U");
 			break;
 		case ALLEGRO_KEY_V:
-			strcat(jogador->nome, "v");
+			strcat(jogador->nome, "V");
 			break;
 		case ALLEGRO_KEY_W:
-			strcat(jogador->nome, "w");
+			strcat(jogador->nome, "W");
 			break;
 		case ALLEGRO_KEY_X:
-			strcat(jogador->nome, "x");
+			strcat(jogador->nome, "X");
 			break;
 		case ALLEGRO_KEY_Y:
-			strcat(jogador->nome, "y");
+			strcat(jogador->nome, "Y");
 			break;
 		case ALLEGRO_KEY_Z:
-			strcat(jogador->nome, "z");
+			strcat(jogador->nome, "Z");
 			break;
 		case ALLEGRO_KEY_0:
 			strcat(jogador->nome, "0");
@@ -1472,6 +1509,11 @@ void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev)
 		default:
 			break;
 		}
+	}
+	else {
+		if (ev.keyboard.keycode == ALLEGRO_KEY_BACKSPACE) {
+			jogador->nome[strlen(jogador->nome) - 1] = '\0';
+		}			
 	}
 }
 
