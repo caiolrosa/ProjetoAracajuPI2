@@ -35,6 +35,8 @@
 
 typedef struct Jogador {
 	char nome[21];
+	int acertoPorIndex[27];
+	int indexEstadosPerdidos[5];
 	int pontos;
 	int vidas;
 	int acertos;
@@ -47,7 +49,6 @@ typedef struct Jogador {
 typedef struct Lista {
 	int heightLista; // Altura do ultimo item da lista
 	int velocidade; // Velocidade em que caem os estados, capitais e siglas
-	int randomNumber;	// Usado para escolher aleatoriamente um item da lista
 	int indexAtual;		// Recebe o index atual da palavra sorteada
 	char *palavraAtual;	// Recebe o texto atual
 	ALLEGRO_COLOR cor; // Cor da palavra caindo na lista

@@ -26,6 +26,17 @@ const int WIDTHMAPA = 650;
 const int HEIGHTMAPA = 650;
 const int HEIGHTCINZA = 650;
 const int WIDTHCINZA = 650;
+const int INCREMENTAPONTOS = 20;
+
+bool finished = false;
+bool isGameOver = false;
+bool isInMenu = true;
+bool redraw = true;
+bool jogadorJogando = false;
+bool clicouRanking = false;
+bool clicouPause = false;
+bool digitouNome = false;
+bool salvouPontuacao = false;
 
 // Variaveis globais Allegro
 ALLEGRO_COLOR WHITE;
@@ -65,7 +76,12 @@ void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev);
 void SalvaPontuacao(FILE *rankingData, Jogador *jogador);
 void GetPontuacao(FILE *rankingData, Ranking *ranking);
 void SortPontos(Ranking * ranking, int size);
-void freeNomeJogadores(Ranking * ranking);
+void JogadorAcertou(Jogador *jogador, Lista *lista);
+void JogadorErrou(Jogador *jogador);
+void TiraEstado(Jogador *jogador);
+void FreeNomeJogadores(Ranking * ranking);
+void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade, ALLEGRO_BITMAP *coracaoCheio, Jogador *jogador);
+void DesenhaBtnPause(ALLEGRO_BITMAP *pauseBtn);
 int GetTotalLinhas(FILE * rankingData);
 
 ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
@@ -87,15 +103,6 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 
 int main() {
 	// Tipos Primitivos
-	bool finished = false;
-	bool isGameOver = false;
-	bool isInMenu = true;
-	bool redraw = true;
-	bool clicouJogar = false;
-	bool clicouRanking = false;
-	bool digitouNome = false;
-	bool salvouPontuacao = false;
-
 	const int FPS = 60;
 	float mLines[36];
 	float mColumns[36];
@@ -152,8 +159,12 @@ int main() {
 	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_BITMAP *inputPopup = NULL;
 	ALLEGRO_BITMAP *jogoBG = NULL;
+	ALLEGRO_BITMAP *pauseBtn = NULL;
 	ALLEGRO_BITMAP *gameOver = NULL;
 	ALLEGRO_BITMAP *estrelaPontos = NULL;
+	ALLEGRO_BITMAP *coracaoVazio = NULL;
+	ALLEGRO_BITMAP *coracaoMetade = NULL;
+	ALLEGRO_BITMAP *coracaoCheio = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *tutorial = NULL;
@@ -203,6 +214,18 @@ int main() {
 	// Bitmap teste do fundo
 	char *jogoBGPath = GetFolderPath("/imgs/Telas/jogoBG.jpg");
 	jogoBG = al_load_bitmap(jogoBGPath);
+
+	// Bitmap botao de pause
+	char *pauseBtnPath = GetFolderPath("/imgs/Botoes/pause.png");
+	pauseBtn = al_load_bitmap(pauseBtnPath);
+
+	//Bitmap Coracoes
+	char *coracaoVazioPath = GetFolderPath("/imgs/HUDItens/heartempty.png");
+	char *coracaoMetadePath = GetFolderPath("/imgs/HUDItens/hearthalf.png");
+	char *coracaoCheioPath = GetFolderPath("/imgs/HUDItens/heartfull.png");
+	coracaoVazio = al_load_bitmap(coracaoVazioPath);
+	coracaoMetade = al_load_bitmap(coracaoMetadePath);
+	coracaoCheio = al_load_bitmap(coracaoCheioPath);
 
 	// Bitmap da tela de Game Over
 	char *gameOverPath = GetFolderPath("/imgs/Telas/gameOver.jpg");
@@ -350,31 +373,20 @@ int main() {
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 
-			printf("index %d, %d\n", t.i, t.j);
+			//printf("index %d, %d\n", t.i, t.j);
 
 			//TESTA o click para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 
-			// Se o jogador acertou incrementa os pontos e 
-			// som de acerto toca
-			if (clicouJogar)
+			// Verifica se jogador clicou no pause
+			if (ev.mouse.x >= 1164 && ev.mouse.x <= 1238 && ev.mouse.y >= 33 && ev.mouse.y <= 101 && !clicouPause)
 			{
-				if (jogador.acertou)
-				{
-					al_play_sample_instance(acertoAudioInstance);
-					jogador.pontos += 50;
-				}
-				else
-				{
-					al_play_sample_instance(erroAudioInstance);
-					jogador.erros++;
-					jogador.vidas--;
-				}
+				clicouPause = true;
 			}
 
-			clicouJogar = true;
+			jogadorJogando = true;
 		}
 
 		if (ev.type == ALLEGRO_EVENT_KEY_DOWN && !digitouNome)
@@ -398,12 +410,15 @@ int main() {
 				{
 					al_stop_sample_instance(menuAudioInstance);
 					al_play_sample_instance(jogoAudioInstance);
-
+					
 					if (!isGameOver)
 					{
 						al_draw_bitmap(jogoBG, 0, 0, 0);
 						UpdateLista(fontLista, &jogador, &lista);
 						al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
+						DesenhaBtnPause(pauseBtn);
+						DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
+						al_draw_textf(fontLista, BLACK, 970, 40, 0, "Pontos: %d", jogador.pontos);
 						al_draw_scaled_bitmap(tocantins, -15 - OFFSET_X, -3 - OFFSET_Y, tocantinsWidth, tocantinsHeight, 0, 0, WIDTHCINZA, HEIGHTCINZA, 0);		// Coloca o mapa na tela
 						al_flip_display();
 						al_clear_to_color(al_map_rgb(255, 184, 40));
@@ -431,6 +446,7 @@ int main() {
 				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela
 				if (clicouRanking)
 				{
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(0, 0, 0, 150));
 					// TERMINAR DE ARRUMAR ISSO
 					GetPontuacao(rankingData, &ranking);
 
@@ -454,6 +470,10 @@ int main() {
 	free(mapaPath);
 	free(jogoBGPath);
 	free(gameOverPath);
+	free(pauseBtnPath);
+	free(coracaoVazioPath);
+	free(coracaoMetadePath);
+	free(coracaoCheioPath);
 	free(estrelaPontosPath);
 	free(tocantinsPath);
 	free(fontPath);
@@ -461,7 +481,7 @@ int main() {
 	free(jogoAudioSamplePath);
 	free(acertoAudioSamplePath);
 	free(erroAudioSamplePath);
-	freeNomeJogadores(&ranking);
+	FreeNomeJogadores(&ranking);
 
 	// Libera a memoria alocada para variaveis Allegro
 	al_destroy_display(display);
@@ -472,6 +492,9 @@ int main() {
 	al_destroy_bitmap(inputPopup);
 	al_destroy_bitmap(jogoBG);
 	al_destroy_bitmap(gameOver);
+	al_destroy_bitmap(coracaoVazio);
+	al_destroy_bitmap(coracaoMetade);
+	al_destroy_bitmap(coracaoCheio);
 	al_destroy_bitmap(estrelaPontos);
 	al_destroy_bitmap(tocantins);
 	//al_destroy_bitmap(tutorial);
@@ -495,19 +518,29 @@ void InitJogador(Jogador * jogador)
 {
 	strcpy(jogador->nome, "");
 	jogador->pontos = 0;
-	jogador->vidas = 5;
+	jogador->vidas = 12;
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->pronto = false;
 	jogador->tutorial = false;
+
+	int i;
+	for (i = 0; i < 27; i++)
+	{
+		jogador->acertoPorIndex[i] = 0;
+	}
+
+	for (i = 0; i < 5; i++)
+	{
+		jogador->indexEstadosPerdidos[i] = -1;
+	}
 }
 
 // Inicializa a lista de palavras
 void InitLista(Lista * lista)
 {
-	lista->velocidade = 3;
+	lista->velocidade = 1;
 	lista->heightLista = 0;
-	lista->randomNumber = 0;
 	lista->palavraAtual = NULL;
 }
 
@@ -1215,7 +1248,6 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 		lista->heightLista = 0;
 		lista->velocidade = 3;
 		lista->palavraAtual = NULL;
-		lista->randomNumber = rand();
 
 		free(lista->palavraAtual);
 	}
@@ -1227,9 +1259,9 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	jogador->acertou = false;
 
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a anima��o de "queda"
-	if (lista->heightLista < HEIGHTMAPA)
+	if (lista->heightLista < HEIGHTMAPA - 30)
 	{
-		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 100, 0, "%s", lista->palavraAtual);
 
 		// Aumentamos a altura da lista de acordo com a velocidade para dar no��o de anima��o
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
@@ -1238,7 +1270,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 10, 0, "%s", lista->palavraAtual);
+		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 100, 0, "%s", lista->palavraAtual);
 
 		// Chegamos ao final da lista, ent�o isMaxHeight � true
 		lista->isMaxHeight = true;
@@ -1314,7 +1346,16 @@ void GetColor(Lista * lista, int pontos)
 void SortPalavra(Jogador * jogador, Lista * lista)
 {
 	srand(time(NULL));
-	lista->indexAtual = lista->randomNumber % 27;
+	int i;
+	lista->indexAtual = rand() % 27;
+
+	for (i = 0; i < 5; i++)
+	{
+		if (jogador->indexEstadosPerdidos[i] == lista->indexAtual)
+		{
+			lista->indexAtual = rand() % 27;
+		}
+	}
 
 	if (jogador->pontos < 500)
 	{
@@ -1407,7 +1448,6 @@ void GetUserInput(Jogador * jogador, ALLEGRO_EVENT ev)
 {
 	if (strlen(jogador->nome) <= 20)
 	{
-		printf("Nome tamnaho: %d", strlen(jogador->nome));
 		switch (ev.keyboard.keycode)
 		{
 		case ALLEGRO_KEY_A:
@@ -1594,13 +1634,172 @@ void SortPontos(Ranking * ranking, int size)
 	}
 }
 
-void freeNomeJogadores(Ranking * ranking)
+void JogadorAcertou(Jogador * jogador, Lista * lista)
+{
+	jogador->pontos += INCREMENTAPONTOS;
+	jogador->acertoPorIndex[lista->indexAtual] += 1;
+	jogador->acertos++;
+	jogador->acertou = true;
+	lista->isMaxHeight = true;
+}
+
+void JogadorErrou(Jogador * jogador)
+{
+	jogador->erros++;
+	jogador->vidas--;
+	jogador->acertou = false;
+}
+
+void TiraEstado(Jogador * jogador)
+{
+	int i, j;
+	for (i = 0; i < 27; i++)
+	{
+		if (jogador->acertoPorIndex[i] > 3)
+		{
+			for (j = 0; j < 5; j++)
+			{
+				if (jogador->indexEstadosPerdidos[j] >= 0)
+				{
+					jogador->indexEstadosPerdidos[j] = i;
+				}
+			}
+		}
+		else {
+			for (j = 0; j < 5; j++)
+			{
+				if (jogador->indexEstadosPerdidos[j] <= 0)
+				{
+					srand(time(NULL));
+					jogador->indexEstadosPerdidos[j] = (rand() * 5) % 27;
+				}
+			}
+		}
+	}
+}
+
+void FreeNomeJogadores(Ranking * ranking)
 {
 	int i;
 	for (i = 0; i < ranking->totalLinhas / 2; i++)
 	{
 		free(ranking->nomesTxt[i]);
 	}
+}
+
+void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMetade, ALLEGRO_BITMAP * coracaoCheio, Jogador * jogador)
+{
+	switch (jogador->vidas)
+	{
+	case 1:
+		al_draw_bitmap(coracaoMetade, 970, 70, 0);
+		al_draw_bitmap(coracaoVazio, 998, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		break;
+	case 2:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoVazio, 998, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		TiraEstado(jogador);
+		break;
+	case 3:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoMetade, 998, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		break;
+	case 4:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		TiraEstado(jogador);
+		break;
+	case 5:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1026, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		break;
+	case 6:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		TiraEstado(jogador);
+		break;
+	case 7:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		break;
+	case 8:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		TiraEstado(jogador);
+		break;
+	case 9:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		break;
+	case 10:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		TiraEstado(jogador);
+		break;
+	case 11:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1110, 70, 0);
+		break;
+	case 12:
+		al_draw_bitmap(coracaoCheio, 970, 70, 0);
+		al_draw_bitmap(coracaoCheio, 998, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1110, 70, 0);
+		break;
+	default:
+		break;
+	}
+}
+
+void DesenhaBtnPause(ALLEGRO_BITMAP * pauseBtn)
+{
+	al_draw_bitmap(pauseBtn, 1160, 25, 0);
 }
 
 // Concatena as palavras da lista
@@ -1688,14 +1887,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Acre->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Acre->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Acre->myIndexPosition)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Acre->myIndexPosition]);
 			return;
@@ -1709,14 +1911,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Alagoas->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Alagoas->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Alagoas->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Alagoas->myIndexPosition]);
 			return;
@@ -1730,14 +1935,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Amapa->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Amapa->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Amapa->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Amapa->myIndexPosition]);
 			return;
@@ -1751,14 +1959,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Amazonas->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Amazonas->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Amazonas->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Amazonas->myIndexPosition]);
 			return;
@@ -1772,14 +1983,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Bahia->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Bahia->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Bahia->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Bahia->myIndexPosition]);
 			return;
@@ -1793,14 +2007,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Ceara->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Ceara->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Ceara->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Ceara->myIndexPosition]);
 			return;
@@ -1814,14 +2031,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = DistritoFederal->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == DistritoFederal->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == DistritoFederal->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[DistritoFederal->myIndexPosition]);
 			return;
@@ -1835,14 +2055,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = EspiritoSanto->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == EspiritoSanto->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == EspiritoSanto->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[EspiritoSanto->myIndexPosition]);
 			return;
@@ -1856,14 +2079,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Goias->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Goias->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Goias->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Goias->myIndexPosition]);
 			return;
@@ -1877,14 +2103,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Maranhao->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Maranhao->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Maranhao->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Maranhao->myIndexPosition]);
 			return;
@@ -1898,14 +2127,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = MatoGrosso->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == MatoGrosso->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == MatoGrosso->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[MatoGrosso->myIndexPosition]);
 			return;
@@ -1919,14 +2151,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = MatoGrossoDoSul->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == MatoGrossoDoSul->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == MatoGrossoDoSul->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[MatoGrossoDoSul->myIndexPosition]);
 			return;
@@ -1940,14 +2175,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = MinasGerais->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == MinasGerais->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == MinasGerais->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[MinasGerais->myIndexPosition]);
 			return;
@@ -1961,14 +2199,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Para->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Para->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Para->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Para->myIndexPosition]);
 			return;
@@ -1982,14 +2223,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Paraiba->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Paraiba->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Paraiba->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Paraiba->myIndexPosition]);
 			return;
@@ -2003,14 +2247,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Parana->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Parana->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Parana->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Parana->myIndexPosition]);
 			return;
@@ -2024,14 +2271,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Pernambuco->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Pernambuco->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Pernambuco->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Pernambuco->myIndexPosition]);
 			return;
@@ -2045,14 +2295,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Piaui->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Piaui->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Piaui->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Piaui->myIndexPosition]);
 			return;
@@ -2066,14 +2319,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = RioDeJaneiro->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == RioDeJaneiro->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == RioDeJaneiro->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[RioDeJaneiro->myIndexPosition]);
 			return;
@@ -2087,14 +2343,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = RioGrandeDoNorte->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == RioGrandeDoNorte->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == RioGrandeDoNorte->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[RioGrandeDoNorte->myIndexPosition]);
 			return;
@@ -2108,14 +2367,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = RioGrandeDoSul->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == RioGrandeDoSul->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == RioGrandeDoSul->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[RioGrandeDoSul->myIndexPosition]);
 			return;
@@ -2129,14 +2391,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Rondonia->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Rondonia->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Rondonia->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Rondonia->myIndexPosition]);
 			return;
@@ -2150,14 +2415,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Roraima->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Roraima->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Roraima->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Roraima->myIndexPosition]);
 			return;
@@ -2171,14 +2439,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = SantaCatarina->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == SantaCatarina->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == SantaCatarina->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[SantaCatarina->myIndexPosition]);
 			return;
@@ -2192,14 +2463,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = SaoPaulo->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == SaoPaulo->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == SaoPaulo->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[SaoPaulo->myIndexPosition]);
 			return;
@@ -2213,14 +2487,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Sergipe->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Sergipe->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Sergipe->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Sergipe->myIndexPosition]);
 			return;
@@ -2234,14 +2511,17 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 		ClickIndex temp = Tocantins->index[i];
 		if (temp.i == index.i && temp.j == index.j)
 		{
-			if (lista->indexAtual == Tocantins->myIndexPosition)
+			if (jogadorJogando)
 			{
-				jogador->acertos++;
-				jogador->acertou = true;
-				lista->isMaxHeight = true;
-			}
-			else {
-				jogador->acertou = false;
+				if (lista->indexAtual == Tocantins->myIndexPosition && jogadorJogando)
+				{
+					al_play_sample_instance(acertoAudioInstance);
+					JogadorAcertou(jogador, lista);
+				}
+				else {
+					al_play_sample_instance(erroAudioInstance);
+					JogadorErrou(jogador);
+				}
 			}
 			printf("%s \n", Estados[Tocantins->myIndexPosition]);
 			return;
