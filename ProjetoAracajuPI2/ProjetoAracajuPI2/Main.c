@@ -35,6 +35,8 @@ bool musicaTocando = true;
 bool jogadorJogando = false;
 bool clicouRanking = false;
 bool clicouPause = false;
+bool clicouTutorial = false;
+bool clicouCreditos = false;
 bool digitouNome = false;
 bool salvouPontuacao = false;
 
@@ -67,6 +69,7 @@ void InitLista(Lista *lista);
 void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void InitEstadosCinza(char *estadosCinzaPath[], ALLEGRO_BITMAP *estadosCinza[]);
+void ResetJogador(Jogador *jogador, bool resetNome);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
 void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP *estrela);
 void GetColor(Lista *lista, int pontos);
@@ -85,6 +88,7 @@ void FreeEstadosCinzaEPath(char *estadosCinzaPath[], ALLEGRO_BITMAP *estadosCinz
 void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade, ALLEGRO_BITMAP *coracaoCheio, Jogador *jogador);
 void DesenhaBtnPause(ALLEGRO_BITMAP *pauseBtn);
 void DesenhaBtnMusica(ALLEGRO_BITMAP *musicaOn, ALLEGRO_BITMAP *musicaOff, bool musicaTocando);
+void DesenhaPontuacaoRanking(ALLEGRO_FONT *fontLista, Ranking *ranking);
 //void DesenhaEstadosCinza();
 
 int GetTotalLinhas(FILE * rankingData);
@@ -167,6 +171,8 @@ int main() {
 	ALLEGRO_BITMAP *jogoBG = NULL;
 	ALLEGRO_BITMAP *pauseBtn = NULL;
 	ALLEGRO_BITMAP *gameOver = NULL;
+	ALLEGRO_BITMAP *rankingTela = NULL;
+	ALLEGRO_BITMAP *pauseTela = NULL;
 	ALLEGRO_BITMAP *estrelaPontos = NULL;
 	ALLEGRO_BITMAP *coracaoVazio = NULL;
 	ALLEGRO_BITMAP *coracaoMetade = NULL;
@@ -224,7 +230,7 @@ int main() {
 	menu = al_load_bitmap(menuPath);
 
 	// Bitmap do popup de input de nome do jogador
-	char *inputPopupPath = GetFolderPath("/imgs/Telas/nomeJogador.jpg");
+	char *inputPopupPath = GetFolderPath("/imgs/Telas/nomeJogador.png");
 	inputPopup = al_load_bitmap(inputPopupPath);
 
 	// Bitmap do mapa do jogo
@@ -234,7 +240,7 @@ int main() {
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
 	// Bitmap teste do fundo
-	char *jogoBGPath = GetFolderPath("/imgs/Telas/jogoBG.jpg");
+	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg.jpg");
 	jogoBG = al_load_bitmap(jogoBGPath);
 
 	// Bitmap botao de pause
@@ -259,6 +265,14 @@ int main() {
 	char *gameOverPath = GetFolderPath("/imgs/Telas/gameOver.jpg");
 	gameOver = al_load_bitmap(gameOverPath);
 
+	// Bitmap da tela de ranking
+	char *rankingTelaPath = GetFolderPath("/imgs/Telas/ranking.png");
+	rankingTela = al_load_bitmap(rankingTelaPath);
+
+	// Bitmap da tela de pause
+	char *pauseTelaPath = GetFolderPath("/imgs/Telas/pause.png");
+	pauseTela = al_load_bitmap(pauseTelaPath);
+
 	// Bitmap da estrelas de pontuação
 	char *estrelaPontosPath = GetFolderPath("/imgs/HUDItens/star.png");
 	estrelaPontos = al_load_bitmap(estrelaPontosPath);
@@ -276,8 +290,8 @@ int main() {
 	al_draw_scaled_bitmap(tutorial, -0, -0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0); */
 
 	// Carrega as fonts
-	char *fontPath = GetFolderPath("/fonts/Neou.otf");
-	fontLista = al_load_font(fontPath, 23, 0);
+	char *fontPath = GetFolderPath("/fonts/Florsn33.ttf");
+	fontLista = al_load_font(fontPath, 20, 0);
 
 	// Inicializa cores
 	WHITE = al_map_rgb(255, 255, 255);
@@ -376,7 +390,7 @@ int main() {
 			//Verifica se o click est� dentro dos bounds do bot�o tutorial, caso esteja variavel jogador.tutorial é verdadeira 
 			if (ev.mouse.x >= botaoTutorial.boundXInicio && ev.mouse.x <= botaoTutorial.boundXFinal && ev.mouse.y >= botaoTutorial.boundYInicio &&  ev.mouse.y <= botaoTutorial.boundYFinal)
 			{
-				jogador.tutorial = true;
+				clicouTutorial = true;
 			}
 
 			if (ev.mouse.x >= 1090 && ev.mouse.x <= 1163 && ev.mouse.y >= 622 && ev.mouse.y <= 891)
@@ -398,23 +412,13 @@ int main() {
 					musicaTocando = false;
 				}
 				else {
-					//printf("Valor Timer: %d", al_get_timer_count(piscaTimer));
-					//al_stop_timer(piscaTimer);
 					musicaTocando = true;
 				}
 			}
 		}
 
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.tutorial) // Verifica se houve input de click no bot�o tutorial
-		{
-	/*		al_draw_scaled_bitmap(tutorial, 0, 0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0);		//coloca o tutorial na tela
-			al_flip_display();									// Muda para o back buffer
-			al_clear_to_color(al_map_rgb(255, 255, 255));  */ 
-			if (jogador.tutorial)
-				printf("funcionando\n");
-		}
 		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
-		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.pronto && !isGameOver && digitouNome) // Verifica se houve input de click no bot�o jogar
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.pronto && !isGameOver && digitouNome && !clicouPause) // Verifica se houve input de click no bot�o jogar
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
 			//printf("index %d, %d\n", t.i, t.j);
@@ -433,6 +437,42 @@ int main() {
 			jogadorJogando = true;
 		}
 
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && clicouPause)
+		{
+			if (ev.mouse.x >= 453 && ev.mouse.x <= 552 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+			{
+				al_stop_sample_instance(jogoAudioInstance);
+				ResetJogador(&jogador, true);
+				isInMenu = true;
+				clicouPause = false;
+				digitouNome = false;
+				jogadorJogando = false;
+			}
+
+			if (ev.mouse.x >= 547 && ev.mouse.x <= 620 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+			{
+				if (musicaTocando)
+				{
+					musicaTocando = false;
+				}
+				else {
+					musicaTocando = true;
+				}
+			}
+
+			if (ev.mouse.x >= 643 && ev.mouse.x <= 716 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+			{
+				clicouPause = false;
+			}
+
+			if (ev.mouse.x >= 738 && ev.mouse.x <= 811 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+			{
+				ResetJogador(&jogador, false);
+				clicouPause = false;
+			}
+			printf("POS X: %d \n POS Y: %d \n", ev.mouse.x, ev.mouse.y);
+		}
+
 		if (ev.type == ALLEGRO_EVENT_KEY_DOWN && !digitouNome)
 		{
 			GetUserInput(&jogador, ev);
@@ -442,50 +482,62 @@ int main() {
 		{															// Lista de eventos vazia e (evitar bugs)
 			redraw = false;
 
-			if (jogador.pronto)   //verifica se o jogador passou a jogar
+			if (jogador.pronto && digitouNome)   //verifica se o jogador passou a jogar
 			{
-				if (!digitouNome)
-				{
-					al_flip_display();
-					al_draw_bitmap(inputPopup, 0, 0, 0);
-					al_draw_textf(fontLista, BLACK, 635, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);					
-				}
-				else 
-				{
-					al_stop_sample_instance(menuAudioInstance);
+				isInMenu = false;
 
-					if (musicaTocando)
-					{
-						al_play_sample_instance(jogoAudioInstance);
-					}
+				al_stop_sample_instance(menuAudioInstance);
+
+				if (musicaTocando)
+				{
+					al_play_sample_instance(jogoAudioInstance);
+				}
+				else {
+					al_stop_sample_instance(jogoAudioInstance);
+				}
 					
-					if (!isGameOver)
+				if (!isGameOver)
+				{
+					al_draw_bitmap(jogoBG, 0, 0, 0);
+					al_draw_bitmap(estadosCinza[0], 0, 0, 0);
+					//al_draw_bitmap(mapaBrasil, 0, 0, 0);
+					//al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
+					DesenhaBtnPause(pauseBtn);
+					DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
+					al_draw_textf(fontLista, BLACK, 970, 40, 0, "Pontos: %d", jogador.pontos);
+					if (!clicouPause)
 					{
-						al_draw_bitmap(jogoBG, 0, 0, 0);
 						UpdateLista(fontLista, &jogador, &lista);
-						al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
-						DesenhaBtnPause(pauseBtn);
-						DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
-						al_draw_textf(fontLista, BLACK, 970, 40, 0, "Pontos: %d", jogador.pontos);
-						al_flip_display();
-						al_clear_to_color(al_map_rgb(255, 184, 40));
 					}
-					else
-					{
-						al_flip_display();
-						al_draw_bitmap(gameOver, 0, 0, 0);
-						DesenhaEstrelas(jogador.pontos, estrelaPontos);
-						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 14, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
-						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 41, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
-						al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 70, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
-						
-						if (!salvouPontuacao)
+					else {
+						al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+						al_draw_bitmap(pauseTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0 );
+						if (musicaTocando)
 						{
-							SalvaPontuacao(rankingData, &jogador);
-							salvouPontuacao = true;
+							al_draw_bitmap(musicaOn, 544, 363, 0);
+						}
+						else {
+							al_draw_bitmap(musicaOff, 544, 363, 0);
 						}
 					}
-				}				
+						
+					al_flip_display();
+				}
+				else
+				{
+					al_flip_display();
+					al_draw_bitmap(gameOver, 0, 0, 0);
+					DesenhaEstrelas(jogador.pontos, estrelaPontos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 14, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 41, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 70, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
+						
+					if (!salvouPontuacao)
+					{
+						SalvaPontuacao(rankingData, &jogador);
+						salvouPontuacao = true;
+					}
+				}			
 			}
 			else
 			{
@@ -499,20 +551,25 @@ int main() {
 
 				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela
 				DesenhaBtnMusica(musicaOn, musicaOff, musicaTocando);
+
+				if (jogador.pronto && !digitouNome)
+				{
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_bitmap(inputPopup, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
+					al_draw_textf(fontLista, BLACK, 635, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);
+				}
+
 				if (clicouRanking)
 				{
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_bitmap(rankingTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
 					// TERMINAR DE ARRUMAR ISSO
 					GetPontuacao(rankingData, &ranking);
-
-					int i;
-					for (i = 0; i < ranking.totalLinhas / 2; i++)
-					{
-						al_draw_textf(fontLista, BLACK, 30, 30 * (i + 1), 0, "%s    %d", ranking.nomesTxt[i], ranking.pontosTxt[i]);
-					}
+					DesenhaPontuacaoRanking(fontLista, &ranking);
 				}
 				
 				al_flip_display();			// Muda para o back buffer
-				al_clear_to_color(al_map_rgb(255, 184, 40));
+				//al_clear_to_color(al_map_rgb(255, 184, 40));
 			}
 		}
 	}
@@ -523,6 +580,8 @@ int main() {
 	free(mapaPath);
 	free(jogoBGPath);
 	free(gameOverPath);
+	free(rankingTelaPath);
+	free(pauseTelaPath);
 	free(pauseBtnPath);
 	free(musicOnPath);
 	free(musicOffPath);
@@ -548,6 +607,8 @@ int main() {
 	al_destroy_bitmap(inputPopup);
 	al_destroy_bitmap(jogoBG);
 	al_destroy_bitmap(gameOver);
+	al_destroy_bitmap(rankingTela);
+	al_destroy_bitmap(pauseTela);
 	al_destroy_bitmap(musicaOn);
 	al_destroy_bitmap(musicaOff);
 	al_destroy_bitmap(coracaoVazio);
@@ -580,7 +641,6 @@ void InitJogador(Jogador * jogador)
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->pronto = false;
-	jogador->tutorial = false;
 
 	int i;
 	for (i = 0; i < 27; i++)
@@ -597,7 +657,7 @@ void InitJogador(Jogador * jogador)
 // Inicializa a lista de palavras
 void InitLista(Lista * lista)
 {
-	lista->velocidade = 1;
+	lista->velocidade = 0.5f;
 	lista->heightLista = 0;
 	lista->palavraAtual = NULL;
 }
@@ -1297,6 +1357,32 @@ void InitEstadosCinza(char * estadosCinzaPath[], ALLEGRO_BITMAP * estadosCinza[]
 	}
 }
 
+void ResetJogador(Jogador * jogador, bool resetNome)
+{
+	jogador->acertos = 0;
+	jogador->erros = 0;
+	jogador->vidas = 12;
+	jogador->pontos = 0;
+	jogador->acertou = false;
+
+	if (resetNome)
+	{
+		strcpy(jogador->nome, "");
+		jogador->pronto = false;
+	}
+	
+	int i;
+	for (i = 0; i < 27; i++)
+	{
+		jogador->acertoPorIndex[i] = 0;
+	}
+
+	for (i = 0; i < 5; i++)
+	{
+		jogador->indexEstadosPerdidos[i] = -1;
+	}
+}
+
 // Altera o valor Y do elemento da lista de acordo velocidade
 // da lista(lista->velocidade) para dar no��o de anima��o
 void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
@@ -1305,15 +1391,18 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
-		if (!jogador->acertou)
+		if (!jogador->acertou && !clicouPause)
 		{
-			al_play_sample_instance(erroAudioInstance);
+			if (musicaTocando)
+			{
+				al_play_sample_instance(erroAudioInstance);
+			}
 			jogador->erros++;
-			jogador->vidas--;
+			//jogador->vidas--;
 		}
 
 		lista->heightLista = 0;
-		lista->velocidade = 1;
+		lista->velocidade = 0.5f;
 		lista->palavraAtual = NULL;
 
 		free(lista->palavraAtual);
@@ -1437,7 +1526,7 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 		}
 	}
 
-	if (jogador->pontos < 500)
+	if (jogador->pontos < 100000)
 	{
 		int conjuntoEasy = (rand() * 5) % 3;
 
@@ -1460,7 +1549,7 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 			break;
 		}
 	}
-	else if (jogador->pontos >= 500 && jogador->pontos < 1000) 
+	/*else if (jogador->pontos >= 500 && jogador->pontos < 1000) 
 	{
 		int conjuntoMedium = (rand() * 5) % 6;
 
@@ -1520,13 +1609,13 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 		default:
 			printf("Deu Ruim");
 			break;
-		}
-	}
+		}*/
+	//}
 }
 
 void GetUserInput(Jogador * jogador, ALLEGRO_EVENT ev)
 {
-	if (strlen(jogador->nome) <= 20)
+	if (strlen(jogador->nome) <= 11)
 	{
 		switch (ev.keyboard.keycode)
 		{
@@ -1716,18 +1805,32 @@ void SortPontos(Ranking * ranking, int size)
 
 void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 {
-	jogador->pontos += pontuacao;
-	jogador->acertoPorIndex[lista->indexAtual] += 1;
-	jogador->acertos++;
-	jogador->acertou = true;
-	lista->isMaxHeight = true;
+	if (!clicouPause)
+	{
+		if (musicaTocando)
+		{
+			al_play_sample_instance(acertoAudioInstance);
+		}
+		jogador->pontos += pontuacao;
+		jogador->acertoPorIndex[lista->indexAtual] += 1;
+		jogador->acertos++;
+		jogador->acertou = true;
+		lista->isMaxHeight = true;
+	}	
 }
 
 void JogadorErrou(Jogador * jogador)
 {
-	jogador->erros++;
-	jogador->vidas--;
-	jogador->acertou = false;
+	if (!clicouPause)
+	{
+		if (musicaTocando)
+		{
+			al_play_sample_instance(erroAudioInstance);
+		}
+		jogador->erros++;
+		//jogador->vidas--;
+		jogador->acertou = false;
+	}
 }
 
 void TiraEstado(Jogador * jogador)
@@ -1903,6 +2006,78 @@ void DesenhaBtnMusica(ALLEGRO_BITMAP * musicaOn, ALLEGRO_BITMAP * musicaOff, boo
 	}
 }
 
+void DesenhaPontuacaoRanking(ALLEGRO_FONT * fontLista, Ranking * ranking)
+{
+	if (ranking->totalLinhas / 2 >= 5)
+	{
+		al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s",ranking->nomesTxt[0]);
+		al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d",ranking->pontosTxt[0]);
+		al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
+		al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
+		al_draw_textf(fontLista, WHITE, 480, 382, 0, "%s", ranking->nomesTxt[2]);
+		al_draw_textf(fontLista, WHITE, 712, 382, 0, "%d", ranking->pontosTxt[2]);
+		al_draw_textf(fontLista, WHITE, 480, 408, 0, "%s", ranking->nomesTxt[3]);
+		al_draw_textf(fontLista, WHITE, 712, 408, 0, "%d", ranking->pontosTxt[3]);
+		al_draw_textf(fontLista, WHITE, 480, 434, 0, "%s", ranking->nomesTxt[4]);
+		al_draw_textf(fontLista, WHITE, 712, 434, 0, "%d", ranking->pontosTxt[4]);
+	}
+	else {
+		switch (ranking->totalLinhas / 2)
+		{
+		case 4:
+			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
+			al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
+			al_draw_textf(fontLista, WHITE, 480, 382, 0, "%s", ranking->nomesTxt[2]);
+			al_draw_textf(fontLista, WHITE, 712, 382, 0, "%d", ranking->pontosTxt[2]);
+			al_draw_textf(fontLista, WHITE, 480, 408, 0, "%s", ranking->nomesTxt[3]);
+			al_draw_textf(fontLista, WHITE, 712, 408, 0, "%d", ranking->pontosTxt[3]);
+			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			break;
+		case 3:
+			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
+			al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
+			al_draw_textf(fontLista, WHITE, 480, 382, 0, "%s", ranking->nomesTxt[2]);
+			al_draw_textf(fontLista, WHITE, 712, 382, 0, "%d", ranking->pontosTxt[2]);
+			al_draw_textf(fontLista, WHITE, 480, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			break;
+		case 2:
+			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
+			al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
+			al_draw_textf(fontLista, WHITE, 480, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 480, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			break;
+		case 1:
+			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 480, 357, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 357, 0, "---");
+			al_draw_textf(fontLista, WHITE, 480, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 480, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			break;
+		default:
+			break;
+		}
+	}
+}
+
 // Concatena as palavras da lista
 void ConcatenaLista(char * s1, char * s2, Lista * lista)
 {
@@ -1992,11 +2167,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Acre->myIndexPosition)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2016,11 +2189,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Alagoas->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2040,11 +2211,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Amapa->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2064,11 +2233,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Amazonas->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 300);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2088,11 +2255,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Bahia->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2112,11 +2277,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Ceara->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2136,11 +2299,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == DistritoFederal->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 2000);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2160,11 +2321,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == EspiritoSanto->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2184,11 +2343,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Goias->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2208,11 +2365,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Maranhao->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2232,11 +2387,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == MatoGrosso->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 300);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2256,11 +2409,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == MatoGrossoDoSul->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2280,11 +2431,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == MinasGerais->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2304,11 +2453,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Para->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 300);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2328,11 +2475,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Paraiba->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2352,11 +2497,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Parana->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2376,11 +2519,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Pernambuco->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2400,11 +2541,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Piaui->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2424,11 +2563,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == RioDeJaneiro->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2448,11 +2585,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == RioGrandeDoNorte->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2472,11 +2607,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == RioGrandeDoSul->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2496,11 +2629,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Rondonia->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2520,11 +2651,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Roraima->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2544,11 +2673,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == SantaCatarina->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2568,11 +2695,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == SaoPaulo->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2592,11 +2717,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Sergipe->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 2000);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
@@ -2616,11 +2739,9 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 			{
 				if (lista->indexAtual == Tocantins->myIndexPosition && jogadorJogando)
 				{
-					al_play_sample_instance(acertoAudioInstance);
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					al_play_sample_instance(erroAudioInstance);
 					JogadorErrou(jogador);
 				}
 			}
