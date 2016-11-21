@@ -877,7 +877,11 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	EspiritoSanto->myIndexPosition = 6; //posicao no vetor ESTADOS de nomes na classe objects.h
 	EspiritoSanto->index[0].i = 21; EspiritoSanto->index[0].j = 30;
 	EspiritoSanto->index[1].i = 22; EspiritoSanto->index[1].j = 30;
-	EspiritoSanto->index[2].i = 23; EspiritoSanto->index[2].j = 29;
+	EspiritoSanto->index[2].i = 22; EspiritoSanto->index[2].j = 31;
+	EspiritoSanto->index[3].i = 23; EspiritoSanto->index[3].j = 29;
+	EspiritoSanto->index[4].i = 23; EspiritoSanto->index[4].j = 30;
+	EspiritoSanto->index[5].i = 23; EspiritoSanto->index[5].j = 31;
+	EspiritoSanto->index[6].i = 24; EspiritoSanto->index[6].j = 30;
 #pragma endregion
 
 #pragma region RIO DE JANEIRO
@@ -885,6 +889,9 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	RioDeJaneiro->index[0].i = 24; RioDeJaneiro->index[0].j = 27;
 	RioDeJaneiro->index[1].i = 24; RioDeJaneiro->index[1].j = 28;
 	RioDeJaneiro->index[2].i = 24; RioDeJaneiro->index[2].j = 29;
+	RioDeJaneiro->index[3].i = 25; RioDeJaneiro->index[3].j = 27;
+	RioDeJaneiro->index[4].i = 25; RioDeJaneiro->index[4].j = 28;
+	RioDeJaneiro->index[5].i = 25; RioDeJaneiro->index[5].j = 29;
 #pragma endregion
 
 #pragma region MINAS GERAIS
@@ -926,6 +933,8 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	MinasGerais->index[34].i = 23;  MinasGerais->index[34].j = 28;
 	MinasGerais->index[35].i = 24;  MinasGerais->index[35].j = 25;
 	MinasGerais->index[36].i = 24;  MinasGerais->index[36].j = 26;
+	MinasGerais->index[37].i = 24;  MinasGerais->index[37].j = 28;
+	MinasGerais->index[38].i = 25;  MinasGerais->index[38].j = 26;
 #pragma endregion
 
 #pragma region SAO PAULO
@@ -940,10 +949,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	SaoPaulo->index[7].i = 24;   SaoPaulo->index[7].j = 23;
 	SaoPaulo->index[8].i = 24;   SaoPaulo->index[8].j = 24;
 	SaoPaulo->index[9].i = 25;   SaoPaulo->index[9].j = 23;
-	SaoPaulo->index[10].i = 25; SaoPaulo->index[10].j = 24;
-	SaoPaulo->index[11].i = 25; SaoPaulo->index[11].j = 25;
-	SaoPaulo->index[12].i = 25; SaoPaulo->index[12].j = 26;
-	SaoPaulo->index[13].i = 26; SaoPaulo->index[13].j = 24;
+	SaoPaulo->index[10].i = 25; SaoPaulo->index[10].j = 20;
+	SaoPaulo->index[11].i = 25; SaoPaulo->index[11].j = 21;
+	SaoPaulo->index[12].i = 25; SaoPaulo->index[12].j = 22;
+	SaoPaulo->index[13].i = 26; SaoPaulo->index[13].j = 22;
+	SaoPaulo->index[14].i = 26; SaoPaulo->index[14].j = 23;
+	SaoPaulo->index[15].i = 26; SaoPaulo->index[15].j = 24;
+	SaoPaulo->index[16].i = 26; SaoPaulo->index[16].j = 25;
+	SaoPaulo->index[17].i = 26; SaoPaulo->index[17].j = 26;
+	SaoPaulo->index[18].i = 27; SaoPaulo->index[18].j = 23;
+	SaoPaulo->index[19].i = 27; SaoPaulo->index[19].j = 24;
 #pragma endregion
 
 #pragma region PARANA
