@@ -167,11 +167,12 @@ int main() {
 	ALLEGRO_TIMER *piscaTimer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
-	ALLEGRO_BITMAP *inputPopup = NULL;
+	ALLEGRO_BITMAP *nomeJogadorTela = NULL;
 	ALLEGRO_BITMAP *jogoBG = NULL;
 	ALLEGRO_BITMAP *pauseBtn = NULL;
 	ALLEGRO_BITMAP *gameOver = NULL;
 	ALLEGRO_BITMAP *rankingTela = NULL;
+	ALLEGRO_BITMAP *creditosTela = NULL;
 	ALLEGRO_BITMAP *pauseTela = NULL;
 	ALLEGRO_BITMAP *estrelaPontos = NULL;
 	ALLEGRO_BITMAP *coracaoVazio = NULL;
@@ -231,7 +232,7 @@ int main() {
 
 	// Bitmap do popup de input de nome do jogador
 	char *inputPopupPath = GetFolderPath("/imgs/Telas/nomeJogador.png");
-	inputPopup = al_load_bitmap(inputPopupPath);
+	nomeJogadorTela = al_load_bitmap(inputPopupPath);
 
 	// Bitmap do mapa do jogo
 	char *mapaPath = GetFolderPath("/imgs/Mapas/mapaEscuro1.png");
@@ -264,6 +265,10 @@ int main() {
 	// Bitmap da tela de Game Over
 	char *gameOverPath = GetFolderPath("/imgs/Telas/gameOver.jpg");
 	gameOver = al_load_bitmap(gameOverPath);
+
+	// Bitmap da tela de creditos
+	char *creditosTelaPath = GetFolderPath("/imgs/Telas/creditos.png");
+	creditosTela = al_load_bitmap(creditosTelaPath);
 
 	// Bitmap da tela de ranking
 	char *rankingTelaPath = GetFolderPath("/imgs/Telas/ranking.png");
@@ -398,6 +403,11 @@ int main() {
 				clicouRanking = true;
 			}
 
+			if (ev.mouse.x >= 1171 && ev.mouse.x <= 1245 && ev.mouse.y >= 622 && ev.mouse.y <= 891)
+			{
+				clicouCreditos = true;
+			}
+
 			//Verifica se o click est� dentro dos bounds do continuar para verificar se o usuario digitou o nome, caso tenha digitado a variavel digitouNome é verdadeira 
 			if (ev.mouse.x >= 742 && ev.mouse.x <= 904 && ev.mouse.y >= 446 && ev.mouse.y <= 486 && strlen(jogador.nome) >= 1)
 			{
@@ -470,7 +480,6 @@ int main() {
 				ResetJogador(&jogador, false);
 				clicouPause = false;
 			}
-			printf("POS X: %d \n POS Y: %d \n", ev.mouse.x, ev.mouse.y);
 		}
 
 		if (ev.type == ALLEGRO_EVENT_KEY_DOWN && !digitouNome)
@@ -499,12 +508,12 @@ int main() {
 				if (!isGameOver)
 				{
 					al_draw_bitmap(jogoBG, 0, 0, 0);
-					al_draw_bitmap(estadosCinza[0], 0, 0, 0);
+					al_draw_bitmap(estadosCinza[24], 0, 0, 0);
 					//al_draw_bitmap(mapaBrasil, 0, 0, 0);
 					//al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
 					DesenhaBtnPause(pauseBtn);
 					DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
-					al_draw_textf(fontLista, BLACK, 970, 40, 0, "Pontos: %d", jogador.pontos);
+					al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
 					if (!clicouPause)
 					{
 						UpdateLista(fontLista, &jogador, &lista);
@@ -555,8 +564,14 @@ int main() {
 				if (jogador.pronto && !digitouNome)
 				{
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
-					al_draw_bitmap(inputPopup, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
+					al_draw_bitmap(nomeJogadorTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
 					al_draw_textf(fontLista, BLACK, 635, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);
+				}
+
+				if (clicouCreditos)
+				{
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_bitmap(creditosTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
 				}
 
 				if (clicouRanking)
@@ -581,6 +596,7 @@ int main() {
 	free(jogoBGPath);
 	free(gameOverPath);
 	free(rankingTelaPath);
+	free(creditosTelaPath);
 	free(pauseTelaPath);
 	free(pauseBtnPath);
 	free(musicOnPath);
@@ -604,10 +620,11 @@ int main() {
 	al_destroy_timer(timer);
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
-	al_destroy_bitmap(inputPopup);
+	al_destroy_bitmap(nomeJogadorTela);
 	al_destroy_bitmap(jogoBG);
 	al_destroy_bitmap(gameOver);
 	al_destroy_bitmap(rankingTela);
+	al_destroy_bitmap(creditosTela);
 	al_destroy_bitmap(pauseTela);
 	al_destroy_bitmap(musicaOn);
 	al_destroy_bitmap(musicaOff);
