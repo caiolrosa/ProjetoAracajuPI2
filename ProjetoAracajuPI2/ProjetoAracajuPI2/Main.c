@@ -243,7 +243,7 @@ int main() {
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
 	// Bitmap teste do fundo
-	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg.jpg");
+	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg-grid.jpg");
 	jogoBG = al_load_bitmap(jogoBGPath);
 
 	// Bitmap botao de pause
@@ -439,6 +439,8 @@ int main() {
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
+
+			printf("POS X = %d \nPOS Y = %d \n", t.i, t.j);
 
 			// Verifica se jogador clicou no pause
 			if (ev.mouse.x >= 1164 && ev.mouse.x <= 1238 && ev.mouse.y >= 33 && ev.mouse.y <= 101 && !clicouPause)
@@ -722,14 +724,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region SANTA CATARINA
 	SantaCatarina->myIndexPosition = 1;
-	SantaCatarina->index[0].i = 28; SantaCatarina->index[0].j = 18;
-	SantaCatarina->index[1].i = 28; SantaCatarina->index[1].j = 19;
-	SantaCatarina->index[2].i = 28; SantaCatarina->index[2].j = 20;
-	SantaCatarina->index[3].i = 28; SantaCatarina->index[3].j = 21;
-	SantaCatarina->index[4].i = 28; SantaCatarina->index[4].j = 22;
-	SantaCatarina->index[5].i = 28; SantaCatarina->index[5].j = 23;
-	SantaCatarina->index[6].i = 29; SantaCatarina->index[6].j = 22;
-	SantaCatarina->index[7].i = 29; SantaCatarina->index[7].j = 23;
+	SantaCatarina->index[0].i = 29; SantaCatarina->index[0].j = 19;
+	SantaCatarina->index[1].i = 29; SantaCatarina->index[1].j = 20;
+	SantaCatarina->index[2].i = 29; SantaCatarina->index[2].j = 21;
+	SantaCatarina->index[3].i = 29; SantaCatarina->index[3].j = 22;
+	SantaCatarina->index[4].i = 29; SantaCatarina->index[4].j = 23;
+	SantaCatarina->index[5].i = 30; SantaCatarina->index[5].j = 21;
+	SantaCatarina->index[6].i = 30; SantaCatarina->index[6].j = 22;
+	SantaCatarina->index[7].i = 30; SantaCatarina->index[7].j = 23;
+	SantaCatarina->index[7].i = 31; SantaCatarina->index[7].j = 22;
+	SantaCatarina->index[7].i = 31; SantaCatarina->index[7].j = 23;
 #pragma endregion
 
 #pragma region RIO GRANDE DO NORTE
@@ -944,48 +948,41 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region PARANA
 	Parana->myIndexPosition = 2; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Parana->index[0].i = 25;   Parana->index[0].j = 19;
-	Parana->index[1].i = 25;   Parana->index[1].j = 20;
-	Parana->index[2].i = 25;   Parana->index[2].j = 21;
-	Parana->index[3].i = 25;   Parana->index[3].j = 22;
-	Parana->index[4].i = 25;   Parana->index[4].j = 23;
-	Parana->index[5].i = 26;   Parana->index[5].j = 19;
-	Parana->index[6].i = 26;   Parana->index[6].j = 20;
-	Parana->index[7].i = 26;   Parana->index[7].j = 21;
-	Parana->index[8].i = 26;   Parana->index[8].j = 22;
-	Parana->index[9].i = 26;   Parana->index[9].j = 23;
-	Parana->index[10].i = 27;   Parana->index[10].j = 19;
-	Parana->index[11].i = 27;   Parana->index[11].j = 20;
-	Parana->index[12].i = 27;   Parana->index[12].j = 21;
-	Parana->index[13].i = 27;   Parana->index[13].j = 22;
-	Parana->index[14].i = 27;   Parana->index[14].j = 23;
+	Parana->index[0].i = 26;   Parana->index[0].j = 18;
+	Parana->index[1].i = 26;   Parana->index[1].j = 19;
+	Parana->index[2].i = 26;   Parana->index[2].j = 20;
+	Parana->index[3].i = 26;   Parana->index[3].j = 21;
+	Parana->index[4].i = 27;   Parana->index[4].j = 18;
+	Parana->index[5].i = 27;   Parana->index[5].j = 20;
+	Parana->index[6].i = 27;   Parana->index[6].j = 21;
+	Parana->index[7].i = 27;   Parana->index[7].j = 22;
+	Parana->index[8].i = 28;   Parana->index[8].j = 18;
+	Parana->index[9].i = 28;   Parana->index[9].j = 19;
+	Parana->index[10].i = 28;   Parana->index[10].j = 20;
+	Parana->index[11].i = 28;   Parana->index[11].j = 21;
+	Parana->index[12].i = 28;   Parana->index[12].j = 22;
+	Parana->index[13].i = 28;   Parana->index[13].j = 23;
+	Parana->index[14].i = 29;   Parana->index[14].j = 21;
+	Parana->index[15].i = 29;   Parana->index[15].j = 22;
+	Parana->index[16].i = 30;   Parana->index[16].j = 22;
 #pragma endregion	
 
 #pragma region RIO GRAND DO SUL
 	RioGrandeDoSul->myIndexPosition = 0; //posicao no vetor ESTADOS de nomes na classe objects.h
-	RioGrandeDoSul->index[0].i = 29;   RioGrandeDoSul->index[0].j = 17;
-	RioGrandeDoSul->index[1].i = 29;   RioGrandeDoSul->index[1].j = 18;
-	RioGrandeDoSul->index[2].i = 29;   RioGrandeDoSul->index[2].j = 19;
-	RioGrandeDoSul->index[3].i = 29;   RioGrandeDoSul->index[3].j = 20;
-	RioGrandeDoSul->index[4].i = 29;   RioGrandeDoSul->index[4].j = 21;
-	RioGrandeDoSul->index[5].i = 30;   RioGrandeDoSul->index[5].j = 16;
-	RioGrandeDoSul->index[6].i = 30;   RioGrandeDoSul->index[6].j = 17;
-	RioGrandeDoSul->index[7].i = 30;   RioGrandeDoSul->index[7].j = 18;
-	RioGrandeDoSul->index[8].i = 30;   RioGrandeDoSul->index[8].j = 19;
-	RioGrandeDoSul->index[9].i = 30;   RioGrandeDoSul->index[9].j = 20;
-	RioGrandeDoSul->index[10].i = 30;   RioGrandeDoSul->index[10].j = 21;
-	RioGrandeDoSul->index[11].i = 30;   RioGrandeDoSul->index[11].j = 22;
-	RioGrandeDoSul->index[12].i = 31;   RioGrandeDoSul->index[12].j = 17;
-	RioGrandeDoSul->index[13].i = 31;   RioGrandeDoSul->index[13].j = 18;
-	RioGrandeDoSul->index[14].i = 31;   RioGrandeDoSul->index[14].j = 19;
-	RioGrandeDoSul->index[15].i = 31;   RioGrandeDoSul->index[15].j = 20;
-	RioGrandeDoSul->index[16].i = 31;   RioGrandeDoSul->index[16].j = 21;
-	RioGrandeDoSul->index[17].i = 32;   RioGrandeDoSul->index[17].j = 18;
-	RioGrandeDoSul->index[18].i = 32;   RioGrandeDoSul->index[18].j = 19;
-	RioGrandeDoSul->index[19].i = 32;   RioGrandeDoSul->index[19].j = 20;
-	RioGrandeDoSul->index[20].i = 32;   RioGrandeDoSul->index[20].j = 21;
-	RioGrandeDoSul->index[21].i = 33;   RioGrandeDoSul->index[21].j = 19;
-	RioGrandeDoSul->index[22].i = 33;   RioGrandeDoSul->index[22].j = 20;
+	RioGrandeDoSul->index[0].i = 30;   RioGrandeDoSul->index[0].j = 18;
+	RioGrandeDoSul->index[1].i = 30;   RioGrandeDoSul->index[1].j = 19;
+	RioGrandeDoSul->index[2].i = 30;   RioGrandeDoSul->index[2].j = 20;
+	RioGrandeDoSul->index[3].i = 31;   RioGrandeDoSul->index[3].j = 17;
+	RioGrandeDoSul->index[4].i = 31;   RioGrandeDoSul->index[4].j = 18;
+	RioGrandeDoSul->index[5].i = 31;   RioGrandeDoSul->index[5].j = 19;
+	RioGrandeDoSul->index[6].i = 31;   RioGrandeDoSul->index[6].j = 20;
+	RioGrandeDoSul->index[7].i = 31;   RioGrandeDoSul->index[7].j = 21;
+	RioGrandeDoSul->index[8].i = 32;   RioGrandeDoSul->index[8].j = 18;
+	RioGrandeDoSul->index[9].i = 32;   RioGrandeDoSul->index[9].j = 19;
+	RioGrandeDoSul->index[10].i = 32;   RioGrandeDoSul->index[10].j = 20;
+	RioGrandeDoSul->index[11].i = 32;   RioGrandeDoSul->index[11].j = 21;
+	RioGrandeDoSul->index[12].i = 33;   RioGrandeDoSul->index[12].j = 19;
+	RioGrandeDoSul->index[13].i = 33;   RioGrandeDoSul->index[13].j = 20;
 #pragma endregion
 
 #pragma region TOCANTINS
@@ -1406,7 +1403,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 				al_play_sample_instance(erroAudioInstance);
 			}
 			jogador->erros++;
-			jogador->vidas--;
+			//jogador->vidas--;
 		}
 
 		lista->heightLista = 0;
@@ -1841,7 +1838,7 @@ void JogadorErrou(Jogador * jogador)
 			al_play_sample_instance(erroAudioInstance);
 		}
 		jogador->erros++;
-		jogador->vidas--;
+		//jogador->vidas--;
 		jogador->acertou = false;
 	}
 }

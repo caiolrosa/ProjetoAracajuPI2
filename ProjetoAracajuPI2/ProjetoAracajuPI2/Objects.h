@@ -18,15 +18,15 @@
 #define minasGeraisIndexSize 37
 #define paraIndexSize 72
 #define paraibaIndexSize 4
-#define paranaIndexSize 15
+#define paranaIndexSize 17
 #define pernambucoIndexSize 7
 #define piauiIndexSize 16
 #define rioDeJaneiroIndexSize 3
 #define rioGrandeDoNorteIndexSize 3
-#define rioGrandeDoSulIndexSize 23
+#define rioGrandeDoSulIndexSize 14
 #define rondoniaIndexSize 20
 #define roraimaIndexSize 20 //diego adicionou
-#define santaCatarinaIndexSize 8
+#define santaCatarinaIndexSize 9
 #define saoPauloIndexSize 14
 #define sergipeIndexSize 2
 #define tocantinsIndexSize 20
