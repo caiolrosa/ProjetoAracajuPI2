@@ -37,6 +37,7 @@ bool clicouRanking = false;
 bool clicouPause = false;
 bool clicouTutorial = false;
 bool clicouCreditos = false;
+bool perdeuEstado = false;
 bool digitouNome = false;
 bool salvouPontuacao = false;
 
@@ -89,6 +90,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade
 void DesenhaBtnPause(ALLEGRO_BITMAP *pauseBtn);
 void DesenhaBtnMusica(ALLEGRO_BITMAP *musicaOn, ALLEGRO_BITMAP *musicaOff, int posX, int posY, bool musicaTocando);
 void DesenhaPontuacaoRanking(ALLEGRO_FONT *fontLista, Ranking *ranking);
+void DesenhaEstadosCinza(ALLEGRO_BITMAP *estadosCinza[], Jogador *jogador);
 //void DesenhaEstadosCinza();
 
 int GetTotalLinhas(FILE * rankingData);
@@ -263,7 +265,7 @@ int main() {
 	coracaoCheio = al_load_bitmap(coracaoCheioPath);
 
 	// Bitmap da tela de Game Over
-	char *gameOverPath = GetFolderPath("/imgs/Telas/gameOver.jpg");
+	char *gameOverPath = GetFolderPath("/imgs/Telas/gameover.png");
 	gameOver = al_load_bitmap(gameOverPath);
 
 	// Bitmap da tela de creditos
@@ -409,7 +411,7 @@ int main() {
 			}
 
 			//Verifica se o click est� dentro dos bounds do continuar para verificar se o usuario digitou o nome, caso tenha digitado a variavel digitouNome é verdadeira 
-			if (ev.mouse.x >= 742 && ev.mouse.x <= 904 && ev.mouse.y >= 446 && ev.mouse.y <= 486 && strlen(jogador.nome) >= 1)
+			if (ev.mouse.x >= 743 && ev.mouse.x <= 905 && ev.mouse.y >= 446 && ev.mouse.y <= 486 && strlen(jogador.nome) >= 1)
 			{
 				digitouNome = true;
 			}
@@ -448,9 +450,10 @@ int main() {
 		}
 
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && clicouPause)
-		{
-			if (ev.mouse.x >= 453 && ev.mouse.x <= 552 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+		{ 
+			if (ev.mouse.x >= 462 && ev.mouse.x <= 536 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
+				printf("click menu");
 				al_stop_sample_instance(jogoAudioInstance);
 				ResetJogador(&jogador, true);
 				isInMenu = true;
@@ -459,7 +462,7 @@ int main() {
 				jogadorJogando = false;
 			}
 
-			if (ev.mouse.x >= 547 && ev.mouse.x <= 620 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+			if (ev.mouse.x >= 558 && ev.mouse.x <= 631 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
 				if (musicaTocando)
 				{
@@ -470,12 +473,12 @@ int main() {
 				}
 			}
 
-			if (ev.mouse.x >= 643 && ev.mouse.x <= 716 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+			if (ev.mouse.x >= 653 && ev.mouse.x <= 727 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
 				clicouPause = false;
 			}
 
-			if (ev.mouse.x >= 738 && ev.mouse.x <= 811 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
+			if (ev.mouse.x >= 748 && ev.mouse.x <= 822 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
 				ResetJogador(&jogador, false);
 				clicouPause = false;
@@ -504,43 +507,39 @@ int main() {
 				else {
 					al_stop_sample_instance(jogoAudioInstance);
 				}
-					
-				if (!isGameOver)
+
+				al_flip_display();
+				al_draw_bitmap(jogoBG, 0, 0, 0);
+				DesenhaEstadosCinza(estadosCinza, &jogador);
+				//al_draw_bitmap(mapaBrasil, 0, 0, 0);
+				//al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
+				DesenhaBtnPause(pauseBtn);
+				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
+				al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
+				if (!clicouPause && !isGameOver)
 				{
-					al_draw_bitmap(jogoBG, 0, 0, 0);
-					al_draw_bitmap(estadosCinza[24], 0, 0, 0);
-					//al_draw_bitmap(mapaBrasil, 0, 0, 0);
-					//al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
-					DesenhaBtnPause(pauseBtn);
-					DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
-					al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
-					if (!clicouPause)
-					{
-						UpdateLista(fontLista, &jogador, &lista);
-					}
-					else {
-						al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
-						al_draw_bitmap(pauseTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0 );
-						DesenhaBtnMusica(musicaOn, musicaOff, 544, 363, musicaTocando);
-					}
-						
-					al_flip_display();
+					UpdateLista(fontLista, &jogador, &lista);
 				}
-				else
-				{
-					al_flip_display();
-					al_draw_bitmap(gameOver, 0, 0, 0);
+				else if(clicouPause && !isGameOver) {
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_bitmap(pauseTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0 );
+					DesenhaBtnMusica(musicaOn, musicaOff, 554, 363, musicaTocando);
+				}
+				if (isGameOver)
+				{					
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_bitmap(gameOver, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
 					DesenhaEstrelas(jogador.pontos, estrelaPontos);
-					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 14, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
-					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 41, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
-					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 70, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
-						
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) - 4, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 23, ALLEGRO_ALIGN_CENTER, "%d", jogador.acertos);
+					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) + 52, ALLEGRO_ALIGN_CENTER, "%d", jogador.erros);
+
 					if (!salvouPontuacao)
 					{
 						SalvaPontuacao(rankingData, &jogador);
 						salvouPontuacao = true;
 					}
-				}			
+				}	
 			}
 			else
 			{
@@ -558,27 +557,25 @@ int main() {
 				if (jogador.pronto && !digitouNome)
 				{
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
-					al_draw_bitmap(nomeJogadorTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
-					al_draw_textf(fontLista, BLACK, 635, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);
+					al_draw_bitmap(nomeJogadorTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
+					al_draw_textf(fontLista, BLACK, 645, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);
 				}
 
 				if (clicouCreditos)
 				{
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
-					al_draw_bitmap(creditosTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
+					al_draw_bitmap(creditosTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
 				}
 
 				if (clicouRanking)
 				{
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
-					al_draw_bitmap(rankingTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0);
-					// TERMINAR DE ARRUMAR ISSO
+					al_draw_bitmap(rankingTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
 					GetPontuacao(rankingData, &ranking);
 					DesenhaPontuacaoRanking(fontLista, &ranking);
 				}
 				
 				al_flip_display();			// Muda para o back buffer
-				//al_clear_to_color(al_map_rgb(255, 184, 40));
 			}
 		}
 	}
@@ -1409,7 +1406,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 				al_play_sample_instance(erroAudioInstance);
 			}
 			jogador->erros++;
-			//jogador->vidas--;
+			jogador->vidas--;
 		}
 
 		lista->heightLista = 0;
@@ -1528,7 +1525,12 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 	srand(time(NULL));
 	int i;
 	lista->indexAtual = rand() % 27;
-
+	while (lista->indexAtual == jogador->indexEstadosPerdidos[0] && lista->indexAtual == jogador->indexEstadosPerdidos[1] &&
+		   lista->indexAtual == jogador->indexEstadosPerdidos[2] && lista->indexAtual == jogador->indexEstadosPerdidos[3] && 
+		   lista->indexAtual == jogador->indexEstadosPerdidos[4])
+	{
+		lista->indexAtual = rand() % 27;
+	}
 	for (i = 0; i < 5; i++)
 	{
 		if (jogador->indexEstadosPerdidos[i] == lista->indexAtual)
@@ -1560,7 +1562,7 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 			break;
 		}
 	}
-	/*else if (jogador->pontos >= 500 && jogador->pontos < 1000) 
+	else if (jogador->pontos >= 500 && jogador->pontos < 1000) 
 	{
 		int conjuntoMedium = (rand() * 5) % 6;
 
@@ -1620,8 +1622,8 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 		default:
 			printf("Deu Ruim");
 			break;
-		}*/
-	//}
+		}
+	}
 }
 
 void GetUserInput(Jogador * jogador, ALLEGRO_EVENT ev)
@@ -1839,34 +1841,36 @@ void JogadorErrou(Jogador * jogador)
 			al_play_sample_instance(erroAudioInstance);
 		}
 		jogador->erros++;
-		//jogador->vidas--;
+		jogador->vidas--;
 		jogador->acertou = false;
 	}
 }
 
 void TiraEstado(Jogador * jogador)
 {
-	int i, j;
-	for (i = 0; i < 27; i++)
+	if (!perdeuEstado)
 	{
-		if (jogador->acertoPorIndex[i] > 3)
+		int i, j;
+		for (i = 0; i < 27; i++)
 		{
-			for (j = 0; j < 5; j++)
+			if (jogador->acertoPorIndex[i] >= 1)
 			{
-				if (jogador->indexEstadosPerdidos[j] >= 0)
+				for (j = 0; j < 5; j++)
 				{
-					jogador->indexEstadosPerdidos[j] = i;
+					if (jogador->indexEstadosPerdidos[j] < 0)
+					{
+						if (i != jogador->indexEstadosPerdidos[0] && i != jogador->indexEstadosPerdidos[1] &&
+							i != jogador->indexEstadosPerdidos[2] && i != jogador->indexEstadosPerdidos[3] &&
+							i != jogador->indexEstadosPerdidos[4]) 
+						{
+							jogador->indexEstadosPerdidos[j] = i;
+							jogador->acertoPorIndex[i] = -1;
+							perdeuEstado = true;
+							break;
+						}
+					}
 				}
-			}
-		}
-		else {
-			for (j = 0; j < 5; j++)
-			{
-				if (jogador->indexEstadosPerdidos[j] <= 0)
-				{
-					srand(time(NULL));
-					jogador->indexEstadosPerdidos[j] = (rand() * 5) % 27;
-				}
+				break;
 			}
 		}
 	}
@@ -1895,6 +1899,15 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 {
 	switch (jogador->vidas)
 	{
+	case 0:
+		al_draw_bitmap(coracaoVazio, 970, 70, 0);
+		al_draw_bitmap(coracaoVazio, 998, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		perdeuEstado = false;
+		break;
 	case 1:
 		al_draw_bitmap(coracaoMetade, 970, 70, 0);
 		al_draw_bitmap(coracaoVazio, 998, 70, 0);
@@ -1902,6 +1915,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		perdeuEstado = false;
 		break;
 	case 2:
 		al_draw_bitmap(coracaoCheio, 970, 70, 0);
@@ -1919,6 +1933,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		perdeuEstado = false;
 		break;
 	case 4:
 		al_draw_bitmap(coracaoCheio, 970, 70, 0);
@@ -1936,6 +1951,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		perdeuEstado = false;
 		break;
 	case 6:
 		al_draw_bitmap(coracaoCheio, 970, 70, 0);
@@ -1953,6 +1969,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 		al_draw_bitmap(coracaoMetade, 1054, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		perdeuEstado = false;
 		break;
 	case 8:
 		al_draw_bitmap(coracaoCheio, 970, 70, 0);
@@ -1970,6 +1987,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
 		al_draw_bitmap(coracaoMetade, 1082, 70, 0);
 		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		perdeuEstado = false;
 		break;
 	case 10:
 		al_draw_bitmap(coracaoCheio, 970, 70, 0);
@@ -1987,6 +2005,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
 		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
 		al_draw_bitmap(coracaoMetade, 1110, 70, 0);
+		perdeuEstado = false;
 		break;
 	case 12:
 		al_draw_bitmap(coracaoCheio, 970, 70, 0);
@@ -1995,6 +2014,7 @@ void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMeta
 		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
 		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
 		al_draw_bitmap(coracaoCheio, 1110, 70, 0);
+		perdeuEstado = false;
 		break;
 	default:
 		break;
@@ -2021,70 +2041,82 @@ void DesenhaPontuacaoRanking(ALLEGRO_FONT * fontLista, Ranking * ranking)
 {
 	if (ranking->totalLinhas / 2 >= 5)
 	{
-		al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s",ranking->nomesTxt[0]);
-		al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d",ranking->pontosTxt[0]);
-		al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
-		al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
-		al_draw_textf(fontLista, WHITE, 480, 382, 0, "%s", ranking->nomesTxt[2]);
-		al_draw_textf(fontLista, WHITE, 712, 382, 0, "%d", ranking->pontosTxt[2]);
-		al_draw_textf(fontLista, WHITE, 480, 408, 0, "%s", ranking->nomesTxt[3]);
-		al_draw_textf(fontLista, WHITE, 712, 408, 0, "%d", ranking->pontosTxt[3]);
-		al_draw_textf(fontLista, WHITE, 480, 434, 0, "%s", ranking->nomesTxt[4]);
-		al_draw_textf(fontLista, WHITE, 712, 434, 0, "%d", ranking->pontosTxt[4]);
+		al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s",ranking->nomesTxt[0]);
+		al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d",ranking->pontosTxt[0]);
+		al_draw_textf(fontLista, WHITE, 490, 357, 0, "%s", ranking->nomesTxt[1]);
+		al_draw_textf(fontLista, WHITE, 722, 357, 0, "%d", ranking->pontosTxt[1]);
+		al_draw_textf(fontLista, WHITE, 490, 382, 0, "%s", ranking->nomesTxt[2]);
+		al_draw_textf(fontLista, WHITE, 722, 382, 0, "%d", ranking->pontosTxt[2]);
+		al_draw_textf(fontLista, WHITE, 490, 408, 0, "%s", ranking->nomesTxt[3]);
+		al_draw_textf(fontLista, WHITE, 722, 408, 0, "%d", ranking->pontosTxt[3]);
+		al_draw_textf(fontLista, WHITE, 490, 434, 0, "%s", ranking->nomesTxt[4]);
+		al_draw_textf(fontLista, WHITE, 722, 434, 0, "%d", ranking->pontosTxt[4]);
 	}
 	else {
 		switch (ranking->totalLinhas / 2)
 		{
 		case 4:
-			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
-			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
-			al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
-			al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
-			al_draw_textf(fontLista, WHITE, 480, 382, 0, "%s", ranking->nomesTxt[2]);
-			al_draw_textf(fontLista, WHITE, 712, 382, 0, "%d", ranking->pontosTxt[2]);
-			al_draw_textf(fontLista, WHITE, 480, 408, 0, "%s", ranking->nomesTxt[3]);
-			al_draw_textf(fontLista, WHITE, 712, 408, 0, "%d", ranking->pontosTxt[3]);
-			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 490, 357, 0, "%s", ranking->nomesTxt[1]);
+			al_draw_textf(fontLista, WHITE, 722, 357, 0, "%d", ranking->pontosTxt[1]);
+			al_draw_textf(fontLista, WHITE, 490, 382, 0, "%s", ranking->nomesTxt[2]);
+			al_draw_textf(fontLista, WHITE, 722, 382, 0, "%d", ranking->pontosTxt[2]);
+			al_draw_textf(fontLista, WHITE, 490, 408, 0, "%s", ranking->nomesTxt[3]);
+			al_draw_textf(fontLista, WHITE, 722, 408, 0, "%d", ranking->pontosTxt[3]);
+			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
 			break;
 		case 3:
-			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
-			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
-			al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
-			al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
-			al_draw_textf(fontLista, WHITE, 480, 382, 0, "%s", ranking->nomesTxt[2]);
-			al_draw_textf(fontLista, WHITE, 712, 382, 0, "%d", ranking->pontosTxt[2]);
-			al_draw_textf(fontLista, WHITE, 480, 408, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 408, 0, "---");
-			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 490, 357, 0, "%s", ranking->nomesTxt[1]);
+			al_draw_textf(fontLista, WHITE, 722, 357, 0, "%d", ranking->pontosTxt[1]);
+			al_draw_textf(fontLista, WHITE, 490, 382, 0, "%s", ranking->nomesTxt[2]);
+			al_draw_textf(fontLista, WHITE, 722, 382, 0, "%d", ranking->pontosTxt[2]);
+			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
 			break;
 		case 2:
-			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
-			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
-			al_draw_textf(fontLista, WHITE, 480, 357, 0, "%s", ranking->nomesTxt[1]);
-			al_draw_textf(fontLista, WHITE, 712, 357, 0, "%d", ranking->pontosTxt[1]);
-			al_draw_textf(fontLista, WHITE, 480, 382, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 382, 0, "---");
-			al_draw_textf(fontLista, WHITE, 480, 408, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 408, 0, "---");
-			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 490, 357, 0, "%s", ranking->nomesTxt[1]);
+			al_draw_textf(fontLista, WHITE, 722, 357, 0, "%d", ranking->pontosTxt[1]);
+			al_draw_textf(fontLista, WHITE, 490, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
 			break;
 		case 1:
-			al_draw_textf(fontLista, WHITE, 480, 331, 0, "%s", ranking->nomesTxt[0]);
-			al_draw_textf(fontLista, WHITE, 712, 331, 0, "%d", ranking->pontosTxt[0]);
-			al_draw_textf(fontLista, WHITE, 480, 357, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 357, 0, "---");
-			al_draw_textf(fontLista, WHITE, 480, 382, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 382, 0, "---");
-			al_draw_textf(fontLista, WHITE, 480, 408, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 408, 0, "---");
-			al_draw_textf(fontLista, WHITE, 480, 434, 0, "---");
-			al_draw_textf(fontLista, WHITE, 712, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s", ranking->nomesTxt[0]);
+			al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 490, 357, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 357, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
 			break;
 		default:
 			break;
+		}
+	}
+}
+
+void DesenhaEstadosCinza(ALLEGRO_BITMAP * estadosCinza[], Jogador * jogador)
+{
+	int i;
+	for (i = 0; i < 5; i++)
+	{
+		if (jogador->indexEstadosPerdidos[i] >= 0)
+		{
+			al_draw_bitmap(estadosCinza[jogador->indexEstadosPerdidos[i]], 0, 0, 0);
 		}
 	}
 }
