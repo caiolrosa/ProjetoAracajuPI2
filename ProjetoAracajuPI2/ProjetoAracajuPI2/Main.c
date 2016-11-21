@@ -87,7 +87,7 @@ void FreeNomeJogadores(Ranking * ranking);
 void FreeEstadosCinzaEPath(char *estadosCinzaPath[], ALLEGRO_BITMAP *estadosCinza[]);
 void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade, ALLEGRO_BITMAP *coracaoCheio, Jogador *jogador);
 void DesenhaBtnPause(ALLEGRO_BITMAP *pauseBtn);
-void DesenhaBtnMusica(ALLEGRO_BITMAP *musicaOn, ALLEGRO_BITMAP *musicaOff, bool musicaTocando);
+void DesenhaBtnMusica(ALLEGRO_BITMAP *musicaOn, ALLEGRO_BITMAP *musicaOff, int posX, int posY, bool musicaTocando);
 void DesenhaPontuacaoRanking(ALLEGRO_FONT *fontLista, Ranking *ranking);
 //void DesenhaEstadosCinza();
 
@@ -512,13 +512,7 @@ int main() {
 					else {
 						al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
 						al_draw_bitmap(pauseTela, WIDTH / 2 - 300, HEIGHT / 2 - 157, 0 );
-						if (musicaTocando)
-						{
-							al_draw_bitmap(musicaOn, 544, 363, 0);
-						}
-						else {
-							al_draw_bitmap(musicaOff, 544, 363, 0);
-						}
+						DesenhaBtnMusica(musicaOn, musicaOff, 544, 363, musicaTocando);
 					}
 						
 					al_flip_display();
@@ -550,7 +544,7 @@ int main() {
 				}
 
 				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela
-				DesenhaBtnMusica(musicaOn, musicaOff, musicaTocando);
+				DesenhaBtnMusica(musicaOn, musicaOff, 1000, 617, musicaTocando);
 
 				if (jogador.pronto && !digitouNome)
 				{
@@ -1995,14 +1989,14 @@ void DesenhaBtnPause(ALLEGRO_BITMAP * pauseBtn)
 	al_draw_bitmap(pauseBtn, 1160, 25, 0);
 }
 
-void DesenhaBtnMusica(ALLEGRO_BITMAP * musicaOn, ALLEGRO_BITMAP * musicaOff, bool musicaTocando)
+void DesenhaBtnMusica(ALLEGRO_BITMAP * musicaOn, ALLEGRO_BITMAP * musicaOff, int posX, int posY, bool musicaTocando)
 {
 	if (musicaTocando)
 	{
-		al_draw_bitmap(musicaOn, 1000, 617, 0);
+		al_draw_bitmap(musicaOn, posX, posY, 0);
 	}
 	else {
-		al_draw_bitmap(musicaOff, 1000, 617, 0);
+		al_draw_bitmap(musicaOff, posX, posY, 0);
 	}
 }
 
