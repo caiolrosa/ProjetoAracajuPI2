@@ -42,6 +42,7 @@ typedef struct Jogador {
 	int acertos;
 	int erros;
 	bool acertou;
+	bool clicouErrado;
 	bool pronto;
 } Jogador;
 

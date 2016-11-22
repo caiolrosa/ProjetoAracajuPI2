@@ -37,7 +37,6 @@ bool clicouRanking = false;
 bool clicouPause = false;
 bool clicouTutorial = false;
 bool clicouCreditos = false;
-bool clicouEstado = false;
 bool perdeuEstado = false;
 bool digitouNome = false;
 bool salvouPontuacao = false;
@@ -87,7 +86,7 @@ void SalvaPontuacao(FILE *rankingData, Jogador *jogador);
 void GetPontuacao(FILE *rankingData, Ranking *ranking);
 void SortPontos(Ranking * ranking, int size);
 void JogadorAcertou(Jogador *jogador, Lista *lista, int pontuacao);
-void JogadorErrou(Jogador *jogador);
+void JogadorErrou(Jogador *jogador, Lista * lista);
 void TiraEstado(Jogador *jogador);
 void FreeNomeJogadores(Ranking * ranking);
 void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
@@ -680,6 +679,8 @@ void InitJogador(Jogador * jogador)
 	jogador->acertos = 0;
 	jogador->erros = 0;
 	jogador->pronto = false;
+	jogador->acertou = false;
+	jogador->clicouErrado = false;
 
 	int i;
 	for (i = 0; i < 27; i++)
@@ -1445,7 +1446,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
-		if (!jogador->acertou && !clicouPause)
+		if (!jogador->acertou && !clicouPause && !jogador->clicouErrado)
 		{
 			if (musicaTocando)
 			{
@@ -1875,10 +1876,11 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 		jogador->acertos++;
 		jogador->acertou = true;
 		lista->isMaxHeight = true;
+		jogador->clicouErrado = false;
 	}	
 }
 
-void JogadorErrou(Jogador * jogador)
+void JogadorErrou(Jogador * jogador, Lista * lista)
 {
 	if (!clicouPause)
 	{
@@ -1889,6 +1891,8 @@ void JogadorErrou(Jogador * jogador)
 		jogador->erros++;
 		//jogador->vidas--;
 		jogador->acertou = false;
+		jogador->clicouErrado = true;
+		lista->isMaxHeight = true;
 	}
 }
 
@@ -2281,7 +2285,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Acre->myIndexPosition]);
@@ -2303,7 +2307,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Alagoas->myIndexPosition]);
@@ -2325,7 +2329,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Amapa->myIndexPosition]);
@@ -2347,7 +2351,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 300);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Amazonas->myIndexPosition]);
@@ -2369,7 +2373,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Bahia->myIndexPosition]);
@@ -2391,7 +2395,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Ceara->myIndexPosition]);
@@ -2413,7 +2417,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 2000);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[DistritoFederal->myIndexPosition]);
@@ -2435,7 +2439,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[EspiritoSanto->myIndexPosition]);
@@ -2457,7 +2461,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Goias->myIndexPosition]);
@@ -2479,7 +2483,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Maranhao->myIndexPosition]);
@@ -2501,7 +2505,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 300);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[MatoGrosso->myIndexPosition]);
@@ -2523,7 +2527,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[MatoGrossoDoSul->myIndexPosition]);
@@ -2545,7 +2549,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[MinasGerais->myIndexPosition]);
@@ -2567,7 +2571,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 300);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Para->myIndexPosition]);
@@ -2589,7 +2593,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Paraiba->myIndexPosition]);
@@ -2611,7 +2615,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Parana->myIndexPosition]);
@@ -2633,7 +2637,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Pernambuco->myIndexPosition]);
@@ -2655,7 +2659,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Piaui->myIndexPosition]);
@@ -2677,7 +2681,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[RioDeJaneiro->myIndexPosition]);
@@ -2699,7 +2703,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1500);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[RioGrandeDoNorte->myIndexPosition]);
@@ -2721,7 +2725,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[RioGrandeDoSul->myIndexPosition]);
@@ -2743,7 +2747,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Rondonia->myIndexPosition]);
@@ -2765,7 +2769,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Roraima->myIndexPosition]);
@@ -2787,7 +2791,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 1000);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[SantaCatarina->myIndexPosition]);
@@ -2809,7 +2813,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[SaoPaulo->myIndexPosition]);
@@ -2831,7 +2835,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 2000);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Sergipe->myIndexPosition]);
@@ -2853,7 +2857,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 					JogadorAcertou(jogador, lista, 700);
 				}
 				else {
-					JogadorErrou(jogador);
+					JogadorErrou(jogador, lista);
 				}
 			}
 			printf("%s \n", Estados[Tocantins->myIndexPosition]);
