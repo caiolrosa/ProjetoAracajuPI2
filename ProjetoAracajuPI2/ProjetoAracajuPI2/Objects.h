@@ -49,6 +49,7 @@ typedef struct Lista {
 	int heightLista; // Altura do ultimo item da lista
 	float velocidade; // Velocidade em que caem os estados, capitais e siglas
 	int indexAtual;		// Recebe o index atual da palavra sorteada
+	int indexAnterior;
 	char *palavraAtual;	// Recebe o texto atual
 	ALLEGRO_COLOR cor; // Cor da palavra caindo na lista
 	bool isMaxHeight;	// Verifica se a palavra chegou na altura maxima

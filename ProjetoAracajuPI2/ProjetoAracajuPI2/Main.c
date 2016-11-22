@@ -37,11 +37,16 @@ bool clicouRanking = false;
 bool clicouPause = false;
 bool clicouTutorial = false;
 bool clicouCreditos = false;
+bool clicouEstado = false;
 bool perdeuEstado = false;
 bool digitouNome = false;
 bool salvouPontuacao = false;
 
 // Variaveis globais Allegro
+ALLEGRO_DISPLAY *display = NULL;
+ALLEGRO_EVENT_QUEUE *event_queue = NULL;
+ALLEGRO_TIMER *timer = NULL;
+ALLEGRO_TIMER *piscaTimer = NULL;
 ALLEGRO_COLOR WHITE;
 ALLEGRO_COLOR BLACK;
 ALLEGRO_COLOR BLUE;
@@ -69,7 +74,7 @@ void InitJogador(Jogador *jogador);
 void InitLista(Lista *lista);
 void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
-void InitEstadosCinza(char *estadosCinzaPath[], ALLEGRO_BITMAP *estadosCinza[]);
+void InitEstadosCores(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
 void ResetJogador(Jogador *jogador, bool resetNome);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
 void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP *estrela);
@@ -85,12 +90,14 @@ void JogadorAcertou(Jogador *jogador, Lista *lista, int pontuacao);
 void JogadorErrou(Jogador *jogador);
 void TiraEstado(Jogador *jogador);
 void FreeNomeJogadores(Ranking * ranking);
-void FreeEstadosCinzaEPath(char *estadosCinzaPath[], ALLEGRO_BITMAP *estadosCinza[]);
+void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
 void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade, ALLEGRO_BITMAP *coracaoCheio, Jogador *jogador);
 void DesenhaBtnPause(ALLEGRO_BITMAP *pauseBtn);
 void DesenhaBtnMusica(ALLEGRO_BITMAP *musicaOn, ALLEGRO_BITMAP *musicaOff, int posX, int posY, bool musicaTocando);
 void DesenhaPontuacaoRanking(ALLEGRO_FONT *fontLista, Ranking *ranking);
 void DesenhaEstadosCinza(ALLEGRO_BITMAP *estadosCinza[], Jogador *jogador);
+void DesenhaEstadosFeedBack(ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[], Jogador *jogador, Lista * lista);
+
 //void DesenhaEstadosCinza();
 
 int GetTotalLinhas(FILE * rankingData);
@@ -163,10 +170,6 @@ int main() {
 #pragma endregion
 	
 	// Variaveis do Allegro
-	ALLEGRO_DISPLAY *display = NULL;
-	ALLEGRO_EVENT_QUEUE *event_queue = NULL;
-	ALLEGRO_TIMER *timer = NULL;
-	ALLEGRO_TIMER *piscaTimer = NULL;
 	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_BITMAP *nomeJogadorTela = NULL;
@@ -185,6 +188,8 @@ int main() {
 	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *estadosCinza[27];
+	ALLEGRO_BITMAP *estadosVerdes[27];
+	ALLEGRO_BITMAP *estadosVermelhos[27];
 	ALLEGRO_BITMAP *tutorial = NULL;
 	ALLEGRO_BITMAP *tocantins = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
@@ -215,7 +220,7 @@ int main() {
 
 	// Carrega os bitmaps
 
-	// Carrega Bitmaps dos estados cinza
+	// Carrega Bitmaps dos Estados
 	char *estadosCinzaPath[] = { GetFolderPath("/imgs/EstadosCinzas/RioGrandeDoSul.png"), GetFolderPath("/imgs/EstadosCinzas/SantaCatarina.png"), 
 		GetFolderPath("/imgs/EstadosCinzas/Parana.png"), GetFolderPath("/imgs/EstadosCinzas/SaoPaulo.png"), GetFolderPath("/imgs/EstadosCinzas/RioDeJaneiro.png"), 
 		GetFolderPath("/imgs/EstadosCinzas/MinasGerais.png"),  GetFolderPath("/imgs/EstadosCinzas/EspiritoSanto.png"), 
@@ -226,7 +231,30 @@ int main() {
 		GetFolderPath("/imgs/EstadosCinzas/Piaui.png"), GetFolderPath("/imgs/EstadosCinzas/Ceara.png"), GetFolderPath("/imgs/EstadosCinzas/RioGrandeDoNorte.png"), 
 		GetFolderPath("/imgs/EstadosCinzas/Paraiba.png"), GetFolderPath("/imgs/EstadosCinzas/Pernambuco.png"), GetFolderPath("/imgs/EstadosCinzas/Alagoas.png"), 
 		GetFolderPath("/imgs/EstadosCinzas/Sergipe.png") };
-	InitEstadosCinza(estadosCinzaPath, estadosCinza);
+
+	char *estadosVerdesPath[] = { GetFolderPath("/imgs/EstadosVerdes/RioGrandeDoSul.png"), GetFolderPath("/imgs/EstadosVerdes/SantaCatarina.png"),
+		GetFolderPath("/imgs/EstadosVerdes/Parana.png"), GetFolderPath("/imgs/EstadosVerdes/SaoPaulo.png"), GetFolderPath("/imgs/EstadosVerdes/RioDeJaneiro.png"),
+		GetFolderPath("/imgs/EstadosVerdes/MinasGerais.png"),  GetFolderPath("/imgs/EstadosVerdes/EspiritoSanto.png"),
+		GetFolderPath("/imgs/EstadosVerdes/MatoGrossoDoSul.png"), GetFolderPath("/imgs/EstadosVerdes/Goias.png"), GetFolderPath("/imgs/EstadosVerdes/DistritoFederal.png"),
+		GetFolderPath("/imgs/EstadosVerdes/MatoGrosso.png"), GetFolderPath("/imgs/EstadosVerdes/Tocantins.png"), GetFolderPath("/imgs/EstadosVerdes/Rondonia.png"),
+		GetFolderPath("/imgs/EstadosVerdes/Acre.png"), GetFolderPath("/imgs/EstadosVerdes/Amazonas.png"), GetFolderPath("/imgs/EstadosVerdes/Roraima.png"), GetFolderPath("/imgs/EstadosVerdes/Para.png"),
+		GetFolderPath("/imgs/EstadosVerdes/Amapa.png"), GetFolderPath("/imgs/EstadosVerdes/Bahia.png"), GetFolderPath("/imgs/EstadosVerdes/Maranhao.png"),
+		GetFolderPath("/imgs/EstadosVerdes/Piaui.png"), GetFolderPath("/imgs/EstadosVerdes/Ceara.png"), GetFolderPath("/imgs/EstadosVerdes/RioGrandeDoNorte.png"),
+		GetFolderPath("/imgs/EstadosVerdes/Paraiba.png"), GetFolderPath("/imgs/EstadosVerdes/Pernambuco.png"), GetFolderPath("/imgs/EstadosVerdes/Alagoas.png"),
+		GetFolderPath("/imgs/EstadosVerdes/Sergipe.png") };
+
+	char *estadosVermelhosPath[] = { GetFolderPath("/imgs/EstadosVermelhos/RioGrandeDoSul.png"), GetFolderPath("/imgs/EstadosVermelhos/SantaCatarina.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/Parana.png"), GetFolderPath("/imgs/EstadosVermelhos/SaoPaulo.png"), GetFolderPath("/imgs/EstadosVermelhos/RioDeJaneiro.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/MinasGerais.png"),  GetFolderPath("/imgs/EstadosVermelhos/EspiritoSanto.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/MatoGrossoDoSul.png"), GetFolderPath("/imgs/EstadosVermelhos/Goias.png"), GetFolderPath("/imgs/EstadosVermelhos/DistritoFederal.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/MatoGrosso.png"), GetFolderPath("/imgs/EstadosVermelhos/Tocantins.png"), GetFolderPath("/imgs/EstadosVermelhos/Rondonia.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/Acre.png"), GetFolderPath("/imgs/EstadosVermelhos/Amazonas.png"), GetFolderPath("/imgs/EstadosVermelhos/Roraima.png"), GetFolderPath("/imgs/EstadosVermelhos/Para.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/Amapa.png"), GetFolderPath("/imgs/EstadosVermelhos/Bahia.png"), GetFolderPath("/imgs/EstadosVermelhos/Maranhao.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/Piaui.png"), GetFolderPath("/imgs/EstadosVermelhos/Ceara.png"), GetFolderPath("/imgs/EstadosVermelhos/RioGrandeDoNorte.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/Paraiba.png"), GetFolderPath("/imgs/EstadosVermelhos/Pernambuco.png"), GetFolderPath("/imgs/EstadosVermelhos/Alagoas.png"),
+		GetFolderPath("/imgs/EstadosVermelhos/Sergipe.png") };
+	
+	InitEstadosCores(estadosCinzaPath, estadosVerdesPath, estadosVermelhosPath, estadosCinza, estadosVerdes, estadosVermelhos);
 
 	// Bitmap do menu do jogo
 	char *menuPath = GetFolderPath("/imgs/Telas/telaInicial.jpg");
@@ -378,7 +406,6 @@ int main() {
 			{
 				isGameOver = true;
 			}
-
 			redraw = true;
 		}
 		else if (ev.type == ALLEGRO_EVENT_DISPLAY_CLOSE)	// Permite fechar a janela pelo X
@@ -447,8 +474,8 @@ int main() {
 			{
 				clicouPause = true;
 			}
-
-			jogadorJogando = true;
+			al_start_timer(piscaTimer);
+			jogadorJogando = true;		
 		}
 
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && clicouPause)
@@ -499,7 +526,7 @@ int main() {
 			if (jogador.pronto && digitouNome)   //verifica se o jogador passou a jogar
 			{
 				isInMenu = false;
-
+				al_set_target_backbuffer(display);
 				al_stop_sample_instance(menuAudioInstance);
 
 				if (musicaTocando)
@@ -512,21 +539,23 @@ int main() {
 
 				al_flip_display();
 				al_draw_bitmap(jogoBG, 0, 0, 0);
-				DesenhaEstadosCinza(estadosCinza, &jogador);
-				//al_draw_bitmap(mapaBrasil, 0, 0, 0);
-				//al_draw_scaled_bitmap(mapaBrasil, -OFFSET_X, -OFFSET_Y, mapaWidth + OFFSET_X, mapaHeight + OFFSET_Y, 0, 0, WIDTHMAPA + OFFSET_X, HEIGHTMAPA + OFFSET_Y, 0);	// Coloca o mapa na tela
-				DesenhaBtnPause(pauseBtn);
-				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
-				al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
+
 				if (!clicouPause && !isGameOver)
 				{
 					UpdateLista(fontLista, &jogador, &lista);
+					DesenhaEstadosFeedBack(estadosVerdes, estadosVermelhos, &jogador, &lista);
 				}
-				else if(clicouPause && !isGameOver) {
+				else if (clicouPause && !isGameOver) {
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
-					al_draw_bitmap(pauseTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0 );
+					al_draw_bitmap(pauseTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
 					DesenhaBtnMusica(musicaOn, musicaOff, 554, 363, musicaTocando);
 				}
+
+				DesenhaEstadosCinza(estadosCinza, &jogador);
+				DesenhaBtnPause(pauseBtn);
+				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
+				al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
+
 				if (isGameOver)
 				{					
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
@@ -605,7 +634,7 @@ int main() {
 	free(acertoAudioSamplePath);
 	free(erroAudioSamplePath);
 	FreeNomeJogadores(&ranking);
-	FreeEstadosCinzaEPath(estadosCinzaPath, estadosCinza);
+	FreeEstadosPaths(estadosCinzaPath, estadosVerdesPath, estadosVermelhosPath, estadosCinza, estadosVerdes, estadosVermelhos);
 
 	// Libera a memoria alocada para variaveis Allegro
 	al_destroy_display(display);
@@ -670,6 +699,9 @@ void InitLista(Lista * lista)
 	lista->velocidade = 0.5f;
 	lista->heightLista = 0;
 	lista->palavraAtual = NULL;
+	lista->isMaxHeight = false;
+	lista->indexAtual = -1;
+	lista->indexAnterior = -1;
 }
 
 //Aqui sera configurado o mapeamento dos estados
@@ -1368,12 +1400,14 @@ void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
 	botaoTutorial->boundYFinal = 570;
 }
 
-void InitEstadosCinza(char * estadosCinzaPath[], ALLEGRO_BITMAP * estadosCinza[])
+void InitEstadosCores(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[])
 {
 	int i;
 	for (i = 0; i < 27; i++)
 	{
 		estadosCinza[i] = al_load_bitmap(estadosCinzaPath[i]);
+		estadosVerdes[i] = al_load_bitmap(estadosVerdesPath[i]);
+		estadosVermelhos[i] = al_load_bitmap(estadosVermelhosPath[i]);
 	}
 }
 
@@ -1432,7 +1466,6 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	{
 		SortPalavra(jogador, lista);
 	}
-	jogador->acertou = false;
 
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a anima��o de "queda"
 	if (lista->heightLista < HEIGHTMAPA - 30)
@@ -1536,6 +1569,7 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 {
 	srand(time(NULL));
 	int i;
+	lista->indexAnterior = lista->indexAtual;
 	lista->indexAtual = rand() % 27;
 	while (lista->indexAtual == jogador->indexEstadosPerdidos[0] && lista->indexAtual == jogador->indexEstadosPerdidos[1] &&
 		   lista->indexAtual == jogador->indexEstadosPerdidos[2] && lista->indexAtual == jogador->indexEstadosPerdidos[3] && 
@@ -1897,13 +1931,17 @@ void FreeNomeJogadores(Ranking * ranking)
 	}
 }
 
-void FreeEstadosCinzaEPath(char * estadosCinzaPath[], ALLEGRO_BITMAP * estadosCinza[])
+void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[])
 {
 	int i;
 	for (i = 0; i < 27; i++)
 	{
 		al_destroy_bitmap(estadosCinza[i]);
+		al_destroy_bitmap(estadosVerdes[i]);
+		al_destroy_bitmap(estadosVermelhos[i]);
 		free(estadosCinzaPath[i]);
+		free(estadosVerdesPath[i]);
+		free(estadosVermelhosPath[i]);
 	}
 }
 
@@ -2133,6 +2171,24 @@ void DesenhaEstadosCinza(ALLEGRO_BITMAP * estadosCinza[], Jogador * jogador)
 	}
 }
 
+void DesenhaEstadosFeedBack(ALLEGRO_BITMAP * estadosVerdes[], ALLEGRO_BITMAP * estadosVermelhos[], Jogador * jogador, Lista * lista)
+{
+	if (al_get_timer_started(piscaTimer) && al_get_timer_count(piscaTimer) < 1)
+	{
+		if (jogador->acertou && lista->indexAnterior >= 0)
+		{
+			al_draw_bitmap(estadosVerdes[lista->indexAnterior], 0, 0, 0);
+		}
+		else if(!jogador->acertou && lista->indexAnterior >= 0) {
+			al_draw_bitmap(estadosVermelhos[lista->indexAnterior], 0, 0, 0);
+		}
+	}
+	else {		
+		al_stop_timer(piscaTimer);
+		al_set_timer_count(piscaTimer, 0);
+	}
+}
+
 // Concatena as palavras da lista
 void ConcatenaLista(char * s1, char * s2, Lista * lista)
 {
@@ -2202,7 +2258,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
 	EstadosPadrao *Parana, EstadosPadrao *Pernambuco, EstadosPadrao *Piaui, EstadosPadrao *RioDeJaneiro, EstadosPadrao *RioGrandeDoNorte,
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *Roraima, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
-	EstadosPadrao *Tocantins) //DIEGO ADICIONOU RORAIMA
+	EstadosPadrao *Tocantins)
 {
 	int i = 0;
 
