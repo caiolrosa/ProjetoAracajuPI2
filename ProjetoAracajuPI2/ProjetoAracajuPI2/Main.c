@@ -37,7 +37,7 @@ bool clicouRanking = false;
 bool clicouPause = false;
 bool clicouTutorial = false;
 bool clicouCreditos = false;
-bool clicouFechar = false;
+bool chegouFinalLista = false;
 bool mostraFeedback = false;
 bool perdeuEstado = false;
 bool digitouNome = false;
@@ -273,7 +273,7 @@ int main() {
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
 	// Bitmap teste do fundo
-	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg-grid.jpg");
+	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg.jpg");
 	jogoBG = al_load_bitmap(jogoBGPath);
 
 	// Bitmap botao de pause
@@ -387,7 +387,7 @@ int main() {
 	event_queue = al_create_event_queue();						// Cria "lista" de eventos
 
 	timer = al_create_timer(1.0 / FPS);							// Inicializa o timer para que tenhamos 60 fps
-	piscaTimer = al_create_timer(1);							// Inicializa o timer para contar segundos para piscar
+	piscaTimer = al_create_timer(0.3);							// Inicializa o timer para contar segundos para piscar
 
 	// Registro de eventos para a lista de eventos
 	al_register_event_source(event_queue, al_get_mouse_event_source());			// Registra o mouse na lista de eventos
@@ -501,7 +501,7 @@ int main() {
 			}
 
 			al_start_timer(piscaTimer);
-			jogadorJogando = true;		
+			jogadorJogando = true;
 		}
 
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && clicouPause)
@@ -707,9 +707,8 @@ void InitJogador(Jogador * jogador)
 	jogador->vidas = 12;
 	jogador->acertos = 0;
 	jogador->erros = 0;
-	jogador->pronto = false;
 	jogador->acertou = false;
-	jogador->clicouErrado = false;
+	jogador->pronto = false;
 
 	int i;
 	for (i = 0; i < 27; i++)
@@ -794,8 +793,8 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	SantaCatarina->index[5].i = 30; SantaCatarina->index[5].j = 21;
 	SantaCatarina->index[6].i = 30; SantaCatarina->index[6].j = 22;
 	SantaCatarina->index[7].i = 30; SantaCatarina->index[7].j = 23;
-	SantaCatarina->index[7].i = 31; SantaCatarina->index[7].j = 22;
-	SantaCatarina->index[7].i = 31; SantaCatarina->index[7].j = 23;
+	SantaCatarina->index[8].i = 31; SantaCatarina->index[8].j = 22;
+	SantaCatarina->index[9].i = 31; SantaCatarina->index[9].j = 23;
 #pragma endregion
 
 #pragma region RIO GRANDE DO NORTE
@@ -1039,9 +1038,6 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	Parana->index[11].i = 28;   Parana->index[11].j = 21;
 	Parana->index[12].i = 28;   Parana->index[12].j = 22;
 	Parana->index[13].i = 28;   Parana->index[13].j = 23;
-	Parana->index[14].i = 29;   Parana->index[14].j = 21;
-	Parana->index[15].i = 29;   Parana->index[15].j = 22;
-	Parana->index[16].i = 30;   Parana->index[16].j = 22;
 #pragma endregion	
 
 #pragma region RIO GRAND DO SUL
@@ -1054,12 +1050,20 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	RioGrandeDoSul->index[5].i = 31;   RioGrandeDoSul->index[5].j = 19;
 	RioGrandeDoSul->index[6].i = 31;   RioGrandeDoSul->index[6].j = 20;
 	RioGrandeDoSul->index[7].i = 31;   RioGrandeDoSul->index[7].j = 21;
-	RioGrandeDoSul->index[8].i = 32;   RioGrandeDoSul->index[8].j = 18;
-	RioGrandeDoSul->index[9].i = 32;   RioGrandeDoSul->index[9].j = 19;
-	RioGrandeDoSul->index[10].i = 32;   RioGrandeDoSul->index[10].j = 20;
-	RioGrandeDoSul->index[11].i = 32;   RioGrandeDoSul->index[11].j = 21;
-	RioGrandeDoSul->index[12].i = 33;   RioGrandeDoSul->index[12].j = 19;
-	RioGrandeDoSul->index[13].i = 33;   RioGrandeDoSul->index[13].j = 20;
+	RioGrandeDoSul->index[8].i = 32;   RioGrandeDoSul->index[8].j = 16;
+	RioGrandeDoSul->index[9].i = 32;   RioGrandeDoSul->index[9].j = 17;
+	RioGrandeDoSul->index[10].i = 32;   RioGrandeDoSul->index[10].j = 18;
+	RioGrandeDoSul->index[11].i = 32;   RioGrandeDoSul->index[11].j = 19;
+	RioGrandeDoSul->index[12].i = 32;   RioGrandeDoSul->index[12].j = 20;
+	RioGrandeDoSul->index[13].i = 32;   RioGrandeDoSul->index[13].j = 21;
+	RioGrandeDoSul->index[14].i = 33;   RioGrandeDoSul->index[14].j = 17;
+	RioGrandeDoSul->index[15].i = 33;   RioGrandeDoSul->index[15].j = 18;
+	RioGrandeDoSul->index[16].i = 33;   RioGrandeDoSul->index[16].j = 19;
+	RioGrandeDoSul->index[17].i = 33;   RioGrandeDoSul->index[17].j = 20;
+	RioGrandeDoSul->index[18].i = 33;   RioGrandeDoSul->index[18].j = 21;
+	RioGrandeDoSul->index[19].i = 34;   RioGrandeDoSul->index[19].j = 18;
+	RioGrandeDoSul->index[20].i = 34;   RioGrandeDoSul->index[20].j = 19;
+	RioGrandeDoSul->index[21].i = 34;   RioGrandeDoSul->index[21].j = 20;
 #pragma endregion
 
 #pragma region TOCANTINS
@@ -1488,6 +1492,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 		lista->heightLista = 0;
 		lista->velocidade = 0.5f;
 		lista->palavraAtual = NULL;
+		jogador->acertou = false;
 		free(lista->palavraAtual);
 	}
 
@@ -1605,13 +1610,6 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 		   lista->indexAtual == jogador->indexEstadosPerdidos[4])
 	{
 		lista->indexAtual = rand() % 27;
-	}
-	for (i = 0; i < 5; i++)
-	{
-		if (jogador->indexEstadosPerdidos[i] == lista->indexAtual)
-		{
-			lista->indexAtual = rand() % 27;
-		}
 	}
 
 	if (jogador->pontos < 100000)
@@ -1903,8 +1901,8 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 		jogador->acertoPorIndex[lista->indexAtual] += 1;
 		jogador->acertos++;
 		jogador->acertou = true;
-		lista->isMaxHeight = true;
 		jogador->clicouErrado = false;
+		lista->isMaxHeight = true;
 	}	
 }
 
@@ -2205,14 +2203,15 @@ void DesenhaEstadosCinza(ALLEGRO_BITMAP * estadosCinza[], Jogador * jogador)
 
 void DesenhaEstadosFeedBack(ALLEGRO_BITMAP * estadosVerdes[], ALLEGRO_BITMAP * estadosVermelhos[], Jogador * jogador, Lista * lista)
 {
-	if (al_get_timer_started(piscaTimer) && al_get_timer_count(piscaTimer) < 1)
+	//printf("TIMER: %lf \n\n", al_get_timer_count(piscaTimer));
+	if (al_get_timer_started(piscaTimer) && al_get_timer_count(piscaTimer) < 0.5)
 	{
 		mostraFeedback = true;
-		if (jogador->acertou && lista->indexAnterior >= 0)
+		if (!jogador->clicouErrado && lista->indexAnterior >= 0)
 		{
 			al_draw_bitmap(estadosVerdes[lista->indexAnterior], 0, 0, 0);
 		}
-		else if(!jogador->acertou && lista->indexAnterior >= 0) {
+		else if(jogador->clicouErrado && lista->indexAnterior >= 0) {
 			al_draw_bitmap(estadosVermelhos[lista->indexAnterior], 0, 0, 0);
 		}
 	}
