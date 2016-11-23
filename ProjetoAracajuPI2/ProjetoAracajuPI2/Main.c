@@ -37,6 +37,8 @@ bool clicouRanking = false;
 bool clicouPause = false;
 bool clicouTutorial = false;
 bool clicouCreditos = false;
+bool clicouFechar = false;
+bool mostraFeedback = false;
 bool perdeuEstado = false;
 bool digitouNome = false;
 bool salvouPontuacao = false;
@@ -182,6 +184,7 @@ int main() {
 	ALLEGRO_BITMAP *coracaoVazio = NULL;
 	ALLEGRO_BITMAP *coracaoMetade = NULL;
 	ALLEGRO_BITMAP *coracaoCheio = NULL;
+	ALLEGRO_BITMAP *closeBtn = NULL;
 	ALLEGRO_BITMAP *musicaOn = NULL;
 	ALLEGRO_BITMAP *musicaOff = NULL;
 	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
@@ -276,6 +279,9 @@ int main() {
 	// Bitmap botao de pause
 	char *pauseBtnPath = GetFolderPath("/imgs/Botoes/pause.png");
 	pauseBtn = al_load_bitmap(pauseBtnPath);
+
+	char *closeBtnPath = GetFolderPath("/imgs/HUDItens/close.png");
+	closeBtn = al_load_bitmap(closeBtnPath);
 
 	// Bitmaps dos botoes de musicaOn e musicaOff
 	char *musicOnPath = GetFolderPath("/imgs/Botoes/music.png");
@@ -426,27 +432,47 @@ int main() {
 				clicouTutorial = true;
 			}
 
+			//Verifica se o click est� dentro dos bounds do bot�o ranking
 			if (ev.mouse.x >= 1090 && ev.mouse.x <= 1163 && ev.mouse.y >= 622 && ev.mouse.y <= 891)
 			{
 				clicouRanking = true;
 			}
 
+			//Verifica se o click est� dentro dos bounds do bot�o creditos
 			if (ev.mouse.x >= 1171 && ev.mouse.x <= 1245 && ev.mouse.y >= 622 && ev.mouse.y <= 891)
 			{
 				clicouCreditos = true;
 			}
 
-			//Verifica se o click est� dentro dos bounds do continuar para verificar se o usuario digitou o nome, caso tenha digitado a variavel digitouNome é verdadeira 
+			//Verifica se o click est� dentro dos bounds do continuar para verificar se o jogador digitou o nome, caso tenha digitado a variavel digitouNome é verdadeira 
 			if (ev.mouse.x >= 743 && ev.mouse.x <= 905 && ev.mouse.y >= 446 && ev.mouse.y <= 486 && strlen(jogador.nome) >= 1)
 			{
 				digitouNome = true;
 			}
 
+			if (ev.mouse.x >= 1200 && ev.mouse.x <= 1241 && ev.mouse.y >= 30 && ev.mouse.y <= 69)
+			{
+				if (clicouRanking)
+				{
+					clicouRanking = false;
+				}
+
+				if (clicouCreditos)
+				{
+					clicouCreditos = false;
+				}
+
+				if (jogador.pronto)
+				{
+					jogador.pronto = false;
+				}
+			}
+
+			//Verifica se o click est� dentro dos bounds do bot�o musica, dependendo do estado da musica atual musicaTocando assume diferentes valores
 			if (ev.mouse.x >= 1006 && ev.mouse.x <= 1075 && ev.mouse.y >= 623 && ev.mouse.y <= 890)
 			{
 				if (musicaTocando)
 				{
-					al_start_timer(piscaTimer);
 					musicaTocando = false;
 				}
 				else {
@@ -473,6 +499,7 @@ int main() {
 			{
 				clicouPause = true;
 			}
+
 			al_start_timer(piscaTimer);
 			jogadorJogando = true;		
 		}
@@ -481,7 +508,6 @@ int main() {
 		{ 
 			if (ev.mouse.x >= 462 && ev.mouse.x <= 536 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
-				printf("click menu");
 				al_stop_sample_instance(jogoAudioInstance);
 				ResetJogador(&jogador, true);
 				isInMenu = true;
@@ -525,7 +551,6 @@ int main() {
 			if (jogador.pronto && digitouNome)   //verifica se o jogador passou a jogar
 			{
 				isInMenu = false;
-				al_set_target_backbuffer(display);
 				al_stop_sample_instance(menuAudioInstance);
 
 				if (musicaTocando)
@@ -588,6 +613,7 @@ int main() {
 				{
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
 					al_draw_bitmap(nomeJogadorTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
+					al_draw_bitmap(closeBtn, 1200, 30, 0);
 					al_draw_textf(fontLista, BLACK, 645, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);
 				}
 
@@ -595,16 +621,17 @@ int main() {
 				{
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
 					al_draw_bitmap(creditosTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
+					al_draw_bitmap(closeBtn, 1200, 30, 0);
 				}
 
 				if (clicouRanking)
 				{
 					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
 					al_draw_bitmap(rankingTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
+					al_draw_bitmap(closeBtn, 1200, 30, 0);
 					GetPontuacao(rankingData, &ranking);
 					DesenhaPontuacaoRanking(fontLista, &ranking);
 				}
-				
 				al_flip_display();			// Muda para o back buffer
 			}
 		}
@@ -620,6 +647,7 @@ int main() {
 	free(creditosTelaPath);
 	free(pauseTelaPath);
 	free(pauseBtnPath);
+	free(closeBtnPath);
 	free(musicOnPath);
 	free(musicOffPath);
 	free(coracaoVazioPath);
@@ -647,6 +675,7 @@ int main() {
 	al_destroy_bitmap(rankingTela);
 	al_destroy_bitmap(creditosTela);
 	al_destroy_bitmap(pauseTela);
+	al_destroy_bitmap(closeBtn);
 	al_destroy_bitmap(musicaOn);
 	al_destroy_bitmap(musicaOff);
 	al_destroy_bitmap(coracaoVazio);
@@ -1446,20 +1475,19 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
-		if (!jogador->acertou && !clicouPause && !jogador->clicouErrado)
+		if (!jogador->acertou && !clicouPause && !mostraFeedback)
 		{
 			if (musicaTocando)
 			{
 				al_play_sample_instance(erroAudioInstance);
 			}
 			jogador->erros++;
-			//jogador->vidas--;
+			jogador->vidas--;
 		}
 
 		lista->heightLista = 0;
 		lista->velocidade = 0.5f;
 		lista->palavraAtual = NULL;
-
 		free(lista->palavraAtual);
 	}
 
@@ -2179,6 +2207,7 @@ void DesenhaEstadosFeedBack(ALLEGRO_BITMAP * estadosVerdes[], ALLEGRO_BITMAP * e
 {
 	if (al_get_timer_started(piscaTimer) && al_get_timer_count(piscaTimer) < 1)
 	{
+		mostraFeedback = true;
 		if (jogador->acertou && lista->indexAnterior >= 0)
 		{
 			al_draw_bitmap(estadosVerdes[lista->indexAnterior], 0, 0, 0);
@@ -2188,6 +2217,7 @@ void DesenhaEstadosFeedBack(ALLEGRO_BITMAP * estadosVerdes[], ALLEGRO_BITMAP * e
 		}
 	}
 	else {		
+		mostraFeedback = false;
 		al_stop_timer(piscaTimer);
 		al_set_timer_count(piscaTimer, 0);
 	}
