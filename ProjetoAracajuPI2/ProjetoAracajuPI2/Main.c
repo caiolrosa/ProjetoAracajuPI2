@@ -492,7 +492,7 @@ int main() {
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 
-			printf("POS X = %d \nPOS Y = %d \n", t.i, t.j);
+			//printf("POS X = %d \nPOS Y = %d \n", t.i, t.j);
 
 			// Verifica se jogador clicou no pause
 			if (ev.mouse.x >= 1164 && ev.mouse.x <= 1238 && ev.mouse.y >= 33 && ev.mouse.y <= 101 && !clicouPause)
@@ -564,6 +564,11 @@ int main() {
 				al_flip_display();
 				al_draw_bitmap(jogoBG, 0, 0, 0);
 
+				DesenhaEstadosCinza(estadosCinza, &jogador);
+				DesenhaBtnPause(pauseBtn);
+				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
+				al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
+
 				if (!clicouPause && !isGameOver)
 				{
 					UpdateLista(fontLista, &jogador, &lista);
@@ -574,11 +579,6 @@ int main() {
 					al_draw_bitmap(pauseTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
 					DesenhaBtnMusica(musicaOn, musicaOff, 554, 363, musicaTocando);
 				}
-
-				DesenhaEstadosCinza(estadosCinza, &jogador);
-				DesenhaBtnPause(pauseBtn);
-				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
-				al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
 
 				if (isGameOver)
 				{					
@@ -1475,11 +1475,11 @@ void ResetJogador(Jogador * jogador, bool resetNome)
 // da lista(lista->velocidade) para dar no��o de anima��o
 void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 {
-	srand(time(NULL));
+	printf("Erros: %d\n", jogador->erros);
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
-		if (!jogador->acertou && !clicouPause && !mostraFeedback)
+		if (!jogador->acertou && !clicouPause && !mostraFeedback && !jogador->clicouEstado)
 		{
 			if (musicaTocando)
 			{
@@ -1605,8 +1605,8 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 	int i;
 	lista->indexAnterior = lista->indexAtual;
 	lista->indexAtual = rand() % 27;
-	while (lista->indexAtual == jogador->indexEstadosPerdidos[0] && lista->indexAtual == jogador->indexEstadosPerdidos[1] &&
-		   lista->indexAtual == jogador->indexEstadosPerdidos[2] && lista->indexAtual == jogador->indexEstadosPerdidos[3] && 
+	while (lista->indexAtual == jogador->indexEstadosPerdidos[0] || lista->indexAtual == jogador->indexEstadosPerdidos[1] ||
+		   lista->indexAtual == jogador->indexEstadosPerdidos[2] || lista->indexAtual == jogador->indexEstadosPerdidos[3] || 
 		   lista->indexAtual == jogador->indexEstadosPerdidos[4])
 	{
 		lista->indexAtual = rand() % 27;
@@ -1902,6 +1902,7 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 		jogador->acertos++;
 		jogador->acertou = true;
 		jogador->clicouErrado = false;
+		jogador->clicouEstado = true;
 		lista->isMaxHeight = true;
 	}	
 }
@@ -1918,6 +1919,7 @@ void JogadorErrou(Jogador * jogador, Lista * lista)
 		//jogador->vidas--;
 		jogador->acertou = false;
 		jogador->clicouErrado = true;
+		jogador->clicouEstado = true;
 		lista->isMaxHeight = true;
 	}
 }
