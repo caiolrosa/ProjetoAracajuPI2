@@ -1479,7 +1479,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
-		if (!jogador->acertou && !clicouPause && !mostraFeedback && !jogador->clicouEstado)
+		if (!jogador->acertou && !clicouPause && !mostraFeedback)
 		{
 			if (musicaTocando)
 			{
@@ -1902,7 +1902,6 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 		jogador->acertos++;
 		jogador->acertou = true;
 		jogador->clicouErrado = false;
-		jogador->clicouEstado = true;
 		lista->isMaxHeight = true;
 	}	
 }
@@ -1919,7 +1918,6 @@ void JogadorErrou(Jogador * jogador, Lista * lista)
 		//jogador->vidas--;
 		jogador->acertou = false;
 		jogador->clicouErrado = true;
-		jogador->clicouEstado = true;
 		lista->isMaxHeight = true;
 	}
 }
