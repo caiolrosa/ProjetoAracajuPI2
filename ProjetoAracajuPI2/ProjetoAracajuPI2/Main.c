@@ -273,7 +273,7 @@ int main() {
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
 	// Bitmap teste do fundo
-	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg.jpg");
+	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg-grid.jpg");
 	jogoBG = al_load_bitmap(jogoBGPath);
 
 	// Bitmap botao de pause
@@ -492,7 +492,7 @@ int main() {
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 
-			//printf("POS X = %d \nPOS Y = %d \n", t.i, t.j);
+			printf("POS X = %d \nPOS Y = %d \n", t.i, t.j);
 
 			// Verifica se jogador clicou no pause
 			if (ev.mouse.x >= 1164 && ev.mouse.x <= 1238 && ev.mouse.y >= 33 && ev.mouse.y <= 101 && !clicouPause)
@@ -799,25 +799,27 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region RIO GRANDE DO NORTE
 	RioGrandeDoNorte->myIndexPosition = 22; //posicao no vetor ESTADOS de nomes na classe objects.h
-	RioGrandeDoNorte->index[0].i = 10; RioGrandeDoNorte->index[0].j = 33;
-	RioGrandeDoNorte->index[1].i = 10; RioGrandeDoNorte->index[1].j = 34;
-	RioGrandeDoNorte->index[2].i = 10; RioGrandeDoNorte->index[2].j = 35;
+	RioGrandeDoNorte->index[0].i = 9; RioGrandeDoNorte->index[0].j = 33;
+	RioGrandeDoNorte->index[1].i = 10; RioGrandeDoNorte->index[1].j = 33;
+	RioGrandeDoNorte->index[2].i = 10; RioGrandeDoNorte->index[2].j = 34;
+	RioGrandeDoNorte->index[3].i = 10; RioGrandeDoNorte->index[3].j = 35;
 #pragma endregion
 
 #pragma region CEARA
 	Ceara->myIndexPosition = 21; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Ceara->index[0].i = 8; Ceara->index[0].j = 30;
-	Ceara->index[1].i = 8; Ceara->index[1].j = 31;
-	Ceara->index[2].i = 8; Ceara->index[2].j = 32;
-	Ceara->index[3].i = 9; Ceara->index[3].j = 30;
-	Ceara->index[4].i = 9; Ceara->index[4].j = 31;
-	Ceara->index[5].i = 9; Ceara->index[5].j = 32;
-	Ceara->index[6].i = 9; Ceara->index[6].j = 33;
-	Ceara->index[7].i = 10; Ceara->index[7].j = 30;
-	Ceara->index[8].i = 10; Ceara->index[8].j = 31;
-	Ceara->index[9].i = 10; Ceara->index[9].j = 32;
-	Ceara->index[10].i = 11; Ceara->index[10].j = 30;
-	Ceara->index[11].i = 11; Ceara->index[11].j = 31;
+	Ceara->index[0].i = 7; Ceara->index[0].j = 30;
+	Ceara->index[1].i = 7; Ceara->index[1].j = 31;
+	Ceara->index[2].i = 8; Ceara->index[2].j = 30;
+	Ceara->index[3].i = 8; Ceara->index[3].j = 31;
+	Ceara->index[4].i = 8; Ceara->index[4].j = 32;
+	Ceara->index[5].i = 9; Ceara->index[5].j = 30;
+	Ceara->index[6].i = 9; Ceara->index[6].j = 31;
+	Ceara->index[7].i = 9; Ceara->index[7].j = 32;
+	Ceara->index[8].i = 10; Ceara->index[8].j = 30;
+	Ceara->index[9].i = 10; Ceara->index[9].j = 31;
+	Ceara->index[10].i = 10; Ceara->index[10].j = 32;
+	Ceara->index[11].i = 11; Ceara->index[11].j = 30;
+	Ceara->index[12].i = 11; Ceara->index[12].j = 31;
 #pragma endregion
 
 #pragma region PARAIBA
@@ -899,37 +901,38 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	Piaui->index[2].i = 9;   Piaui->index[2].j = 29;
 	Piaui->index[3].i = 10;  Piaui->index[3].j = 28;
 	Piaui->index[4].i = 10;  Piaui->index[4].j = 29;
-	Piaui->index[5].i = 11;  Piaui->index[5].j = 28;
-	Piaui->index[6].i = 11;  Piaui->index[6].j = 29;
-	Piaui->index[7].i = 12;  Piaui->index[7].j = 26;
-	Piaui->index[8].i = 12;  Piaui->index[8].j = 27;
-	Piaui->index[9].i = 12;  Piaui->index[9].j = 28;
-	Piaui->index[10].i = 12; Piaui->index[10].j = 29;
-	Piaui->index[11].i = 13; Piaui->index[11].j = 26;
-	Piaui->index[12].i = 13; Piaui->index[12].j = 27;
-	Piaui->index[13].i = 13; Piaui->index[13].j = 28;
-	Piaui->index[14].i = 14; Piaui->index[14].j = 26;
-	Piaui->index[15].i = 14; Piaui->index[15].j = 27;
+	Piaui->index[5].i = 11;  Piaui->index[5].j = 27;
+	Piaui->index[6].i = 11;  Piaui->index[6].j = 28;
+	Piaui->index[7].i = 11;  Piaui->index[7].j = 29;
+	Piaui->index[8].i = 12;  Piaui->index[8].j = 26;
+	Piaui->index[9].i = 12;  Piaui->index[9].j = 27;
+	Piaui->index[10].i = 12; Piaui->index[10].j = 28;
+	Piaui->index[11].i = 12; Piaui->index[11].j = 29;
+	Piaui->index[12].i = 13; Piaui->index[12].j = 26;
+	Piaui->index[13].i = 13; Piaui->index[13].j = 27;
+	Piaui->index[14].i = 13; Piaui->index[14].j = 28;
+	Piaui->index[15].i = 14; Piaui->index[15].j = 26;
+	Piaui->index[16].i = 14; Piaui->index[16].j = 27;
 #pragma endregion
 
 #pragma region MARANHAO
 	Maranhao->myIndexPosition = 19; //posicao no vetor ESTADOS de nomes na classe objects.h
 	Maranhao->index[0].i = 7;   Maranhao->index[0].j = 26;
 	Maranhao->index[1].i = 7;   Maranhao->index[1].j = 27;
-	Maranhao->index[2].i = 8;   Maranhao->index[2].j = 25;
-	Maranhao->index[3].i = 8;   Maranhao->index[3].j = 26;
-	Maranhao->index[4].i = 8;   Maranhao->index[4].j = 27;
-	Maranhao->index[5].i = 8;   Maranhao->index[5].j = 28;
-	Maranhao->index[6].i = 9;   Maranhao->index[6].j = 24;
-	Maranhao->index[7].i = 9;   Maranhao->index[7].j = 25;
-	Maranhao->index[8].i = 9;   Maranhao->index[8].j = 26;
-	Maranhao->index[9].i = 9;   Maranhao->index[9].j = 27;
-	Maranhao->index[10].i = 10; Maranhao->index[10].j = 25;
-	Maranhao->index[11].i = 10; Maranhao->index[11].j = 26;
-	Maranhao->index[12].i = 10; Maranhao->index[12].j = 27;
-	Maranhao->index[13].i = 11; Maranhao->index[13].j = 25;
-	Maranhao->index[14].i = 11; Maranhao->index[14].j = 26;
-	Maranhao->index[15].i = 11; Maranhao->index[15].j = 27;
+	Maranhao->index[2].i = 7;   Maranhao->index[2].j = 28;
+	Maranhao->index[3].i = 8;   Maranhao->index[3].j = 25;
+	Maranhao->index[4].i = 8;   Maranhao->index[4].j = 26;
+	Maranhao->index[5].i = 8;   Maranhao->index[5].j = 27;
+	Maranhao->index[6].i = 8;   Maranhao->index[6].j = 28;
+	Maranhao->index[7].i = 9;   Maranhao->index[7].j = 24;
+	Maranhao->index[8].i = 9;   Maranhao->index[8].j = 25;
+	Maranhao->index[9].i = 9;   Maranhao->index[9].j = 26;
+	Maranhao->index[10].i = 9;  Maranhao->index[10].j = 27;
+	Maranhao->index[11].i = 10; Maranhao->index[11].j = 25;
+	Maranhao->index[12].i = 10; Maranhao->index[12].j = 26;
+	Maranhao->index[13].i = 10; Maranhao->index[13].j = 27;
+	Maranhao->index[14].i = 11; Maranhao->index[14].j = 25;
+	Maranhao->index[15].i = 11; Maranhao->index[15].j = 26;
 	Maranhao->index[16].i = 12; Maranhao->index[16].j = 25;
 	Maranhao->index[17].i = 13; Maranhao->index[17].j = 25;
 #pragma endregion
@@ -1167,8 +1170,8 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	MatoGrossoDoSul->index[6].i = 22; 		MatoGrossoDoSul->index[6].j = 16;
 	MatoGrossoDoSul->index[7].i = 22; 		MatoGrossoDoSul->index[7].j = 17;
 	MatoGrossoDoSul->index[8].i = 22; 		MatoGrossoDoSul->index[8].j = 18;
-	MatoGrossoDoSul->index[9].i = 22; 		MatoGrossoDoSul->index[9].j= 19;
-	MatoGrossoDoSul->index[10].i= 22 ; 		MatoGrossoDoSul->index[10].j = 20;
+	MatoGrossoDoSul->index[9].i = 22; 		MatoGrossoDoSul->index[9].j = 19;
+	MatoGrossoDoSul->index[10].i = 22; 		MatoGrossoDoSul->index[10].j = 20;
 	MatoGrossoDoSul->index[11].i = 22; 		MatoGrossoDoSul->index[11].j = 21;
 	MatoGrossoDoSul->index[12].i = 23; 		MatoGrossoDoSul->index[12].j = 15;
 	MatoGrossoDoSul->index[13].i = 23; 		MatoGrossoDoSul->index[13].j = 15;
@@ -1182,66 +1185,65 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	MatoGrossoDoSul->index[21].i = 24; 		MatoGrossoDoSul->index[21].j = 17;
 	MatoGrossoDoSul->index[22].i = 24; 		MatoGrossoDoSul->index[22].j = 18;
 	MatoGrossoDoSul->index[23].i = 24; 		MatoGrossoDoSul->index[23].j = 19;
-	MatoGrossoDoSul->index[24].i = 25; 		MatoGrossoDoSul->index[24].j = 18 ;
+	MatoGrossoDoSul->index[24].i = 25; 		MatoGrossoDoSul->index[24].j = 18;
 	
 #pragma endregion
 
 #pragma region MATO GROSSO
 	MatoGrosso->myIndexPosition = 10; //posicao no vetor ESTADOS de nomes na classe objects.h
-	MatoGrosso->index[0]. i = 13; 		MatoGrosso->index[0]. j = 13;
-	MatoGrosso->index[1]. i = 13; 		MatoGrosso->index[1]. j = 14;
-	MatoGrosso->index[2]. i = 13; 		MatoGrosso->index[2]. j = 15;
-	MatoGrosso->index[3]. i = 13; 		MatoGrosso->index[3]. j = 16;
-	MatoGrosso->index[4]. i = 14; 		MatoGrosso->index[4]. j = 13;
-	MatoGrosso->index[5]. i = 14; 		MatoGrosso->index[5]. j = 14;
-	MatoGrosso->index[6]. i = 14; 		MatoGrosso->index[6]. j = 15;
-	MatoGrosso->index[7]. i = 14; 		MatoGrosso->index[7]. j = 16;
-	MatoGrosso->index[8]. i = 14; 		MatoGrosso->index[8]. j = 17;
-	MatoGrosso->index[9].i = 14; 		MatoGrosso->index[9]. j = 18;
+	MatoGrosso->index[0].i = 13; 		MatoGrosso->index[0].j = 13;
+	MatoGrosso->index[1].i = 13; 		MatoGrosso->index[1].j = 14;
+	MatoGrosso->index[2].i = 13; 		MatoGrosso->index[2].j = 15;
+	MatoGrosso->index[3].i = 13; 		MatoGrosso->index[3].j = 16;
+	MatoGrosso->index[4].i = 14; 		MatoGrosso->index[4].j = 13;
+	MatoGrosso->index[5].i = 14; 		MatoGrosso->index[5].j = 14;
+	MatoGrosso->index[6].i = 14; 		MatoGrosso->index[6].j = 15;
+	MatoGrosso->index[7].i = 14; 		MatoGrosso->index[7].j = 16;
+	MatoGrosso->index[8].i = 14; 		MatoGrosso->index[8].j = 17;
+	MatoGrosso->index[9].i = 14; 		MatoGrosso->index[9].j = 18;
 	MatoGrosso->index[10].i = 14; 		MatoGrosso->index[10].j = 19;
 	MatoGrosso->index[11].i = 14; 		MatoGrosso->index[11].j = 20;
 	MatoGrosso->index[12].i = 14; 		MatoGrosso->index[12].j = 21;
-	MatoGrosso->index[13].i = 14; 		MatoGrosso->index[13].j = 22;
-	MatoGrosso->index[14].i = 15; 		MatoGrosso->index[14].j = 14;
-	MatoGrosso->index[15].i = 15; 		MatoGrosso->index[15].j = 15;
-	MatoGrosso->index[16].i = 15; 		MatoGrosso->index[16].j = 16;
-	MatoGrosso->index[17].i = 15; 		MatoGrosso->index[17].j = 17;
-	MatoGrosso->index[18].i = 15; 		MatoGrosso->index[18].j = 18;
-	MatoGrosso->index[19].i = 15; 		MatoGrosso->index[19].j = 19;
-	MatoGrosso->index[20].i = 15; 		MatoGrosso->index[20].j = 20;
-	MatoGrosso->index[21].i = 15; 		MatoGrosso->index[21].j = 21;
-	MatoGrosso->index[22].i = 16; 		MatoGrosso->index[22].j = 14;
-	MatoGrosso->index[23].i = 16; 		MatoGrosso->index[23].j = 15;
-	MatoGrosso->index[24].i = 16; 		MatoGrosso->index[24].j = 16;
-	MatoGrosso->index[25].i = 16; 		MatoGrosso->index[25].j = 17;
-	MatoGrosso->index[26].i = 16; 		MatoGrosso->index[26].j = 18;
-	MatoGrosso->index[27].i = 16; 		MatoGrosso->index[27].j = 19;
-	MatoGrosso->index[28].i = 16; 		MatoGrosso->index[28].j = 20;
-	MatoGrosso->index[29].i = 16; 		MatoGrosso->index[29].j = 21;
-	MatoGrosso->index[30].i = 17; 		MatoGrosso->index[30].j = 14;
-	MatoGrosso->index[31].i = 17; 		MatoGrosso->index[31].j = 15;
-	MatoGrosso->index[32].i = 17; 		MatoGrosso->index[32].j = 16;
-	MatoGrosso->index[33].i = 17; 		MatoGrosso->index[33].j = 17;
-	MatoGrosso->index[34].i = 17; 		MatoGrosso->index[34].j = 18;
-	MatoGrosso->index[35].i = 17; 		MatoGrosso->index[35].j = 19;
-	MatoGrosso->index[36].i = 17; 		MatoGrosso->index[36].j = 20;
-	MatoGrosso->index[37].i = 17; 		MatoGrosso->index[37].j = 21;
-	MatoGrosso->index[38].i = 18; 		MatoGrosso->index[38].j = 14;
-	MatoGrosso->index[39].i = 18; 		MatoGrosso->index[39].j = 15;
-	MatoGrosso->index[40].i = 18; 		MatoGrosso->index[40].j = 16;
-	MatoGrosso->index[41].i = 18; 		MatoGrosso->index[41].j = 17;
-	MatoGrosso->index[42].i = 18; 		MatoGrosso->index[42].j = 18;
-	MatoGrosso->index[43].i = 18; 		MatoGrosso->index[43].j = 19;
-	MatoGrosso->index[44].i = 18; 		MatoGrosso->index[44].j = 20;
-	MatoGrosso->index[45].i = 19; 		MatoGrosso->index[45].j = 14;
-	MatoGrosso->index[46].i = 19; 		MatoGrosso->index[46].j = 15;
-	MatoGrosso->index[47].i = 19; 		MatoGrosso->index[47].j = 16;
-	MatoGrosso->index[48].i = 19; 		MatoGrosso->index[48].j = 17;
-	MatoGrosso->index[49].i = 19; 		MatoGrosso->index[49].j = 18;
-	MatoGrosso->index[50].i = 19; 		MatoGrosso->index[50].j = 19;
-	MatoGrosso->index[51].i = 20; 		MatoGrosso->index[51].j = 15;
-	MatoGrosso->index[52].i = 20; 		MatoGrosso->index[52].j = 16;
-	MatoGrosso->index[53].i = 20; 		MatoGrosso->index[53].j = 19;
+	MatoGrosso->index[13].i = 15; 		MatoGrosso->index[13].j = 14;
+	MatoGrosso->index[14].i = 15; 		MatoGrosso->index[14].j = 15;
+	MatoGrosso->index[15].i = 15; 		MatoGrosso->index[15].j = 16;
+	MatoGrosso->index[16].i = 15; 		MatoGrosso->index[16].j = 17;
+	MatoGrosso->index[17].i = 15; 		MatoGrosso->index[17].j = 18;
+	MatoGrosso->index[18].i = 15; 		MatoGrosso->index[18].j = 19;
+	MatoGrosso->index[19].i = 15; 		MatoGrosso->index[19].j = 20;
+	MatoGrosso->index[20].i = 15; 		MatoGrosso->index[20].j = 21;
+	MatoGrosso->index[21].i = 16; 		MatoGrosso->index[21].j = 14;
+	MatoGrosso->index[22].i = 16; 		MatoGrosso->index[22].j = 15;
+	MatoGrosso->index[23].i = 16; 		MatoGrosso->index[23].j = 16;
+	MatoGrosso->index[24].i = 16; 		MatoGrosso->index[24].j = 17;
+	MatoGrosso->index[25].i = 16; 		MatoGrosso->index[25].j = 18;
+	MatoGrosso->index[26].i = 16; 		MatoGrosso->index[26].j = 19;
+	MatoGrosso->index[27].i = 16; 		MatoGrosso->index[27].j = 20;
+	MatoGrosso->index[28].i = 16; 		MatoGrosso->index[28].j = 21;
+	MatoGrosso->index[29].i = 17; 		MatoGrosso->index[29].j = 14;
+	MatoGrosso->index[30].i = 17; 		MatoGrosso->index[30].j = 15;
+	MatoGrosso->index[31].i = 17; 		MatoGrosso->index[31].j = 16;
+	MatoGrosso->index[32].i = 17; 		MatoGrosso->index[32].j = 17;
+	MatoGrosso->index[33].i = 17; 		MatoGrosso->index[33].j = 18;
+	MatoGrosso->index[34].i = 17; 		MatoGrosso->index[34].j = 19;
+	MatoGrosso->index[35].i = 17; 		MatoGrosso->index[35].j = 20;
+	MatoGrosso->index[36].i = 17; 		MatoGrosso->index[36].j = 21;
+	MatoGrosso->index[37].i = 18; 		MatoGrosso->index[37].j = 14;
+	MatoGrosso->index[38].i = 18; 		MatoGrosso->index[38].j = 15;
+	MatoGrosso->index[39].i = 18; 		MatoGrosso->index[39].j = 16;
+	MatoGrosso->index[40].i = 18; 		MatoGrosso->index[40].j = 17;
+	MatoGrosso->index[41].i = 18; 		MatoGrosso->index[41].j = 18;
+	MatoGrosso->index[42].i = 18; 		MatoGrosso->index[42].j = 19;
+	MatoGrosso->index[43].i = 18; 		MatoGrosso->index[43].j = 20;
+	MatoGrosso->index[44].i = 19; 		MatoGrosso->index[44].j = 14;
+	MatoGrosso->index[45].i = 19; 		MatoGrosso->index[45].j = 15;
+	MatoGrosso->index[46].i = 19; 		MatoGrosso->index[46].j = 16;
+	MatoGrosso->index[47].i = 19; 		MatoGrosso->index[47].j = 17;
+	MatoGrosso->index[48].i = 19; 		MatoGrosso->index[48].j = 18;
+	MatoGrosso->index[49].i = 19; 		MatoGrosso->index[49].j = 19;
+	MatoGrosso->index[50].i = 20; 		MatoGrosso->index[50].j = 15;
+	MatoGrosso->index[51].i = 20; 		MatoGrosso->index[51].j = 16;
+	MatoGrosso->index[52].i = 20; 		MatoGrosso->index[52].j = 19;
 #pragma endregion
 
 #pragma region PARA
@@ -1475,7 +1477,6 @@ void ResetJogador(Jogador * jogador, bool resetNome)
 // da lista(lista->velocidade) para dar no��o de anima��o
 void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 {
-	printf("Erros: %d\n", jogador->erros);
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
@@ -1486,7 +1487,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 				al_play_sample_instance(erroAudioInstance);
 			}
 			jogador->erros++;
-			jogador->vidas--;
+			//jogador->vidas--;
 		}
 
 		lista->heightLista = 0;

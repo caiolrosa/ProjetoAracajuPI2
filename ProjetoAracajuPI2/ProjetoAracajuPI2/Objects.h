@@ -8,21 +8,21 @@
 #define amapaIndexSize 14
 #define amazonasIndexSize 87
 #define bahiaIndexSize 34
-#define cearaIndexSize 12
+#define cearaIndexSize 13
 #define distritoFederalIndexSize 4
 #define espiritoSantoIndexSize 7
-#define goiasIndexSize 15
+#define goiasIndexSize 17
 #define maranhaoIndexSize 18	
-#define matoGrossoIndexSize 54
+#define matoGrossoIndexSize 53
 #define matoGrossoDoSulIndexSize 25
 #define minasGeraisIndexSize 39
 #define paraIndexSize 72
 #define paraibaIndexSize 4
 #define paranaIndexSize 14
 #define pernambucoIndexSize 7
-#define piauiIndexSize 16
+#define piauiIndexSize 17
 #define rioDeJaneiroIndexSize 6
-#define rioGrandeDoNorteIndexSize 3
+#define rioGrandeDoNorteIndexSize 4
 #define rioGrandeDoSulIndexSize 22
 #define rondoniaIndexSize 20
 #define roraimaIndexSize 20 //diego adicionou
