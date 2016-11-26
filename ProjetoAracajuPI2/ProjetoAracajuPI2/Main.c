@@ -274,7 +274,7 @@ int main() {
 	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
 	// Bitmap teste do fundo
-	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg-grid.jpg");
+	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg.jpg");
 	jogoBG = al_load_bitmap(jogoBGPath);
 
 	// Bitmap botao de pause
@@ -1544,7 +1544,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 				al_play_sample_instance(erroAudioInstance);
 			}
 			jogador->erros++;
-			//jogador->vidas--;
+			jogador->vidas--;
 		}
 
 		ResetLista(lista);
@@ -1964,7 +1964,7 @@ void JogadorErrou(Jogador * jogador, Lista * lista)
 			al_play_sample_instance(erroAudioInstance);
 		}
 		jogador->erros++;
-		//jogador->vidas--;
+		jogador->vidas--;
 		jogador->acertou = false;
 		ResetLista(lista);
 	}
@@ -1974,16 +1974,12 @@ void TiraEstado(Jogador * jogador)
 {
 	if (!perdeuEstado)
 	{
-		int i, j, maior;
+		int i, j, maiorValor = 0, maiorIndex = 0;
 		for (i = 0; i < 27; i++)
 		{
-			maior = i;
-			for (j = i + 1; j < 27; j++)
+			if (jogador->acertoPorIndex[i] > maiorValor)
 			{
-				if (jogador->acertoPorIndex[i] < jogador->acertoPorIndex[j])
-				{
-					maior = j;
-				}
+				maiorIndex = i;
 			}
 		}
 
@@ -1991,7 +1987,10 @@ void TiraEstado(Jogador * jogador)
 		{
 			if (jogador->indexEstadosPerdidos[i] < 0)
 			{
-				jogador->indexEstadosPerdidos[i] = maior;
+				jogador->indexEstadosPerdidos[i] = maiorIndex;
+				jogador->acertoPorIndex[maiorIndex] = -1;
+				perdeuEstado = true;
+				break;
 			}
 		}
 
