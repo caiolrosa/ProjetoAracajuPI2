@@ -10,26 +10,26 @@
 #define bahiaIndexSize 34
 #define cearaIndexSize 13
 #define distritoFederalIndexSize 4
-#define espiritoSantoIndexSize 7
+#define espiritoSantoIndexSize 6
 #define goiasIndexSize 17
 #define maranhaoIndexSize 18	
-#define matoGrossoIndexSize 53
-#define matoGrossoDoSulIndexSize 25
+#define matoGrossoIndexSize 55
+#define matoGrossoDoSulIndexSize 26
 #define minasGeraisIndexSize 39
-#define paraIndexSize 86
+#define paraIndexSize 87
 #define paraibaIndexSize 4
-#define paranaIndexSize 14
+#define paranaIndexSize 15
 #define pernambucoIndexSize 7
 #define piauiIndexSize 17
 #define rioDeJaneiroIndexSize 6
 #define rioGrandeDoNorteIndexSize 4
 #define rioGrandeDoSulIndexSize 22
-#define rondoniaIndexSize 15
+#define rondoniaIndexSize 16
 #define roraimaIndexSize 18
 #define santaCatarinaIndexSize 10
-#define saoPauloIndexSize 20
+#define saoPauloIndexSize 22
 #define sergipeIndexSize 2
-#define tocantinsIndexSize 19
+#define tocantinsIndexSize 20
 
 #pragma endregion
 

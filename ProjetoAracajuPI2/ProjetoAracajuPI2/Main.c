@@ -953,8 +953,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	EspiritoSanto->index[2].i = 22; EspiritoSanto->index[2].j = 31;
 	EspiritoSanto->index[3].i = 23; EspiritoSanto->index[3].j = 29;
 	EspiritoSanto->index[4].i = 23; EspiritoSanto->index[4].j = 30;
-	EspiritoSanto->index[5].i = 23; EspiritoSanto->index[5].j = 31;
-	EspiritoSanto->index[6].i = 24; EspiritoSanto->index[6].j = 30;
+	EspiritoSanto->index[5].i = 24; EspiritoSanto->index[5].j = 30;
 #pragma endregion
 
 #pragma region RIO DE JANEIRO
@@ -1021,35 +1020,38 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	SaoPaulo->index[6].i = 24;   SaoPaulo->index[6].j = 22;
 	SaoPaulo->index[7].i = 24;   SaoPaulo->index[7].j = 23;
 	SaoPaulo->index[8].i = 24;   SaoPaulo->index[8].j = 24;
-	SaoPaulo->index[9].i = 25;   SaoPaulo->index[9].j = 23;
-	SaoPaulo->index[10].i = 25; SaoPaulo->index[10].j = 20;
-	SaoPaulo->index[11].i = 25; SaoPaulo->index[11].j = 21;
-	SaoPaulo->index[12].i = 25; SaoPaulo->index[12].j = 22;
-	SaoPaulo->index[13].i = 26; SaoPaulo->index[13].j = 22;
-	SaoPaulo->index[14].i = 26; SaoPaulo->index[14].j = 23;
-	SaoPaulo->index[15].i = 26; SaoPaulo->index[15].j = 24;
-	SaoPaulo->index[16].i = 26; SaoPaulo->index[16].j = 25;
-	SaoPaulo->index[17].i = 26; SaoPaulo->index[17].j = 26;
-	SaoPaulo->index[18].i = 27; SaoPaulo->index[18].j = 23;
-	SaoPaulo->index[19].i = 27; SaoPaulo->index[19].j = 24;
+	SaoPaulo->index[9].i = 25;   SaoPaulo->index[9].j = 20;
+	SaoPaulo->index[10].i = 25; SaoPaulo->index[10].j = 21;
+	SaoPaulo->index[11].i = 25; SaoPaulo->index[11].j = 22;
+	SaoPaulo->index[12].i = 25; SaoPaulo->index[12].j = 23;
+	SaoPaulo->index[13].i = 25; SaoPaulo->index[13].j = 24;
+	SaoPaulo->index[14].i = 25; SaoPaulo->index[14].j = 25;
+	SaoPaulo->index[15].i = 26; SaoPaulo->index[15].j = 22;
+	SaoPaulo->index[16].i = 26; SaoPaulo->index[16].j = 23;
+	SaoPaulo->index[17].i = 26; SaoPaulo->index[17].j = 24;
+	SaoPaulo->index[18].i = 26; SaoPaulo->index[18].j = 25;
+	SaoPaulo->index[19].i = 26; SaoPaulo->index[19].j = 26;
+	SaoPaulo->index[20].i = 27; SaoPaulo->index[20].j = 23;
+	SaoPaulo->index[21].i = 27; SaoPaulo->index[21].j = 24;
 #pragma endregion
 
 #pragma region PARANA
 	Parana->myIndexPosition = 2; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Parana->index[0].i = 26;   Parana->index[0].j = 18;
+	Parana->index[0].i = 26;   Parana->index[0].j = 19;
 	Parana->index[1].i = 26;   Parana->index[1].j = 19;
 	Parana->index[2].i = 26;   Parana->index[2].j = 20;
 	Parana->index[3].i = 26;   Parana->index[3].j = 21;
 	Parana->index[4].i = 27;   Parana->index[4].j = 18;
-	Parana->index[5].i = 27;   Parana->index[5].j = 20;
-	Parana->index[6].i = 27;   Parana->index[6].j = 21;
-	Parana->index[7].i = 27;   Parana->index[7].j = 22;
-	Parana->index[8].i = 28;   Parana->index[8].j = 18;
-	Parana->index[9].i = 28;   Parana->index[9].j = 19;
-	Parana->index[10].i = 28;   Parana->index[10].j = 20;
-	Parana->index[11].i = 28;   Parana->index[11].j = 21;
-	Parana->index[12].i = 28;   Parana->index[12].j = 22;
-	Parana->index[13].i = 28;   Parana->index[13].j = 23;
+	Parana->index[5].i = 27;   Parana->index[5].j = 19;
+	Parana->index[6].i = 27;   Parana->index[6].j = 20;
+	Parana->index[7].i = 27;   Parana->index[7].j = 21;
+	Parana->index[8].i = 27;   Parana->index[8].j = 22;
+	Parana->index[9].i = 28;   Parana->index[9].j = 18;
+	Parana->index[10].i = 28;   Parana->index[10].j = 19;
+	Parana->index[11].i = 28;   Parana->index[11].j = 20;
+	Parana->index[12].i = 28;   Parana->index[12].j = 21;
+	Parana->index[13].i = 28;   Parana->index[13].j = 22;
+	Parana->index[14].i = 28;   Parana->index[14].j = 23;
 #pragma endregion	
 
 #pragma region RIO GRAND DO SUL
@@ -1189,6 +1191,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	MatoGrossoDoSul->index[22].i = 24; 		MatoGrossoDoSul->index[22].j = 18;
 	MatoGrossoDoSul->index[23].i = 24; 		MatoGrossoDoSul->index[23].j = 19;
 	MatoGrossoDoSul->index[24].i = 25; 		MatoGrossoDoSul->index[24].j = 18;
+	MatoGrossoDoSul->index[25].i = 26; 		MatoGrossoDoSul->index[25].j = 18;
 	
 #pragma endregion
 
@@ -1247,6 +1250,9 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	MatoGrosso->index[50].i = 20; 		MatoGrosso->index[50].j = 15;
 	MatoGrosso->index[51].i = 20; 		MatoGrosso->index[51].j = 16;
 	MatoGrosso->index[52].i = 20; 		MatoGrosso->index[52].j = 19;
+
+	MatoGrosso->index[53].i = 13; 		MatoGrosso->index[53].j = 12;
+	MatoGrosso->index[54].i = 14; 		MatoGrosso->index[54].j = 12;
 #pragma endregion
 
 #pragma region PARA
@@ -1337,6 +1343,8 @@ Para->index[82].i = 13; 	Para->index[82].j = 18;
 Para->index[83].i = 13; 	Para->index[83].j = 19;
 Para->index[84].i = 13; 	Para->index[84].j = 20;
 Para->index[85].i = 13; 	Para->index[85].j = 21;
+
+Para->index[86].i = 10; 	Para->index[86].j = 15;
 #pragma endregion
 
 #pragma region AMAZONAS
