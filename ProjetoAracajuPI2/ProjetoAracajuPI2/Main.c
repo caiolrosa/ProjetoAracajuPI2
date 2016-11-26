@@ -1938,29 +1938,49 @@ void TiraEstado(Jogador * jogador)
 {
 	if (!perdeuEstado)
 	{
-		int i, j;
+		int i, j, maior;
 		for (i = 0; i < 27; i++)
 		{
-			if (jogador->acertoPorIndex[i] >= 1)
+			maior = i;
+			for (j = i + 1; j < 27; j++)
 			{
-				for (j = 0; j < 5; j++)
+				if (jogador->acertoPorIndex[i] < jogador->acertoPorIndex[j])
 				{
-					if (jogador->indexEstadosPerdidos[j] < 0)
-					{
-						if (i != jogador->indexEstadosPerdidos[0] && i != jogador->indexEstadosPerdidos[1] &&
-							i != jogador->indexEstadosPerdidos[2] && i != jogador->indexEstadosPerdidos[3] &&
-							i != jogador->indexEstadosPerdidos[4]) 
-						{
-							jogador->indexEstadosPerdidos[j] = i;
-							jogador->acertoPorIndex[i] = -1;
-							perdeuEstado = true;
-							break;
-						}
-					}
+					maior = j;
 				}
-				break;
 			}
 		}
+
+		for (i = 0; i < 5; i++)
+		{
+			if (jogador->indexEstadosPerdidos[i] < 0)
+			{
+				jogador->indexEstadosPerdidos[i] = maior;
+			}
+		}
+
+		//for (i = 0; i < 27; i++)
+		//{
+		//	if (jogador->acertoPorIndex[i] >= 1)
+		//	{
+		//		for (j = 0; j < 5; j++)
+		//		{
+		//			if (jogador->indexEstadosPerdidos[j] < 0)
+		//			{
+		//				if (i != jogador->indexEstadosPerdidos[0] && i != jogador->indexEstadosPerdidos[1] &&
+		//					i != jogador->indexEstadosPerdidos[2] && i != jogador->indexEstadosPerdidos[3] &&
+		//					i != jogador->indexEstadosPerdidos[4]) 
+		//				{
+		//					jogador->indexEstadosPerdidos[j] = i;
+		//					jogador->acertoPorIndex[i] = -1;
+		//					perdeuEstado = true;
+		//					break;
+		//				}
+		//			}
+		//		}
+		//		break;
+		//	}
+		//}
 	}
 }
 
@@ -2133,8 +2153,8 @@ void DesenhaPontuacaoRanking(ALLEGRO_FONT * fontLista, Ranking * ranking)
 {
 	if (ranking->totalLinhas / 2 >= 5)
 	{
-		al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s",ranking->nomesTxt[0]);
-		al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d",ranking->pontosTxt[0]);
+		al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s", ranking->nomesTxt[0]);
+		al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d", ranking->pontosTxt[0]);
 		al_draw_textf(fontLista, WHITE, 490, 357, 0, "%s", ranking->nomesTxt[1]);
 		al_draw_textf(fontLista, WHITE, 722, 357, 0, "%d", ranking->pontosTxt[1]);
 		al_draw_textf(fontLista, WHITE, 490, 382, 0, "%s", ranking->nomesTxt[2]);
@@ -2166,8 +2186,8 @@ void DesenhaPontuacaoRanking(ALLEGRO_FONT * fontLista, Ranking * ranking)
 			al_draw_textf(fontLista, WHITE, 722, 357, 0, "%d", ranking->pontosTxt[1]);
 			al_draw_textf(fontLista, WHITE, 490, 382, 0, "%s", ranking->nomesTxt[2]);
 			al_draw_textf(fontLista, WHITE, 722, 382, 0, "%d", ranking->pontosTxt[2]);
-			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
-			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 408, 0, "---");
 			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
 			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
 			break;
@@ -2186,6 +2206,18 @@ void DesenhaPontuacaoRanking(ALLEGRO_FONT * fontLista, Ranking * ranking)
 		case 1:
 			al_draw_textf(fontLista, WHITE, 490, 331, 0, "%s", ranking->nomesTxt[0]);
 			al_draw_textf(fontLista, WHITE, 722, 331, 0, "%d", ranking->pontosTxt[0]);
+			al_draw_textf(fontLista, WHITE, 490, 357, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 357, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 382, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 408, 0, "---");
+			al_draw_textf(fontLista, WHITE, 490, 434, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 434, 0, "---");
+			break;
+		case 0:
+			al_draw_textf(fontLista, WHITE, 490, 331, 0, "---");
+			al_draw_textf(fontLista, WHITE, 722, 331, 0, "---");
 			al_draw_textf(fontLista, WHITE, 490, 357, 0, "---");
 			al_draw_textf(fontLista, WHITE, 722, 357, 0, "---");
 			al_draw_textf(fontLista, WHITE, 490, 382, 0, "---");
