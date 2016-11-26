@@ -493,7 +493,7 @@ int main() {
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 
-			printf("POS X = %d \nPOS Y = %d \n", t.i, t.j);
+			printf("POS X = %d \nPOS Y = %d \n \n", t.i, t.j);
 
 			// Verifica se jogador clicou no pause
 			if (ev.mouse.x >= 1164 && ev.mouse.x <= 1238 && ev.mouse.y >= 33 && ev.mouse.y <= 101 && !clicouPause)
@@ -757,7 +757,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	Goias->index[2].i = 17; Goias->index[2].j = 23;
 	Goias->index[3].i = 17; Goias->index[3].j = 22;
 	Goias->index[4].i = 18; Goias->index[4].j = 21;
-	Goias->index[5].i = 18; Goias->index[5].j = 21;
+	Goias->index[5].i = 18; Goias->index[5].j = 22;
 	Goias->index[6].i = 19; Goias->index[6].j = 22;
 	Goias->index[7].i = 19; Goias->index[7].j = 21;
 	Goias->index[8].i = 19; Goias->index[8].j = 20;
@@ -769,19 +769,27 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	Goias->index[14].i = 20; Goias->index[14].j = 20;
 	Goias->index[15].i = 21; Goias->index[15].j = 20;
 	Goias->index[16].i = 21; Goias->index[16].j = 21;
+	Goias->index[17].i = 18; Goias->index[17].j = 22;
+
 #pragma endregion
 	
 #pragma region ACRE
 	Acre->myIndexPosition = 13; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Acre->index[0].i = 12; Acre->index[0].j = 2;
-	Acre->index[1].i = 12; Acre->index[1].j = 3;
-	Acre->index[2].i = 13; Acre->index[2].j = 3;
-	Acre->index[3].i = 13; Acre->index[3].j = 4;
-	Acre->index[4].i = 13; Acre->index[4].j = 5;
-	Acre->index[5].i = 13; Acre->index[5].j = 6;
-	Acre->index[6].i = 14; Acre->index[6].j = 5;
-	Acre->index[7].i = 14; Acre->index[7].j = 6;
-	Acre->index[8].i = 14; Acre->index[8].j = 7;
+	Acre->index[0].i = 11; Acre->index[0].j = 1;
+	Acre->index[1].i = 12; Acre->index[1].j = 1;
+	Acre->index[2].i = 12; Acre->index[2].j = 2;
+	Acre->index[3].i = 12; Acre->index[3].j = 3;
+	Acre->index[4].i = 12; Acre->index[4].j = 4;
+	Acre->index[5].i = 13; Acre->index[5].j = 2;
+	Acre->index[6].i = 13; Acre->index[6].j = 3;
+	Acre->index[7].i = 13; Acre->index[7].j = 4;
+	Acre->index[8].i = 13; Acre->index[8].j = 5;
+	Acre->index[9].i = 13; Acre->index[9].j = 6;
+	Acre->index[10].i = 14; Acre->index[10].j = 4;
+	Acre->index[11].i = 14; Acre->index[11].j = 5;
+	Acre->index[12].i = 14; Acre->index[12].j = 6;
+	Acre->index[13].i = 14; Acre->index[13].j = 7;
+
 #pragma endregion
 
 #pragma region SANTA CATARINA
@@ -1097,49 +1105,45 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 #pragma region RONDONIA
 	Rondonia->myIndexPosition = 12; //posicao no vetor ESTADOS de nomes na classe objects.h
 	Rondonia->index[0].i =  12;   Rondonia->index[0].j =  11;
-	Rondonia->index[1].i =  12;   Rondonia->index[1].j =  12;
-	Rondonia->index[2].i =  13;   Rondonia->index[2].j =  9;
-	Rondonia->index[3].i =  13;   Rondonia->index[3].j =  10;
-	Rondonia->index[4].i =  13;   Rondonia->index[4].j =  11;
-	Rondonia->index[5].i =  13;   Rondonia->index[5].j =  12;
-	Rondonia->index[6].i =  14;   Rondonia->index[6].j =  9;
-	Rondonia->index[7].i =  14;   Rondonia->index[7].j =  10;
-	Rondonia->index[8].i =  14;   Rondonia->index[8].j =  11;
-	Rondonia->index[9].i =  14;   Rondonia->index[9].j =  12;
-	Rondonia->index[10].i = 15;   Rondonia->index[10].j=  9;
-	Rondonia->index[11].i = 15;   Rondonia->index[11].j = 10;
-	Rondonia->index[12].i = 15;   Rondonia->index[12].j = 11;
-	Rondonia->index[13].i = 15;   Rondonia->index[13].j = 12;
-	Rondonia->index[14].i = 15;   Rondonia->index[14].j = 13;
-	Rondonia->index[15].i = 16;   Rondonia->index[15].j = 11;
-	Rondonia->index[16].i = 16;   Rondonia->index[16].j = 12;
-	Rondonia->index[17].i = 16;   Rondonia->index[17].j = 13;
-	Rondonia->index[18].i = 17;   Rondonia->index[18].j = 12;
-	Rondonia->index[19].i = 17;   Rondonia->index[19].j = 13;
+	Rondonia->index[1].i =  13;   Rondonia->index[1].j =  9;
+	Rondonia->index[2].i =  13;   Rondonia->index[2].j =  10;
+	Rondonia->index[3].i =  13;   Rondonia->index[3].j =  11;
+	Rondonia->index[4].i =  14;   Rondonia->index[4].j =  9;
+	Rondonia->index[5].i =  14;   Rondonia->index[5].j =  10;
+	Rondonia->index[6].i =  14;   Rondonia->index[6].j =  11;
+	Rondonia->index[7].i =  15;   Rondonia->index[7].j =  9;
+	Rondonia->index[8].i =  15;   Rondonia->index[8].j =  10;
+	Rondonia->index[9].i =  15;   Rondonia->index[9].j =  11;
+	Rondonia->index[10].i = 15;   Rondonia->index[10].j=  12;
+	Rondonia->index[11].i = 15;   Rondonia->index[11].j = 13;
+	Rondonia->index[12].i = 16;   Rondonia->index[12].j = 10;
+	Rondonia->index[13].i = 16;   Rondonia->index[13].j = 11;
+	Rondonia->index[14].i = 16;   Rondonia->index[14].j = 12;
+	Rondonia->index[15].i = 16;   Rondonia->index[15].j = 13;
+
 #pragma endregion
 
 #pragma region RORAIMA
 	Roraima->myIndexPosition = 15; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Roraima->index[0].i =  1;    Roraima->index[0].j = 13;
-	Roraima->index[1].i =  2;    Roraima->index[1].j = 10;
-	Roraima->index[2].i =  2;    Roraima->index[2].j = 11;
-	Roraima->index[3].i =  2;    Roraima->index[3].j = 12;
-	Roraima->index[4].i =  2;    Roraima->index[4].j = 13;
-	Roraima->index[5].i =  2;    Roraima->index[5].j = 14;
-	Roraima->index[6].i =  3;    Roraima->index[6].j = 10;
-	Roraima->index[7].i =  3;    Roraima->index[7].j = 11;
-	Roraima->index[8].i =  3;    Roraima->index[8].j = 12;
-	Roraima->index[9].i =  3;    Roraima->index[9].j = 13;
-	Roraima->index[10].i = 3;   Roraima->index[10].j = 14;
-	Roraima->index[11].i = 4;   Roraima->index[11].j = 11;
-	Roraima->index[12].i = 4;   Roraima->index[12].j = 12;
-	Roraima->index[13].i = 4;   Roraima->index[13].j = 13;
-	Roraima->index[14].i = 4;   Roraima->index[14].j = 14;
-	Roraima->index[15].i = 5;   Roraima->index[15].j = 12;
-	Roraima->index[16].i = 5;   Roraima->index[16].j = 13;
-	Roraima->index[17].i = 5;   Roraima->index[17].j = 14;
-	Roraima->index[18].i = 6;   Roraima->index[18].j = 12;
-	Roraima->index[19].i = 6;   Roraima->index[19].j = 13;
+	Roraima->index[0].i =  0;    Roraima->index[0].j = 13;
+	Roraima->index[1].i =  1;    Roraima->index[1].j = 10;
+	Roraima->index[2].i =  1;    Roraima->index[2].j = 11;
+	Roraima->index[3].i =  1;    Roraima->index[3].j = 12;
+	Roraima->index[4].i =  1;    Roraima->index[4].j = 13;
+	Roraima->index[5].i =  2;    Roraima->index[5].j = 10;
+	Roraima->index[6].i =  2;    Roraima->index[6].j = 11;
+	Roraima->index[7].i =  2;    Roraima->index[7].j = 12;
+	Roraima->index[8].i =  2;    Roraima->index[8].j = 13;
+	Roraima->index[9].i =  3;    Roraima->index[9].j = 11;
+	Roraima->index[10].i = 3;   Roraima->index[10].j = 12;
+	Roraima->index[11].i = 3;   Roraima->index[11].j = 13;
+	Roraima->index[12].i = 3;   Roraima->index[12].j = 14;
+	Roraima->index[13].i = 4;   Roraima->index[13].j = 11;
+	Roraima->index[14].i = 4;   Roraima->index[14].j = 12;
+	Roraima->index[15].i = 4;   Roraima->index[15].j = 13;
+	Roraima->index[16].i = 4;   Roraima->index[16].j = 14;
+	Roraima->index[17].i = 5;   Roraima->index[17].j = 11;
+
 #pragma endregion
 
 #pragma region AMAPA
@@ -1337,93 +1341,117 @@ Para->index[85].i = 13; 	Para->index[85].j = 21;
 
 #pragma region AMAZONAS
 Amazonas->myIndexPosition = 14; //posicao no vetor ESTADOS de nomes na classe objects.h
-Amazonas->index[0]. i = 4; 		Amazonas->index[0]. j = 6;
-Amazonas->index[1]. i = 4; 		Amazonas->index[1]. j = 7;
-Amazonas->index[2]. i = 4; 		Amazonas->index[2]. j = 8;
-Amazonas->index[3]. i = 4; 		Amazonas->index[3]. j = 10;
-Amazonas->index[4]. i = 5; 		Amazonas->index[4]. j = 5;
-Amazonas->index[5]. i = 5; 		Amazonas->index[5]. j = 6;
-Amazonas->index[6]. i = 5; 		Amazonas->index[6]. j = 7;
-Amazonas->index[7]. i = 5; 		Amazonas->index[7]. j = 8;
-Amazonas->index[8]. i = 5; 		Amazonas->index[8]. j = 9;
-Amazonas->index[9]. i = 5; 		Amazonas->index[9]. j = 10;
-Amazonas->index[10].i = 5; 		Amazonas->index[10].j = 11;
-Amazonas->index[11].i = 6; 		Amazonas->index[11].j = 6;
-Amazonas->index[12].i = 6; 		Amazonas->index[12].j = 7;
-Amazonas->index[13].i = 6; 		Amazonas->index[13].j = 8;
-Amazonas->index[14].i = 6; 		Amazonas->index[14].j = 9;
-Amazonas->index[15].i = 6; 		Amazonas->index[15].j = 10;
-Amazonas->index[16].i = 6; 		Amazonas->index[16].j = 11;
-Amazonas->index[17].i = 6; 		Amazonas->index[17].j = 14;
-Amazonas->index[18].i = 7; 		Amazonas->index[18].j = 6;
-Amazonas->index[19].i = 7; 		Amazonas->index[19].j = 7;
-Amazonas->index[20].i = 7; 		Amazonas->index[20].j = 8;
-Amazonas->index[21].i = 7; 		Amazonas->index[21].j = 9;
-Amazonas->index[22].i = 7; 		Amazonas->index[22].j = 10;
-Amazonas->index[23].i = 7; 		Amazonas->index[23].j = 11;
-Amazonas->index[24].i = 7; 		Amazonas->index[24].j = 12;
-Amazonas->index[25].i = 7; 		Amazonas->index[25].j = 13;
-Amazonas->index[26].i = 7; 		Amazonas->index[26].j = 14;
-Amazonas->index[27].i = 7; 		Amazonas->index[27].j = 15;
-Amazonas->index[28].i = 7; 		Amazonas->index[28].j = 16;
-Amazonas->index[29].i = 8; 		Amazonas->index[29].j = 6;
-Amazonas->index[30].i = 8; 		Amazonas->index[30].j = 7;
-Amazonas->index[31].i = 8; 		Amazonas->index[31].j = 8;
-Amazonas->index[32].i = 8; 		Amazonas->index[32].j = 9;
-Amazonas->index[33].i = 8; 		Amazonas->index[33].j = 10;
-Amazonas->index[34].i = 8; 		Amazonas->index[34].j = 11;
-Amazonas->index[35].i = 8; 		Amazonas->index[35].j = 12;
-Amazonas->index[36].i = 8; 		Amazonas->index[36].j = 13;
-Amazonas->index[37].i = 8; 		Amazonas->index[37].j = 14;
-Amazonas->index[38].i = 8; 		Amazonas->index[38].j = 15;
-Amazonas->index[39].i = 8; 		Amazonas->index[39].j = 16;
-Amazonas->index[40].i = 9; 		Amazonas->index[40].j = 5;
-Amazonas->index[41].i = 9; 		Amazonas->index[41].j = 6;
-Amazonas->index[42].i = 9; 		Amazonas->index[42].j = 7;
-Amazonas->index[43].i = 9;  	Amazonas->index[43].j = 8;
-Amazonas->index[44].i = 9;  	Amazonas->index[44].j = 9;
-Amazonas->index[45].i = 9;  	Amazonas->index[45].j = 10;
-Amazonas->index[46].i = 9;  	Amazonas->index[46].j = 11;
-Amazonas->index[47].i = 9;  	Amazonas->index[47].j = 12;
-Amazonas->index[48].i = 9;		Amazonas->index[48].j = 13;
-Amazonas->index[49].i = 9;		Amazonas->index[49].j = 14;
-Amazonas->index[50].i = 9; 	    Amazonas->index[50].j = 15;
-Amazonas->index[51].i = 10; 	Amazonas->index[51].j = 3;
-Amazonas->index[52].i = 10; 	Amazonas->index[52].j = 4;
-Amazonas->index[53].i = 10; 	Amazonas->index[53].j = 5;
-Amazonas->index[54].i = 10; 	Amazonas->index[54].j = 6;
-Amazonas->index[55].i = 10; 	Amazonas->index[55].j = 7;
-Amazonas->index[56].i = 10; 	Amazonas->index[56].j = 8;
-Amazonas->index[57].i = 10; 	Amazonas->index[57].j = 9;
-Amazonas->index[58].i = 10; 	Amazonas->index[58].j = 10;
-Amazonas->index[59].i = 10; 	Amazonas->index[59].j = 11;
-Amazonas->index[60].i = 10; 	Amazonas->index[60].j = 12;
-Amazonas->index[61].i = 10; 	Amazonas->index[61].j = 13;
-Amazonas->index[62].i = 10; 	Amazonas->index[62].j = 14;
-Amazonas->index[63].i = 10; 	Amazonas->index[63].j = 15;
-Amazonas->index[64].i = 11; 	Amazonas->index[64].j = 3;
-Amazonas->index[65].i = 11; 	Amazonas->index[65].j = 4;
-Amazonas->index[66].i = 11; 	Amazonas->index[66].j = 5;
-Amazonas->index[67].i = 11; 	Amazonas->index[67].j = 6;
-Amazonas->index[68].i = 11; 	Amazonas->index[68].j = 7;
-Amazonas->index[69].i = 11; 	Amazonas->index[69].j = 8;
-Amazonas->index[70].i = 11; 	Amazonas->index[70].j = 9;
-Amazonas->index[71].i = 11; 	Amazonas->index[71].j = 10;
-Amazonas->index[72].i = 11; 	Amazonas->index[72].j = 11;
-Amazonas->index[73].i = 11; 	Amazonas->index[73].j = 12;
-Amazonas->index[74].i = 11; 	Amazonas->index[74].j = 13;
-Amazonas->index[75].i = 11; 	Amazonas->index[75].j = 14;
-Amazonas->index[76].i = 12; 	Amazonas->index[76].j = 4;
-Amazonas->index[77].i = 12; 	Amazonas->index[77].j = 5;
-Amazonas->index[78].i = 12; 	Amazonas->index[78].j = 6;
-Amazonas->index[79].i = 12; 	Amazonas->index[79].j = 7;
-Amazonas->index[80].i = 12; 	Amazonas->index[80].j = 8;
-Amazonas->index[81].i = 12; 	Amazonas->index[81].j = 9;
-Amazonas->index[82].i = 12; 	Amazonas->index[82].j = 10;
-Amazonas->index[83].i = 12; 	Amazonas->index[83].j = 13;
-Amazonas->index[84].i = 12; 	Amazonas->index[84].j = 14;
-Amazonas->index[85].i = 13; 	Amazonas->index[85].j = 7;
-Amazonas->index[86].i = 13; 	Amazonas->index[86].j = 8;
+Amazonas->index[0]. i = 3; 		Amazonas->index[0]. j = 4;
+Amazonas->index[1]. i = 3; 		Amazonas->index[1]. j = 5;
+Amazonas->index[2]. i = 3; 		Amazonas->index[2]. j = 6;
+Amazonas->index[3]. i = 3; 		Amazonas->index[3]. j = 7;
+Amazonas->index[4]. i = 3; 		Amazonas->index[4]. j = 8;
+Amazonas->index[5]. i = 3; 		Amazonas->index[5]. j = 9;
+Amazonas->index[6]. i = 3; 		Amazonas->index[6]. j = 10;
+Amazonas->index[7]. i = 4; 		Amazonas->index[7]. j = 5;
+Amazonas->index[8]. i = 4; 		Amazonas->index[8]. j = 6;
+Amazonas->index[9]. i = 4; 		Amazonas->index[9]. j = 7;
+Amazonas->index[10].i = 4; 		Amazonas->index[10].j = 8;
+Amazonas->index[11].i = 4; 		Amazonas->index[11].j = 9;
+Amazonas->index[12].i = 4; 		Amazonas->index[12].j = 10;
+Amazonas->index[13].i = 5; 		Amazonas->index[13].j = 5;
+Amazonas->index[14].i = 5; 		Amazonas->index[14].j = 6;
+Amazonas->index[15].i = 5; 		Amazonas->index[15].j = 7;
+Amazonas->index[16].i = 5; 		Amazonas->index[16].j = 8;
+Amazonas->index[17].i = 5; 		Amazonas->index[17].j = 9;
+Amazonas->index[18].i = 5; 		Amazonas->index[18].j = 10;
+Amazonas->index[19].i = 5; 		Amazonas->index[19].j = 12;
+Amazonas->index[20].i = 5; 		Amazonas->index[20].j = 13;
+Amazonas->index[21].i = 5; 		Amazonas->index[21].j = 14;
+Amazonas->index[22].i = 6; 		Amazonas->index[22].j = 5;
+Amazonas->index[23].i = 6; 		Amazonas->index[23].j = 6;
+Amazonas->index[24].i = 6; 		Amazonas->index[24].j = 7;
+Amazonas->index[25].i = 6; 		Amazonas->index[25].j = 8;
+Amazonas->index[26].i = 6; 		Amazonas->index[26].j = 9;
+Amazonas->index[27].i = 6; 		Amazonas->index[27].j = 10;
+Amazonas->index[28].i = 6; 		Amazonas->index[28].j = 11;
+Amazonas->index[29].i = 6; 		Amazonas->index[29].j = 12;
+Amazonas->index[30].i = 6; 		Amazonas->index[30].j = 13;
+Amazonas->index[31].i = 6; 		Amazonas->index[31].j = 14;
+Amazonas->index[32].i = 6; 		Amazonas->index[32].j = 15;
+Amazonas->index[33].i = 7; 		Amazonas->index[33].j = 5;
+Amazonas->index[34].i = 7; 		Amazonas->index[34].j = 6;
+Amazonas->index[35].i = 7; 		Amazonas->index[35].j = 7;
+Amazonas->index[36].i = 7; 		Amazonas->index[36].j = 8;
+Amazonas->index[37].i = 7; 		Amazonas->index[37].j = 9;
+Amazonas->index[38].i = 7; 		Amazonas->index[38].j = 10;
+Amazonas->index[39].i = 7; 		Amazonas->index[39].j = 11;
+Amazonas->index[40].i = 7; 		Amazonas->index[40].j = 12;
+Amazonas->index[41].i = 7; 		Amazonas->index[41].j = 13;
+Amazonas->index[42].i = 7; 		Amazonas->index[42].j = 14;
+Amazonas->index[43].i = 7;  	Amazonas->index[43].j = 15;
+Amazonas->index[44].i = 7;  	Amazonas->index[44].j = 16;
+Amazonas->index[45].i = 8;  	Amazonas->index[45].j = 4;
+Amazonas->index[46].i = 8;  	Amazonas->index[46].j = 5;
+Amazonas->index[47].i = 8;  	Amazonas->index[47].j = 6;
+Amazonas->index[48].i = 8;		Amazonas->index[48].j = 7;
+Amazonas->index[49].i = 8;		Amazonas->index[49].j = 8;
+Amazonas->index[50].i = 8; 	    Amazonas->index[50].j = 9;
+Amazonas->index[51].i = 8;		Amazonas->index[51].j = 10;
+Amazonas->index[52].i = 8;		Amazonas->index[52].j = 11;
+Amazonas->index[53].i = 8;		Amazonas->index[53].j = 12;
+Amazonas->index[54].i = 8; 		Amazonas->index[54].j = 13;
+Amazonas->index[55].i = 8;		Amazonas->index[55].j = 14;
+Amazonas->index[56].i = 8;		Amazonas->index[56].j = 15;
+Amazonas->index[57].i = 9;		Amazonas->index[57].j = 2;
+Amazonas->index[58].i = 9;		Amazonas->index[58].j = 3;
+Amazonas->index[59].i = 9;		Amazonas->index[59].j = 4;
+Amazonas->index[60].i = 9;		Amazonas->index[60].j = 5;
+Amazonas->index[61].i = 9;		Amazonas->index[61].j = 6;
+Amazonas->index[62].i = 9;		Amazonas->index[62].j = 7;
+Amazonas->index[63].i = 9;		Amazonas->index[63].j = 8;
+Amazonas->index[64].i = 9;		Amazonas->index[64].j = 9;
+Amazonas->index[65].i = 9;		Amazonas->index[65].j = 10;
+Amazonas->index[66].i = 9;	 	Amazonas->index[66].j = 11;
+Amazonas->index[67].i = 9;		Amazonas->index[67].j = 12;
+Amazonas->index[68].i = 9;		Amazonas->index[68].j = 13;
+Amazonas->index[69].i = 9;		Amazonas->index[69].j = 14;
+Amazonas->index[70].i = 9;		Amazonas->index[70].j = 15;
+Amazonas->index[71].i = 10; 	Amazonas->index[71].j = 2;
+Amazonas->index[72].i = 10; 	Amazonas->index[72].j = 3;
+Amazonas->index[73].i = 10; 	Amazonas->index[73].j = 4;
+Amazonas->index[74].i = 10; 	Amazonas->index[74].j = 5;
+Amazonas->index[75].i = 10; 	Amazonas->index[75].j = 6;
+Amazonas->index[76].i = 10; 	Amazonas->index[76].j = 7;
+Amazonas->index[77].i = 10; 	Amazonas->index[77].j = 8;
+Amazonas->index[78].i = 10; 	Amazonas->index[78].j = 9;
+Amazonas->index[79].i = 10; 	Amazonas->index[79].j = 10;
+Amazonas->index[80].i = 10; 	Amazonas->index[80].j = 11;
+Amazonas->index[81].i = 10; 	Amazonas->index[81].j = 12;
+Amazonas->index[82].i = 10; 	Amazonas->index[82].j = 13;
+Amazonas->index[83].i = 10; 	Amazonas->index[83].j = 14;
+Amazonas->index[84].i = 11; 	Amazonas->index[84].j = 2;
+Amazonas->index[85].i = 11; 	Amazonas->index[85].j = 3;
+Amazonas->index[86].i = 11; 	Amazonas->index[86].j = 4;
+Amazonas->index[87].i = 11; 	Amazonas->index[87].j = 5;
+Amazonas->index[88].i = 11; 	Amazonas->index[88].j = 6;
+Amazonas->index[89].i = 11; 	Amazonas->index[89].j = 7;
+Amazonas->index[90].i = 11; 	Amazonas->index[90].j = 8;
+Amazonas->index[91].i = 11; 	Amazonas->index[91].j = 9;
+Amazonas->index[92].i = 11; 	Amazonas->index[92].j = 10;
+Amazonas->index[93].i = 11; 	Amazonas->index[93].j = 11;
+Amazonas->index[94].i = 11; 	Amazonas->index[94].j = 12;
+Amazonas->index[95].i = 11; 	Amazonas->index[95].j = 13;
+Amazonas->index[96].i = 11; 	Amazonas->index[96].j = 14;
+Amazonas->index[97].i = 12; 	Amazonas->index[97].j = 5;
+Amazonas->index[98].i = 12; 	Amazonas->index[98].j = 6;
+Amazonas->index[99].i = 12; 	Amazonas->index[99].j = 7;
+Amazonas->index[100].i = 12; 	Amazonas->index[100].j = 8;
+Amazonas->index[101].i = 12; 	Amazonas->index[101].j = 9;
+Amazonas->index[102].i = 12; 	Amazonas->index[102].j = 10;
+Amazonas->index[103].i = 12; 	Amazonas->index[103].j = 12;
+Amazonas->index[104].i = 12; 	Amazonas->index[104].j = 13;
+Amazonas->index[105].i = 12; 	Amazonas->index[105].j = 14;
+Amazonas->index[106].i = 13; 	Amazonas->index[106].j = 7;
+Amazonas->index[107].i = 13; 	Amazonas->index[107].j = 8;
+
+
+
 #pragma endregion
 
 }

@@ -3,10 +3,10 @@
 //Definir quantas posicoes estao mapeadas por estado
 #pragma region DEFINICAO DE TAMANHO DO MAPEAMENTO DOS ESTADOS
 
-#define acreIndexSize 9
+#define acreIndexSize 14
 #define alagoasIndexSize 3
 #define amapaIndexSize 12
-#define amazonasIndexSize 87
+#define amazonasIndexSize 108
 #define bahiaIndexSize 34
 #define cearaIndexSize 13
 #define distritoFederalIndexSize 4
@@ -24,12 +24,12 @@
 #define rioDeJaneiroIndexSize 6
 #define rioGrandeDoNorteIndexSize 4
 #define rioGrandeDoSulIndexSize 22
-#define rondoniaIndexSize 20
-#define roraimaIndexSize 20 //diego adicionou
+#define rondoniaIndexSize 15
+#define roraimaIndexSize 18
 #define santaCatarinaIndexSize 10
 #define saoPauloIndexSize 20
 #define sergipeIndexSize 2
-#define tocantinsIndexSize 20
+#define tocantinsIndexSize 19
 
 #pragma endregion
 
