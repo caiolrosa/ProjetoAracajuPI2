@@ -5,7 +5,7 @@
 
 #define acreIndexSize 9
 #define alagoasIndexSize 3
-#define amapaIndexSize 14
+#define amapaIndexSize 12
 #define amazonasIndexSize 87
 #define bahiaIndexSize 34
 #define cearaIndexSize 13
@@ -16,7 +16,7 @@
 #define matoGrossoIndexSize 53
 #define matoGrossoDoSulIndexSize 25
 #define minasGeraisIndexSize 39
-#define paraIndexSize 72
+#define paraIndexSize 86
 #define paraibaIndexSize 4
 #define paranaIndexSize 14
 #define pernambucoIndexSize 7
