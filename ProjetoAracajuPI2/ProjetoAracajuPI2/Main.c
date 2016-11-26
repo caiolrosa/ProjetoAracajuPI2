@@ -77,6 +77,7 @@ void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void InitEstadosCores(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
 void ResetJogador(Jogador *jogador, bool resetNome);
+void ResetLista(Lista * lista);
 void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
 void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP *estrela);
 void GetColor(Lista *lista, int pontos);
@@ -725,7 +726,7 @@ void InitJogador(Jogador * jogador)
 // Inicializa a lista de palavras
 void InitLista(Lista * lista)
 {
-	lista->velocidade = 0.5f;
+	lista->velocidade = 1.0f;
 	lista->heightLista = 0;
 	lista->palavraAtual = NULL;
 	lista->isMaxHeight = false;
@@ -1485,6 +1486,14 @@ void ResetJogador(Jogador * jogador, bool resetNome)
 	}
 }
 
+void ResetLista(Lista * lista)
+{
+	lista->heightLista = 0;
+	lista->velocidade = 1.0f;
+	lista->palavraAtual = NULL;
+	free(lista->palavraAtual);
+}
+
 // Altera o valor Y do elemento da lista de acordo velocidade
 // da lista(lista->velocidade) para dar no��o de anima��o
 void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
@@ -1492,7 +1501,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
 	if (lista->isMaxHeight)
 	{
-		if (!jogador->acertou && !clicouPause && !mostraFeedback)
+		if (!clicouPause)
 		{
 			if (musicaTocando)
 			{
@@ -1502,11 +1511,8 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 			//jogador->vidas--;
 		}
 
-		lista->heightLista = 0;
-		lista->velocidade = 0.5f;
-		lista->palavraAtual = NULL;
-		jogador->acertou = false;
-		free(lista->palavraAtual);
+		ResetLista(lista);
+		jogador->acertou = false;	
 	}
 
 	if (lista->palavraAtual == NULL)
@@ -1517,16 +1523,16 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 	// Caso a altura da palavra seja menor que a altura do mapa devemos continuar a anima��o de "queda"
 	if (lista->heightLista < HEIGHTMAPA - 30)
 	{
-		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 100, 0, "%s", lista->palavraAtual);
+		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 100.0, 0, "%s", lista->palavraAtual);
 
 		// Aumentamos a altura da lista de acordo com a velocidade para dar no��o de anima��o
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
 		lista->heightLista = lista->velocidade + 10;
-		lista->velocidade += 5;
+		lista->velocidade += 4.5f;
 		lista->isMaxHeight = false;
 	}
 	else {
-		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 100, 0, "%s", lista->palavraAtual);
+		al_draw_textf(fontLista, lista->cor, WIDTHMAPA + 70, lista->velocidade + 100.0, 0, "%s", lista->palavraAtual);
 
 		// Chegamos ao final da lista, ent�o isMaxHeight � true
 		lista->isMaxHeight = true;
@@ -1625,88 +1631,83 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 		lista->indexAtual = rand() % 27;
 	}
 
-	if (jogador->pontos < 100000)
+	if (jogador->pontos <= 12000)
+	{
+		lista->palavraAtual = Estados[lista->indexAtual];
+		GetColor(lista, jogador->pontos);
+	}
+
+	if (jogador->pontos > 12000 && jogador->pontos <= 19000)
 	{
 		int conjuntoEasy = (rand() * 5) % 3;
+		GetColor(lista, jogador->pontos);
 
 		switch (conjuntoEasy)
 		{
 		case 0:
-			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
+			lista->palavraAtual = Estados[lista->indexAtual];
 			break;
 		case 1:
-			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
+			ConcatenaLista(Siglas[lista->indexAtual], Estados[lista->indexAtual], lista);
 			break;
 		case 2:
-			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
+			ConcatenaLista(Capitais[lista->indexAtual], Estados[lista->indexAtual], lista);
 			break;
 		default:
-			printf("Deu Ruim");
 			break;
 		}
 	}
-	else if (jogador->pontos >= 500 && jogador->pontos < 1000) 
+
+	if (jogador->pontos > 19000 && jogador->pontos <= 27000)
 	{
-		int conjuntoMedium = (rand() * 5) % 6;
+		int conjuntoMedium = (rand() * 5) % 4;
+		GetColor(lista, jogador->pontos);
 
 		switch (conjuntoMedium)
 		{
 		case 0:
 			lista->palavraAtual = Estados[lista->indexAtual];
-			GetColor(lista, jogador->pontos);
 			break;
 		case 1:
-			lista->palavraAtual = Siglas[lista->indexAtual];
-			GetColor(lista, jogador->pontos);
+			ConcatenaLista(Siglas[lista->indexAtual], Estados[lista->indexAtual], lista);
 			break;
 		case 2:
-			lista->palavraAtual = Capitais[lista->indexAtual];
-			GetColor(lista, jogador->pontos);
+			ConcatenaLista(Capitais[lista->indexAtual], Estados[lista->indexAtual], lista);
 			break;
 		case 3:
-			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
-			break;
-		case 4:
 			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
-			break;
-		case 5:
-			ConcatenaLista(Estados[lista->indexAtual], Capitais[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
 			break;
 		default:
-			printf("Deu Ruim");
 			break;
 		}
 	}
-	else if (jogador->pontos >= 1000)
+
+	if (jogador->pontos > 27000)
 	{
-		int conjuntoHard = (rand() * 5) % 4;
+		int conjuntoHard = (rand() * 5) % 6;
+		GetColor(lista, jogador->pontos);
 
 		switch (conjuntoHard)
 		{
 		case 0:
-			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
+			lista->palavraAtual = Estados[lista->indexAtual];
 			break;
 		case 1:
-			lista->palavraAtual = Siglas[lista->indexAtual];
-			GetColor(lista, jogador->pontos);
+			lista->palavraAtual = Capitais[lista->indexAtual];
 			break;
 		case 2:
-			lista->palavraAtual = Capitais[lista->indexAtual];
-			GetColor(lista, jogador->pontos);
+			lista->palavraAtual = Siglas[lista->indexAtual];
 			break;
 		case 3:
-			ConcatenaLista(Estados[lista->indexAtual], Siglas[lista->indexAtual], lista);
-			GetColor(lista, jogador->pontos);
+			ConcatenaLista(Siglas[lista->indexAtual], Estados[lista->indexAtual], lista);
+			break;
+		case 4:
+			ConcatenaLista(Capitais[lista->indexAtual], Estados[lista->indexAtual], lista);
+			break;
+		case 5:
+			ConcatenaLista(Capitais[lista->indexAtual], Siglas[lista->indexAtual], lista);
 			break;
 		default:
-			printf("Deu Ruim");
 			break;
 		}
 	}
@@ -1914,8 +1915,7 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 		jogador->acertoPorIndex[lista->indexAtual] += 1;
 		jogador->acertos++;
 		jogador->acertou = true;
-		jogador->clicouErrado = false;
-		lista->isMaxHeight = true;
+		ResetLista(lista);
 	}	
 }
 
@@ -1930,8 +1930,7 @@ void JogadorErrou(Jogador * jogador, Lista * lista)
 		jogador->erros++;
 		//jogador->vidas--;
 		jogador->acertou = false;
-		jogador->clicouErrado = true;
-		lista->isMaxHeight = true;
+		ResetLista(lista);
 	}
 }
 
@@ -2216,15 +2215,14 @@ void DesenhaEstadosCinza(ALLEGRO_BITMAP * estadosCinza[], Jogador * jogador)
 
 void DesenhaEstadosFeedBack(ALLEGRO_BITMAP * estadosVerdes[], ALLEGRO_BITMAP * estadosVermelhos[], Jogador * jogador, Lista * lista)
 {
-	//printf("TIMER: %lf \n\n", al_get_timer_count(piscaTimer));
 	if (al_get_timer_started(piscaTimer) && al_get_timer_count(piscaTimer) < 0.5)
 	{
 		mostraFeedback = true;
-		if (!jogador->clicouErrado && lista->indexAnterior >= 0)
+		if (jogador->acertou && lista->indexAnterior >= 0)
 		{
 			al_draw_bitmap(estadosVerdes[lista->indexAnterior], 0, 0, 0);
 		}
-		else if(jogador->clicouErrado && lista->indexAnterior >= 0) {
+		else if(!jogador->acertou && lista->indexAnterior >= 0) {
 			al_draw_bitmap(estadosVermelhos[lista->indexAnterior], 0, 0, 0);
 		}
 	}
