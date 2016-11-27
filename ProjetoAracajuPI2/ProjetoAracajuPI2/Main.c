@@ -569,6 +569,7 @@ int main() {
 				DesenhaBtnPause(pauseBtn);
 				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
 				al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
+				al_draw_textf(fontLista, BLACK, 100, 650, 0, "Combo: %d", jogador.combo);
 
 				if (!clicouPause && !isGameOver)
 				{
@@ -708,6 +709,7 @@ void InitJogador(Jogador * jogador)
 	jogador->vidas = 12;
 	jogador->acertos = 0;
 	jogador->erros = 0;
+	jogador->combo = 0;
 	jogador->acertou = false;
 	jogador->pronto = false;
 
@@ -1548,7 +1550,8 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 		}
 
 		ResetLista(lista);
-		jogador->acertou = false;	
+		jogador->acertou = false;
+		jogador->combo = 0;
 	}
 
 	if (lista->palavraAtual == NULL)
@@ -1564,7 +1567,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 		// Aumentamos a altura da lista de acordo com a velocidade para dar no��o de anima��o
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
 		lista->heightLista = lista->velocidade + 10;
-		lista->velocidade += 4.5f;
+		lista->velocidade += 4.0f;
 		lista->isMaxHeight = false;
 	}
 	else {
@@ -1659,12 +1662,12 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 	srand(time(NULL));
 	int i;
 	lista->indexAnterior = lista->indexAtual;
-	lista->indexAtual = rand() % 27;
+	lista->indexAtual = (rand() * 5) % 27;
 	while (lista->indexAtual == jogador->indexEstadosPerdidos[0] || lista->indexAtual == jogador->indexEstadosPerdidos[1] ||
 		   lista->indexAtual == jogador->indexEstadosPerdidos[2] || lista->indexAtual == jogador->indexEstadosPerdidos[3] || 
 		   lista->indexAtual == jogador->indexEstadosPerdidos[4])
 	{
-		lista->indexAtual = rand() % 27;
+		lista->indexAtual = (rand() * 5) % 27;
 	}
 
 	if (jogador->pontos <= 12000)
@@ -1941,6 +1944,7 @@ void SortPontos(Ranking * ranking, int size)
 
 void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 {
+	printf("COMBO: %d", jogador->combo);
 	if (!clicouPause)
 	{
 		if (musicaTocando)
@@ -1950,6 +1954,13 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 		jogador->pontos += pontuacao;
 		jogador->acertoPorIndex[lista->indexAtual] += 1;
 		jogador->acertos++;
+		jogador->combo++;
+
+		if (jogador->combo >= 10)
+		{
+			jogador->vidas++;
+		}
+
 		jogador->acertou = true;
 		ResetLista(lista);
 	}	
@@ -1965,6 +1976,7 @@ void JogadorErrou(Jogador * jogador, Lista * lista)
 		}
 		jogador->erros++;
 		jogador->vidas--;
+		jogador->combo = 0;
 		jogador->acertou = false;
 		ResetLista(lista);
 	}

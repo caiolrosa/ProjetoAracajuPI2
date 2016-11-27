@@ -40,6 +40,7 @@ typedef struct Jogador {
 	int pontos;
 	int vidas;
 	int acertos;
+	int combo;
 	int erros;
 	bool acertou;
 	bool clicouErrado;
