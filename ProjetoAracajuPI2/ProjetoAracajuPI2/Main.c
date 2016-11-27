@@ -540,7 +540,7 @@ int main() {
 			}
 		}
 
-		if (ev.type == ALLEGRO_EVENT_KEY_DOWN && !digitouNome)
+		if (ev.type == ALLEGRO_EVENT_KEY_DOWN && !digitouNome && jogador.pronto)
 		{
 			GetUserInput(&jogador, ev);
 		}
