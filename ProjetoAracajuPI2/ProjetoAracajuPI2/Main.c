@@ -76,37 +76,7 @@ void InitLista(Lista *lista);
 void InitBotaoJogar(BotaoJogar *botaoJogar);
 void InitBotaoTutorial(BotaoTutorial *botaoTutorial);
 void InitEstadosCores(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
-void ResetJogador(Jogador *jogador, bool resetNome);
-void ResetLista(Lista * lista);
-void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
-void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP *estrela);
-void GetColor(Lista *lista, int pontos);
 void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns, int offsetX, int offsetY);
-void ConcatenaLista(char *s1, char *s2, Lista *lista);
-void SortPalavra(Jogador *jogador, Lista *lista);
-void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev);
-void SalvaPontuacao(FILE *rankingData, Jogador *jogador);
-void GetPontuacao(FILE *rankingData, Ranking *ranking);
-void SortPontos(Ranking * ranking, int size);
-void JogadorAcertou(Jogador *jogador, Lista *lista, int pontuacao);
-void JogadorErrou(Jogador *jogador, Lista * lista);
-void TiraEstado(Jogador *jogador);
-void FreeNomeJogadores(Ranking * ranking);
-void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
-void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade, ALLEGRO_BITMAP *coracaoCheio, Jogador *jogador);
-void DesenhaBtnPause(ALLEGRO_BITMAP *pauseBtn);
-void DesenhaBtnMusica(ALLEGRO_BITMAP *musicaOn, ALLEGRO_BITMAP *musicaOff, int posX, int posY, bool musicaTocando);
-void DesenhaPontuacaoRanking(ALLEGRO_FONT *fontLista, Ranking *ranking);
-void DesenhaEstadosCinza(ALLEGRO_BITMAP *estadosCinza[], Jogador *jogador);
-void DesenhaEstadosFeedBack(ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[], Jogador *jogador, Lista * lista);
-
-//void DesenhaEstadosCinza();
-
-int GetTotalLinhas(FILE * rankingData);
-
-ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
-char *GetFolderPath(char *path);
-
 void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
@@ -114,6 +84,38 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	EstadosPadrao *RioGrandeDoSul, EstadosPadrao *Rondonia, EstadosPadrao *Roraima, EstadosPadrao *SantaCatarina, EstadosPadrao *SaoPaulo, EstadosPadrao *Sergipe,
 	EstadosPadrao *Tocantins);
 
+void ResetJogador(Jogador *jogador, bool resetNome);
+void ResetLista(Lista * lista);
+
+void UpdateLista(ALLEGRO_FONT *fontLista, Jogador *jogador, Lista *lista);
+void GetColor(Lista *lista, int pontos);
+void TiraEstado(Jogador *jogador);
+void ConcatenaLista(char *s1, char *s2, Lista *lista);
+
+void GetUserInput(Jogador *jogador, ALLEGRO_EVENT ev);
+void SalvaPontuacao(FILE *rankingData, Jogador *jogador);
+void GetPontuacao(FILE *rankingData, Ranking *ranking);
+int GetTotalLinhas(FILE * rankingData);
+char *GetFolderPath(char *path);
+
+void SortPalavra(Jogador *jogador, Lista *lista);
+void SortPontos(Ranking * ranking, int size);
+
+void JogadorAcertou(Jogador *jogador, Lista *lista, int pontuacao);
+void JogadorErrou(Jogador *jogador, Lista * lista);
+
+void FreeNomeJogadores(Ranking * ranking);
+void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
+
+void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP *estrela);
+void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade, ALLEGRO_BITMAP *coracaoCheio, Jogador *jogador);
+void DesenhaBtnPause(ALLEGRO_BITMAP *pauseBtn);
+void DesenhaBtnMusica(ALLEGRO_BITMAP *musicaOn, ALLEGRO_BITMAP *musicaOff, int posX, int posY, bool musicaTocando);
+void DesenhaPontuacaoRanking(ALLEGRO_FONT *fontLista, Ranking *ranking);
+void DesenhaEstadosCinza(ALLEGRO_BITMAP *estadosCinza[], Jogador *jogador);
+void DesenhaEstadosFeedBack(ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[], Jogador *jogador, Lista * lista);
+
+ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev);
 void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
@@ -193,9 +195,10 @@ int main() {
 	ALLEGRO_BITMAP *estadosCinza[27];
 	ALLEGRO_BITMAP *estadosVerdes[27];
 	ALLEGRO_BITMAP *estadosVermelhos[27];
-	ALLEGRO_BITMAP *tutorial = NULL;
+	ALLEGRO_BITMAP *tutorialTela = NULL;
 	ALLEGRO_BITMAP *tocantins = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
+	ALLEGRO_FONT *comboFont = NULL;
 
 	// Inicializa o Allegro
 	if (!al_init())
@@ -314,25 +317,20 @@ int main() {
 	char *pauseTelaPath = GetFolderPath("/imgs/Telas/pause.png");
 	pauseTela = al_load_bitmap(pauseTelaPath);
 
+	//bitmap do tutorial do jogo
+	char *tutorialPath = GetFolderPath("/imgs/Telas/tutorial.png");
+	tutorialTela = al_load_bitmap(tutorialPath);
+
 	// Bitmap da estrelas de pontuação
 	char *estrelaPontosPath = GetFolderPath("/imgs/HUDItens/star.png");
 	estrelaPontos = al_load_bitmap(estrelaPontosPath);
 
-	// Estados cinza bitmap
-	char *tocantinsPath = GetFolderPath("/imgs/EstadosCinzas/tocantins.png");
-	tocantins = al_load_bitmap(tocantinsPath); // bmp de testes para encontrar o indice correto
-	int tocantinsWidth = al_get_bitmap_width(tocantins);			// Recebe o tamanho X da imagem
-	int tocantinsHeight = al_get_bitmap_height(tocantins);			// Recebe o tamanho Y da imagem
-
-	//bitmap do tutorial do jogo
-/*	tutorial = al_load_bitmap("imagem.png");
-	int tutorialWidth = al_get_bitmap_width(tutorial);
-	int tutorialHeight = al_get_bitmap_height(tutorial);
-	al_draw_scaled_bitmap(tutorial, -0, -0, tutorialWidth, tutorialHeight, 0, 0, WIDTH, HEIGHT, 0); */
-
 	// Carrega as fonts
-	char *fontPath = GetFolderPath("/fonts/Florsn33.ttf");
-	fontLista = al_load_font(fontPath, 20, 0);
+	char *fontListaPath = GetFolderPath("/fonts/Florsn33.ttf");
+	fontLista = al_load_font(fontListaPath, 20, 0);
+
+	char *fontComboPath = GetFolderPath("/fonts/Space Comics.ttf");
+	comboFont = al_load_font(fontComboPath, 30, 0);
 
 	// Inicializa cores
 	WHITE = al_map_rgb(255, 255, 255);
@@ -398,6 +396,7 @@ int main() {
 	al_register_event_source(event_queue, al_get_display_event_source(display));			// Registra o display na lista de eventos
 
 	al_start_timer(timer);										// Inicia o timer
+
 	// Looping Principal
 	while (!finished) {
 		ALLEGRO_EVENT ev;
@@ -451,7 +450,8 @@ int main() {
 				digitouNome = true;
 			}
 
-			if (ev.mouse.x >= 1200 && ev.mouse.x <= 1241 && ev.mouse.y >= 30 && ev.mouse.y <= 69)
+			// Verifica se o click esta dentro dos bounds do botao de fechar nos popups ranking, creditos e digitar o nome
+			if (ev.mouse.x >= 1235 && ev.mouse.x <= 1256 && ev.mouse.y >= 14 && ev.mouse.y <= 35)
 			{
 				if (clicouRanking)
 				{
@@ -461,6 +461,11 @@ int main() {
 				if (clicouCreditos)
 				{
 					clicouCreditos = false;
+				}
+
+				if (clicouTutorial)
+				{
+					clicouTutorial = false;
 				}
 
 				if (jogador.pronto)
@@ -493,7 +498,7 @@ int main() {
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
 				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
 
-			printf("POS X = %d \nPOS Y = %d \n \n", t.i, t.j);
+			
 
 			// Verifica se jogador clicou no pause
 			if (ev.mouse.x >= 1164 && ev.mouse.x <= 1238 && ev.mouse.y >= 33 && ev.mouse.y <= 101 && !clicouPause)
@@ -501,12 +506,28 @@ int main() {
 				clicouPause = true;
 			}
 
+			// Inicia o timer de piscar os estados
 			al_start_timer(piscaTimer);
 			jogadorJogando = true;
 		}
 
+		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && isGameOver)
+		{
+			printf("POS X: %d \n POS Y: %d \n", ev.mouse.x, ev.mouse.y);
+			if (ev.mouse.x >= 852 && ev.mouse.x <= 896 && ev.mouse.y >= 446 && ev.mouse.y <= 490)
+			{				
+				al_stop_sample_instance(jogoAudioInstance);
+				isInMenu = true;
+				digitouNome = false;
+				jogadorJogando = false;
+				ResetJogador(&jogador, true);
+			}
+		}
+
+		// Verifica em qual botao do menu de pause o jogador clicou
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && clicouPause)
 		{ 
+			// Caso clicou no menu devemos Resetar variaveis globais, o jogador e mudar musica
 			if (ev.mouse.x >= 462 && ev.mouse.x <= 536 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
 				al_stop_sample_instance(jogoAudioInstance);
@@ -517,6 +538,7 @@ int main() {
 				jogadorJogando = false;
 			}
 
+			// Caso clicou no icone de musica devemos parar a musica caso esteja tocando e vice versa
 			if (ev.mouse.x >= 558 && ev.mouse.x <= 631 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
 				if (musicaTocando)
@@ -528,11 +550,13 @@ int main() {
 				}
 			}
 
+			// Caso clicou no botao de voltar ao jogo devemos tirar do menu de pause
 			if (ev.mouse.x >= 653 && ev.mouse.x <= 727 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
 				clicouPause = false;
 			}
 
+			// Caso clicou em restart devemos resetar os dados do jogador
 			if (ev.mouse.x >= 748 && ev.mouse.x <= 822 && ev.mouse.y >= 367 && ev.mouse.y <= 434)
 			{
 				ResetJogador(&jogador, false);
@@ -540,13 +564,14 @@ int main() {
 			}
 		}
 
+		// Verifica se o jogador apertou alguma tecla do teclado na tela de digitar o nome
 		if (ev.type == ALLEGRO_EVENT_KEY_DOWN && !digitouNome && jogador.pronto)
 		{
 			GetUserInput(&jogador, ev);
 		}
 
 		if (redraw && al_is_event_queue_empty(event_queue))			// Permite saber quando podemos redesenhar na tela
-		{															// Lista de eventos vazia e (evitar bugs)
+		{
 			redraw = false;
 
 			if (jogador.pronto && digitouNome)   //verifica se o jogador passou a jogar
@@ -554,6 +579,7 @@ int main() {
 				isInMenu = false;
 				al_stop_sample_instance(menuAudioInstance);
 
+				// Verifica o estado da musica (tocando ou nao)
 				if (musicaTocando)
 				{
 					al_play_sample_instance(jogoAudioInstance);
@@ -563,28 +589,40 @@ int main() {
 				}
 
 				al_flip_display();
+
+				// Desenha o mapa e o bg do jogo na tela
 				al_draw_bitmap(jogoBG, 0, 0, 0);
 
+				// Desenha estados cinza caso haja, o botão de pause, os corações de acordo com as vidas do jogador,
+				// os pontos e combo caso necessário
 				DesenhaEstadosCinza(estadosCinza, &jogador);
 				DesenhaBtnPause(pauseBtn);
 				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
-				al_draw_textf(fontLista, BLACK, 1080, 38, 0, "%d", jogador.pontos);
-				al_draw_textf(fontLista, BLACK, 100, 650, 0, "Combo: %d", jogador.combo);
+				al_draw_textf(fontLista, BLACK, 1028, 36, 0, "%d", jogador.pontos);
+				if (jogador.combo >= 5)
+				{
+					al_draw_textf(comboFont, BLACK, 100, 650, 0, "X%d", jogador.combo);
+				}
 
+				// Se o jogador nao clicou pause e nao terminou o jogo devemos fazer o update da lista
+				// e desenhar os estados vermelhos e verdes de acordo com o acertou ou erro
+				// caso o jogador pause o jogo devemos desenhar a tela de pause.
 				if (!clicouPause && !isGameOver)
 				{
 					UpdateLista(fontLista, &jogador, &lista);
 					DesenhaEstadosFeedBack(estadosVerdes, estadosVermelhos, &jogador, &lista);
 				}
 				else if (clicouPause && !isGameOver) {
-					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 220));
 					al_draw_bitmap(pauseTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
 					DesenhaBtnMusica(musicaOn, musicaOff, 554, 363, musicaTocando);
 				}
 
+				// Se o jogo acabou devemos desenhar a tela de gameover, as estrelas e a pontuação do jogador
+				// e devemos também salvar a pontuação no txt
 				if (isGameOver)
-				{					
-					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+				{		
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 220));
 					al_draw_bitmap(gameOver, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
 					DesenhaEstrelas(jogador.pontos, estrelaPontos);
 					al_draw_textf(fontLista, WHITE, WIDTH / 2 + 10, (HEIGHT / 2) - 4, ALLEGRO_ALIGN_CENTER, "%d", jogador.pontos);
@@ -600,6 +638,7 @@ int main() {
 			}
 			else
 			{
+				// Caso estejamos no menu, devemos verificar o estado da musica (tocando ou nao)
 				if (musicaTocando)
 				{
 					al_play_sample_instance(menuAudioInstance);
@@ -609,28 +648,38 @@ int main() {
 				}
 
 				al_draw_bitmap(menu, 0, 0, 0);		//coloca o menu na tela
-				DesenhaBtnMusica(musicaOn, musicaOff, 1000, 617, musicaTocando);
+				DesenhaBtnMusica(musicaOn, musicaOff, 1000, 617, musicaTocando); // Desenha o botao de musica de acordo com seu estado atual
 
+				// Caso jogador clicou em jogar e nao digitou o nome devemos mostrar a tela para digitar o nome de jogador
 				if (jogador.pronto && !digitouNome)
 				{
-					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 220));
 					al_draw_bitmap(nomeJogadorTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
-					al_draw_bitmap(closeBtn, 1200, 30, 0);
+					al_draw_bitmap(closeBtn, 1220, 0, 0);
 					al_draw_textf(fontLista, BLACK, 645, 363, ALLEGRO_ALIGN_CENTER, "%s", jogador.nome);
 				}
 
-				if (clicouCreditos)
+				if (clicouTutorial)
 				{
-					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
-					al_draw_bitmap(creditosTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
-					al_draw_bitmap(closeBtn, 1200, 30, 0);
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 220));
+					al_draw_bitmap(tutorialTela, 0, 0, 0);
+					al_draw_bitmap(closeBtn, 1220, 0, 0);
 				}
 
+				// Caso o jogador clicou no botao dos creditos
+				if (clicouCreditos)
+				{
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 220));
+					al_draw_bitmap(creditosTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
+					al_draw_bitmap(closeBtn, 1220, 0, 0);
+				}
+
+				// Caso o jogador clicou no botao do ranking, devemos pegar as pontuações salvas e exibir na tela
 				if (clicouRanking)
 				{
-					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 200));
+					al_draw_filled_rectangle(0, 0, 1280, 720, al_map_rgba(40, 40, 40, 220));
 					al_draw_bitmap(rankingTela, WIDTH / 2 - 290, HEIGHT / 2 - 157, 0);
-					al_draw_bitmap(closeBtn, 1200, 30, 0);
+					al_draw_bitmap(closeBtn, 1220, 0, 0);
 					GetPontuacao(rankingData, &ranking);
 					DesenhaPontuacaoRanking(fontLista, &ranking);
 				}
@@ -640,6 +689,7 @@ int main() {
 	}
 
 	// Libera memoria dos paths utilizados
+#pragma region Libera memoria paths
 	free(menuPath);
 	free(inputPopupPath);
 	free(mapaPath);
@@ -649,6 +699,7 @@ int main() {
 	free(creditosTelaPath);
 	free(pauseTelaPath);
 	free(pauseBtnPath);
+	free(tutorialPath);
 	free(closeBtnPath);
 	free(musicOnPath);
 	free(musicOffPath);
@@ -656,16 +707,18 @@ int main() {
 	free(coracaoMetadePath);
 	free(coracaoCheioPath);
 	free(estrelaPontosPath);
-	free(tocantinsPath);
-	free(fontPath);
+	free(fontListaPath);
+	free(fontComboPath);
 	free(menuAudioSamplePath);
 	free(jogoAudioSamplePath);
 	free(acertoAudioSamplePath);
 	free(erroAudioSamplePath);
 	FreeNomeJogadores(&ranking);
 	FreeEstadosPaths(estadosCinzaPath, estadosVerdesPath, estadosVermelhosPath, estadosCinza, estadosVerdes, estadosVermelhos);
+#pragma endregion
 
 	// Libera a memoria alocada para variaveis Allegro
+#pragma region Libera memoria variaveis Allegro
 	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
@@ -684,9 +737,9 @@ int main() {
 	al_destroy_bitmap(coracaoMetade);
 	al_destroy_bitmap(coracaoCheio);
 	al_destroy_bitmap(estrelaPontos);
-	al_destroy_bitmap(tocantins);
-	//al_destroy_bitmap(tutorial);
+	al_destroy_bitmap(tutorialTela);
 	al_destroy_font(fontLista);
+	al_destroy_font(comboFont);
 	al_destroy_sample(menuAudioSample);
 	al_destroy_sample(jogoAudioSample);
 	al_destroy_sample(acertoAudioSample);
@@ -695,6 +748,7 @@ int main() {
 	al_destroy_sample_instance(jogoAudioInstance);
 	al_destroy_sample_instance(acertoAudioInstance);
 	al_destroy_sample_instance(erroAudioInstance);
+#pragma endregion
 
 	return 0;
 }
@@ -716,7 +770,7 @@ void InitJogador(Jogador * jogador)
 	int i;
 	for (i = 0; i < 27; i++)
 	{
-		jogador->acertoPorIndex[i] = 0;
+		jogador->acertoPorIndex[i] = -1;
 	}
 
 	for (i = 0; i < 5; i++)
@@ -724,8 +778,6 @@ void InitJogador(Jogador * jogador)
 		jogador->indexEstadosPerdidos[i] = -1;
 	}
 }
-
-// Inicializa a lista de palavras
 void InitLista(Lista * lista)
 {
 	lista->velocidade = 1.0f;
@@ -735,8 +787,48 @@ void InitLista(Lista * lista)
 	lista->indexAtual = -1;
 	lista->indexAnterior = -1;
 }
+void InitBotaoJogar(BotaoJogar * botaoJogar)
+{
+	botaoJogar->boundXInicio = 435;
+	botaoJogar->boundXFinal = 850;
 
-//Aqui sera configurado o mapeamento dos estados
+	botaoJogar->boundYInicio = 420;
+	botaoJogar->boundYFinal = 485;
+}
+void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
+{
+
+	botaoTutorial->boundXInicio = 431;
+	botaoTutorial->boundXFinal = 850;
+
+	botaoTutorial->boundYInicio = 500;
+	botaoTutorial->boundYFinal = 570;
+}
+void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns, int offsetX, int offsetY)
+{
+	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
+	float pixelH = HEIGHTMAPA / (float)totalColumns; // mesma coisa de cima
+
+	int i = 0, j = 0;
+	for (i = 0; i < totalLines; i++)
+	{
+		lines[i] = (pixelH + pixelH * i) + offsetY; // adiciono o valor em pixels onde ira comecar a matriz de Linhas
+	}
+	for (j = 0; j < totalColumns; j++)
+	{
+		columns[j] = (pixelW + pixelW * j) + offsetX; // adiciono o valor em pixels onde ira comecar a matriz de colunas
+	}
+}
+void InitEstadosCores(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[])
+{
+	int i;
+	for (i = 0; i < 27; i++)
+	{
+		estadosCinza[i] = al_load_bitmap(estadosCinzaPath[i]);
+		estadosVerdes[i] = al_load_bitmap(estadosVerdesPath[i]);
+		estadosVermelhos[i] = al_load_bitmap(estadosVermelhosPath[i]);
+	}
+}
 void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
@@ -774,7 +866,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	Goias->index[17].i = 18; Goias->index[17].j = 22;
 
 #pragma endregion
-	
+
 #pragma region ACRE
 	Acre->myIndexPosition = 13; //posicao no vetor ESTADOS de nomes na classe objects.h
 	Acre->index[0].i = 11; Acre->index[0].j = 1;
@@ -1084,16 +1176,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region TOCANTINS
 	Tocantins->myIndexPosition = 11; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Tocantins->index[0].i =  10;   Tocantins->index[0].j =  24;
-	Tocantins->index[1].i =  11;   Tocantins->index[1].j =  23;
-	Tocantins->index[2].i =  11;   Tocantins->index[2].j =  24;
-	Tocantins->index[3].i =  12;   Tocantins->index[3].j =  23;
-	Tocantins->index[4].i =  12;   Tocantins->index[4].j =  24;
-	Tocantins->index[5].i =  13;   Tocantins->index[5].j =  22;
-	Tocantins->index[6].i =  13;   Tocantins->index[6].j =  23;
-	Tocantins->index[7].i =  13;   Tocantins->index[7].j =  24;
-	Tocantins->index[8].i =  14;   Tocantins->index[8].j =  22;
-	Tocantins->index[9].i =  14;   Tocantins->index[9].j =  23;
+	Tocantins->index[0].i = 10;   Tocantins->index[0].j = 24;
+	Tocantins->index[1].i = 11;   Tocantins->index[1].j = 23;
+	Tocantins->index[2].i = 11;   Tocantins->index[2].j = 24;
+	Tocantins->index[3].i = 12;   Tocantins->index[3].j = 23;
+	Tocantins->index[4].i = 12;   Tocantins->index[4].j = 24;
+	Tocantins->index[5].i = 13;   Tocantins->index[5].j = 22;
+	Tocantins->index[6].i = 13;   Tocantins->index[6].j = 23;
+	Tocantins->index[7].i = 13;   Tocantins->index[7].j = 24;
+	Tocantins->index[8].i = 14;   Tocantins->index[8].j = 22;
+	Tocantins->index[9].i = 14;   Tocantins->index[9].j = 23;
 	Tocantins->index[10].i = 14;   Tocantins->index[10].j = 24;
 	Tocantins->index[11].i = 14;   Tocantins->index[11].j = 25;
 	Tocantins->index[12].i = 15;   Tocantins->index[12].j = 22;
@@ -1108,17 +1200,17 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region RONDONIA
 	Rondonia->myIndexPosition = 12; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Rondonia->index[0].i =  12;   Rondonia->index[0].j =  11;
-	Rondonia->index[1].i =  13;   Rondonia->index[1].j =  9;
-	Rondonia->index[2].i =  13;   Rondonia->index[2].j =  10;
-	Rondonia->index[3].i =  13;   Rondonia->index[3].j =  11;
-	Rondonia->index[4].i =  14;   Rondonia->index[4].j =  9;
-	Rondonia->index[5].i =  14;   Rondonia->index[5].j =  10;
-	Rondonia->index[6].i =  14;   Rondonia->index[6].j =  11;
-	Rondonia->index[7].i =  15;   Rondonia->index[7].j =  9;
-	Rondonia->index[8].i =  15;   Rondonia->index[8].j =  10;
-	Rondonia->index[9].i =  15;   Rondonia->index[9].j =  11;
-	Rondonia->index[10].i = 15;   Rondonia->index[10].j=  12;
+	Rondonia->index[0].i = 12;   Rondonia->index[0].j = 11;
+	Rondonia->index[1].i = 13;   Rondonia->index[1].j = 9;
+	Rondonia->index[2].i = 13;   Rondonia->index[2].j = 10;
+	Rondonia->index[3].i = 13;   Rondonia->index[3].j = 11;
+	Rondonia->index[4].i = 14;   Rondonia->index[4].j = 9;
+	Rondonia->index[5].i = 14;   Rondonia->index[5].j = 10;
+	Rondonia->index[6].i = 14;   Rondonia->index[6].j = 11;
+	Rondonia->index[7].i = 15;   Rondonia->index[7].j = 9;
+	Rondonia->index[8].i = 15;   Rondonia->index[8].j = 10;
+	Rondonia->index[9].i = 15;   Rondonia->index[9].j = 11;
+	Rondonia->index[10].i = 15;   Rondonia->index[10].j = 12;
 	Rondonia->index[11].i = 15;   Rondonia->index[11].j = 13;
 	Rondonia->index[12].i = 16;   Rondonia->index[12].j = 10;
 	Rondonia->index[13].i = 16;   Rondonia->index[13].j = 11;
@@ -1129,16 +1221,16 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region RORAIMA
 	Roraima->myIndexPosition = 15; //posicao no vetor ESTADOS de nomes na classe objects.h
-	Roraima->index[0].i =  0;    Roraima->index[0].j = 13;
-	Roraima->index[1].i =  1;    Roraima->index[1].j = 10;
-	Roraima->index[2].i =  1;    Roraima->index[2].j = 11;
-	Roraima->index[3].i =  1;    Roraima->index[3].j = 12;
-	Roraima->index[4].i =  1;    Roraima->index[4].j = 13;
-	Roraima->index[5].i =  2;    Roraima->index[5].j = 10;
-	Roraima->index[6].i =  2;    Roraima->index[6].j = 11;
-	Roraima->index[7].i =  2;    Roraima->index[7].j = 12;
-	Roraima->index[8].i =  2;    Roraima->index[8].j = 13;
-	Roraima->index[9].i =  3;    Roraima->index[9].j = 11;
+	Roraima->index[0].i = 0;    Roraima->index[0].j = 13;
+	Roraima->index[1].i = 1;    Roraima->index[1].j = 10;
+	Roraima->index[2].i = 1;    Roraima->index[2].j = 11;
+	Roraima->index[3].i = 1;    Roraima->index[3].j = 12;
+	Roraima->index[4].i = 1;    Roraima->index[4].j = 13;
+	Roraima->index[5].i = 2;    Roraima->index[5].j = 10;
+	Roraima->index[6].i = 2;    Roraima->index[6].j = 11;
+	Roraima->index[7].i = 2;    Roraima->index[7].j = 12;
+	Roraima->index[8].i = 2;    Roraima->index[8].j = 13;
+	Roraima->index[9].i = 3;    Roraima->index[9].j = 11;
 	Roraima->index[10].i = 3;   Roraima->index[10].j = 12;
 	Roraima->index[11].i = 3;   Roraima->index[11].j = 13;
 	Roraima->index[12].i = 3;   Roraima->index[12].j = 14;
@@ -1168,7 +1260,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 
 #pragma region MATO GROSSO DO SUL
 	MatoGrossoDoSul->myIndexPosition = 7; //posicao no vetor ESTADOS de nomes na classe objects.h
-	MatoGrossoDoSul->index[0].i= 20 ; 		MatoGrossoDoSul->index[0].j = 17;
+	MatoGrossoDoSul->index[0].i = 20; 		MatoGrossoDoSul->index[0].j = 17;
 	MatoGrossoDoSul->index[1].i = 20; 		MatoGrossoDoSul->index[1].j = 18;
 	MatoGrossoDoSul->index[2].i = 21; 		MatoGrossoDoSul->index[2].j = 16;
 	MatoGrossoDoSul->index[3].i = 21; 		MatoGrossoDoSul->index[3].j = 17;
@@ -1194,7 +1286,7 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 	MatoGrossoDoSul->index[23].i = 24; 		MatoGrossoDoSul->index[23].j = 19;
 	MatoGrossoDoSul->index[24].i = 25; 		MatoGrossoDoSul->index[24].j = 18;
 	MatoGrossoDoSul->index[25].i = 26; 		MatoGrossoDoSul->index[25].j = 18;
-	
+
 #pragma endregion
 
 #pragma region MATO GROSSO
@@ -1258,244 +1350,212 @@ void InitEstados(EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Ama
 #pragma endregion
 
 #pragma region PARA
-Para->myIndexPosition = 16; //posicao no vetor ESTADOS de nomes na classe objects.h
-Para->index[0].i = 2; 		Para->index[0].j = 17;
-Para->index[1].i = 3; 		Para->index[1].j = 15;
-Para->index[2].i = 3; 		Para->index[2].j = 16;
-Para->index[3].i = 3; 		Para->index[3].j = 17;
-Para->index[4].i = 3; 		Para->index[4].j = 18;
-Para->index[5].i = 3; 		Para->index[5].j = 19;
-Para->index[6].i = 4; 		Para->index[6].j = 15;
-Para->index[7].i = 4; 		Para->index[7].j = 16;
-Para->index[8].i = 4; 		Para->index[8].j = 17;
-Para->index[9].i = 4; 		Para->index[9].j = 18;
-Para->index[10].i = 4; 		Para->index[10].j = 19;
-Para->index[11].i = 4; 		Para->index[11].j = 21;
-Para->index[12].i = 4; 		Para->index[12].j = 22;
-Para->index[13].i = 5; 		Para->index[13].j = 15;
-Para->index[14].i = 5; 		Para->index[14].j = 16;
-Para->index[15].i = 5; 		Para->index[15].j = 17;
-Para->index[16].i = 5; 		Para->index[16].j = 18;
-Para->index[17].i = 5; 		Para->index[17].j = 19;
-Para->index[18].i = 5; 		Para->index[18].j = 21;
-Para->index[19].i = 5; 		Para->index[19].j = 22;
-Para->index[20].i = 5; 		Para->index[20].j = 23;
-Para->index[21].i = 6; 		Para->index[21].j = 15;
-Para->index[22].i = 6; 		Para->index[22].j = 16;
-Para->index[23].i = 6; 		Para->index[23].j = 17;
-Para->index[24].i = 6; 		Para->index[24].j = 18;
-Para->index[25].i = 6; 		Para->index[25].j = 19;
-Para->index[26].i = 6; 		Para->index[26].j = 20;
-Para->index[27].i = 6; 		Para->index[27].j = 21;
-Para->index[28].i = 6; 		Para->index[28].j = 22;
-Para->index[29].i = 6; 		Para->index[29].j = 23;
-Para->index[30].i = 6; 		Para->index[30].j = 24;
-Para->index[31].i = 6; 		Para->index[31].j = 25;
-Para->index[32].i = 7; 		Para->index[32].j = 17;
-Para->index[33].i = 7; 		Para->index[33].j = 18;
-Para->index[34].i = 7; 		Para->index[34].j = 19;
-Para->index[35].i = 7; 		Para->index[35].j = 20;
-Para->index[36].i = 7; 		Para->index[36].j = 21;
-Para->index[37].i = 7; 		Para->index[37].j = 22;
-Para->index[38].i = 7; 		Para->index[38].j = 23;
-Para->index[39].i = 7; 		Para->index[39].j = 24;
-Para->index[40].i = 7; 		Para->index[40].j = 25;
-Para->index[41].i = 8; 		Para->index[41].j = 17;
-Para->index[42].i = 8; 		Para->index[42].j = 18;
-Para->index[43].i = 8; 		Para->index[43].j = 19;
-Para->index[44].i = 8; 		Para->index[44].j = 20;
-Para->index[45].i = 8; 		Para->index[45].j = 21;
-Para->index[46].i = 8; 		Para->index[46].j = 22;
-Para->index[47].i = 8; 		Para->index[47].j = 23;
-Para->index[48].i = 8; 		Para->index[48].j = 24;
-Para->index[49].i = 9; 		Para->index[49].j = 16;
-Para->index[50].i = 9; 		Para->index[50].j = 17;
-Para->index[51].i = 9; 		Para->index[51].j = 18;
-Para->index[52].i = 9; 		Para->index[52].j = 19;
-Para->index[53].i = 9; 		Para->index[53].j = 20;
-Para->index[54].i = 9; 		Para->index[54].j = 21;
-Para->index[55].i = 9; 		Para->index[55].j = 22;
-Para->index[56].i = 9; 		Para->index[56].j = 23;
-Para->index[57].i = 10; 	Para->index[57].j = 16;
-Para->index[58].i = 10; 	Para->index[58].j = 17;
-Para->index[59].i = 10; 	Para->index[59].j = 18;
-Para->index[60].i = 10; 	Para->index[60].j = 19;
-Para->index[61].i = 10; 	Para->index[61].j = 20;
-Para->index[62].i = 10;		Para->index[62].j = 21;
-Para->index[63].i = 10;		Para->index[63].j = 22;
-Para->index[64].i = 10; 	Para->index[64].j = 23;
-Para->index[65].i = 11; 	Para->index[65].j = 15;
-Para->index[66].i = 11; 	Para->index[66].j = 16;
-Para->index[67].i = 11; 	Para->index[67].j = 17;
-Para->index[68].i = 11; 	Para->index[68].j = 18;
-Para->index[69].i = 11; 	Para->index[69].j = 19;
-Para->index[70].i = 11; 	Para->index[70].j = 20;
-Para->index[71].i = 11; 	Para->index[71].j = 21;
-Para->index[72].i = 11; 	Para->index[72].j = 22;
-Para->index[73].i = 12; 	Para->index[73].j = 16;
-Para->index[74].i = 12; 	Para->index[74].j = 17;
-Para->index[75].i = 12; 	Para->index[75].j = 18;
-Para->index[76].i = 12; 	Para->index[76].j = 19;
-Para->index[77].i = 12; 	Para->index[77].j = 20;
-Para->index[78].i = 12; 	Para->index[78].j = 21;
-Para->index[79].i = 12; 	Para->index[79].j = 22;
-Para->index[80].i = 13; 	Para->index[80].j = 16;
-Para->index[81].i = 13; 	Para->index[81].j = 17;
-Para->index[82].i = 13; 	Para->index[82].j = 18;
-Para->index[83].i = 13; 	Para->index[83].j = 19;
-Para->index[84].i = 13; 	Para->index[84].j = 20;
-Para->index[85].i = 13; 	Para->index[85].j = 21;
+	Para->myIndexPosition = 16; //posicao no vetor ESTADOS de nomes na classe objects.h
+	Para->index[0].i = 2; 		Para->index[0].j = 17;
+	Para->index[1].i = 3; 		Para->index[1].j = 15;
+	Para->index[2].i = 3; 		Para->index[2].j = 16;
+	Para->index[3].i = 3; 		Para->index[3].j = 17;
+	Para->index[4].i = 3; 		Para->index[4].j = 18;
+	Para->index[5].i = 3; 		Para->index[5].j = 19;
+	Para->index[6].i = 4; 		Para->index[6].j = 15;
+	Para->index[7].i = 4; 		Para->index[7].j = 16;
+	Para->index[8].i = 4; 		Para->index[8].j = 17;
+	Para->index[9].i = 4; 		Para->index[9].j = 18;
+	Para->index[10].i = 4; 		Para->index[10].j = 19;
+	Para->index[11].i = 4; 		Para->index[11].j = 21;
+	Para->index[12].i = 4; 		Para->index[12].j = 22;
+	Para->index[13].i = 5; 		Para->index[13].j = 15;
+	Para->index[14].i = 5; 		Para->index[14].j = 16;
+	Para->index[15].i = 5; 		Para->index[15].j = 17;
+	Para->index[16].i = 5; 		Para->index[16].j = 18;
+	Para->index[17].i = 5; 		Para->index[17].j = 19;
+	Para->index[18].i = 5; 		Para->index[18].j = 21;
+	Para->index[19].i = 5; 		Para->index[19].j = 22;
+	Para->index[20].i = 5; 		Para->index[20].j = 23;
+	Para->index[21].i = 6; 		Para->index[21].j = 15;
+	Para->index[22].i = 6; 		Para->index[22].j = 16;
+	Para->index[23].i = 6; 		Para->index[23].j = 17;
+	Para->index[24].i = 6; 		Para->index[24].j = 18;
+	Para->index[25].i = 6; 		Para->index[25].j = 19;
+	Para->index[26].i = 6; 		Para->index[26].j = 20;
+	Para->index[27].i = 6; 		Para->index[27].j = 21;
+	Para->index[28].i = 6; 		Para->index[28].j = 22;
+	Para->index[29].i = 6; 		Para->index[29].j = 23;
+	Para->index[30].i = 6; 		Para->index[30].j = 24;
+	Para->index[31].i = 6; 		Para->index[31].j = 25;
+	Para->index[32].i = 7; 		Para->index[32].j = 17;
+	Para->index[33].i = 7; 		Para->index[33].j = 18;
+	Para->index[34].i = 7; 		Para->index[34].j = 19;
+	Para->index[35].i = 7; 		Para->index[35].j = 20;
+	Para->index[36].i = 7; 		Para->index[36].j = 21;
+	Para->index[37].i = 7; 		Para->index[37].j = 22;
+	Para->index[38].i = 7; 		Para->index[38].j = 23;
+	Para->index[39].i = 7; 		Para->index[39].j = 24;
+	Para->index[40].i = 7; 		Para->index[40].j = 25;
+	Para->index[41].i = 8; 		Para->index[41].j = 17;
+	Para->index[42].i = 8; 		Para->index[42].j = 18;
+	Para->index[43].i = 8; 		Para->index[43].j = 19;
+	Para->index[44].i = 8; 		Para->index[44].j = 20;
+	Para->index[45].i = 8; 		Para->index[45].j = 21;
+	Para->index[46].i = 8; 		Para->index[46].j = 22;
+	Para->index[47].i = 8; 		Para->index[47].j = 23;
+	Para->index[48].i = 8; 		Para->index[48].j = 24;
+	Para->index[49].i = 9; 		Para->index[49].j = 16;
+	Para->index[50].i = 9; 		Para->index[50].j = 17;
+	Para->index[51].i = 9; 		Para->index[51].j = 18;
+	Para->index[52].i = 9; 		Para->index[52].j = 19;
+	Para->index[53].i = 9; 		Para->index[53].j = 20;
+	Para->index[54].i = 9; 		Para->index[54].j = 21;
+	Para->index[55].i = 9; 		Para->index[55].j = 22;
+	Para->index[56].i = 9; 		Para->index[56].j = 23;
+	Para->index[57].i = 10; 	Para->index[57].j = 16;
+	Para->index[58].i = 10; 	Para->index[58].j = 17;
+	Para->index[59].i = 10; 	Para->index[59].j = 18;
+	Para->index[60].i = 10; 	Para->index[60].j = 19;
+	Para->index[61].i = 10; 	Para->index[61].j = 20;
+	Para->index[62].i = 10;		Para->index[62].j = 21;
+	Para->index[63].i = 10;		Para->index[63].j = 22;
+	Para->index[64].i = 10; 	Para->index[64].j = 23;
+	Para->index[65].i = 11; 	Para->index[65].j = 15;
+	Para->index[66].i = 11; 	Para->index[66].j = 16;
+	Para->index[67].i = 11; 	Para->index[67].j = 17;
+	Para->index[68].i = 11; 	Para->index[68].j = 18;
+	Para->index[69].i = 11; 	Para->index[69].j = 19;
+	Para->index[70].i = 11; 	Para->index[70].j = 20;
+	Para->index[71].i = 11; 	Para->index[71].j = 21;
+	Para->index[72].i = 11; 	Para->index[72].j = 22;
+	Para->index[73].i = 12; 	Para->index[73].j = 16;
+	Para->index[74].i = 12; 	Para->index[74].j = 17;
+	Para->index[75].i = 12; 	Para->index[75].j = 18;
+	Para->index[76].i = 12; 	Para->index[76].j = 19;
+	Para->index[77].i = 12; 	Para->index[77].j = 20;
+	Para->index[78].i = 12; 	Para->index[78].j = 21;
+	Para->index[79].i = 12; 	Para->index[79].j = 22;
+	Para->index[80].i = 13; 	Para->index[80].j = 16;
+	Para->index[81].i = 13; 	Para->index[81].j = 17;
+	Para->index[82].i = 13; 	Para->index[82].j = 18;
+	Para->index[83].i = 13; 	Para->index[83].j = 19;
+	Para->index[84].i = 13; 	Para->index[84].j = 20;
+	Para->index[85].i = 13; 	Para->index[85].j = 21;
 
-Para->index[86].i = 10; 	Para->index[86].j = 15;
+	Para->index[86].i = 10; 	Para->index[86].j = 15;
 #pragma endregion
 
 #pragma region AMAZONAS
-Amazonas->myIndexPosition = 14; //posicao no vetor ESTADOS de nomes na classe objects.h
-Amazonas->index[0]. i = 3; 		Amazonas->index[0]. j = 4;
-Amazonas->index[1]. i = 3; 		Amazonas->index[1]. j = 5;
-Amazonas->index[2]. i = 3; 		Amazonas->index[2]. j = 6;
-Amazonas->index[3]. i = 3; 		Amazonas->index[3]. j = 7;
-Amazonas->index[4]. i = 3; 		Amazonas->index[4]. j = 8;
-Amazonas->index[5]. i = 3; 		Amazonas->index[5]. j = 9;
-Amazonas->index[6]. i = 3; 		Amazonas->index[6]. j = 10;
-Amazonas->index[7]. i = 4; 		Amazonas->index[7]. j = 5;
-Amazonas->index[8]. i = 4; 		Amazonas->index[8]. j = 6;
-Amazonas->index[9]. i = 4; 		Amazonas->index[9]. j = 7;
-Amazonas->index[10].i = 4; 		Amazonas->index[10].j = 8;
-Amazonas->index[11].i = 4; 		Amazonas->index[11].j = 9;
-Amazonas->index[12].i = 4; 		Amazonas->index[12].j = 10;
-Amazonas->index[13].i = 5; 		Amazonas->index[13].j = 5;
-Amazonas->index[14].i = 5; 		Amazonas->index[14].j = 6;
-Amazonas->index[15].i = 5; 		Amazonas->index[15].j = 7;
-Amazonas->index[16].i = 5; 		Amazonas->index[16].j = 8;
-Amazonas->index[17].i = 5; 		Amazonas->index[17].j = 9;
-Amazonas->index[18].i = 5; 		Amazonas->index[18].j = 10;
-Amazonas->index[19].i = 5; 		Amazonas->index[19].j = 12;
-Amazonas->index[20].i = 5; 		Amazonas->index[20].j = 13;
-Amazonas->index[21].i = 5; 		Amazonas->index[21].j = 14;
-Amazonas->index[22].i = 6; 		Amazonas->index[22].j = 5;
-Amazonas->index[23].i = 6; 		Amazonas->index[23].j = 6;
-Amazonas->index[24].i = 6; 		Amazonas->index[24].j = 7;
-Amazonas->index[25].i = 6; 		Amazonas->index[25].j = 8;
-Amazonas->index[26].i = 6; 		Amazonas->index[26].j = 9;
-Amazonas->index[27].i = 6; 		Amazonas->index[27].j = 10;
-Amazonas->index[28].i = 6; 		Amazonas->index[28].j = 11;
-Amazonas->index[29].i = 6; 		Amazonas->index[29].j = 12;
-Amazonas->index[30].i = 6; 		Amazonas->index[30].j = 13;
-Amazonas->index[31].i = 6; 		Amazonas->index[31].j = 14;
-Amazonas->index[32].i = 6; 		Amazonas->index[32].j = 15;
-Amazonas->index[33].i = 7; 		Amazonas->index[33].j = 5;
-Amazonas->index[34].i = 7; 		Amazonas->index[34].j = 6;
-Amazonas->index[35].i = 7; 		Amazonas->index[35].j = 7;
-Amazonas->index[36].i = 7; 		Amazonas->index[36].j = 8;
-Amazonas->index[37].i = 7; 		Amazonas->index[37].j = 9;
-Amazonas->index[38].i = 7; 		Amazonas->index[38].j = 10;
-Amazonas->index[39].i = 7; 		Amazonas->index[39].j = 11;
-Amazonas->index[40].i = 7; 		Amazonas->index[40].j = 12;
-Amazonas->index[41].i = 7; 		Amazonas->index[41].j = 13;
-Amazonas->index[42].i = 7; 		Amazonas->index[42].j = 14;
-Amazonas->index[43].i = 7;  	Amazonas->index[43].j = 15;
-Amazonas->index[44].i = 7;  	Amazonas->index[44].j = 16;
-Amazonas->index[45].i = 8;  	Amazonas->index[45].j = 4;
-Amazonas->index[46].i = 8;  	Amazonas->index[46].j = 5;
-Amazonas->index[47].i = 8;  	Amazonas->index[47].j = 6;
-Amazonas->index[48].i = 8;		Amazonas->index[48].j = 7;
-Amazonas->index[49].i = 8;		Amazonas->index[49].j = 8;
-Amazonas->index[50].i = 8; 	    Amazonas->index[50].j = 9;
-Amazonas->index[51].i = 8;		Amazonas->index[51].j = 10;
-Amazonas->index[52].i = 8;		Amazonas->index[52].j = 11;
-Amazonas->index[53].i = 8;		Amazonas->index[53].j = 12;
-Amazonas->index[54].i = 8; 		Amazonas->index[54].j = 13;
-Amazonas->index[55].i = 8;		Amazonas->index[55].j = 14;
-Amazonas->index[56].i = 8;		Amazonas->index[56].j = 15;
-Amazonas->index[57].i = 9;		Amazonas->index[57].j = 2;
-Amazonas->index[58].i = 9;		Amazonas->index[58].j = 3;
-Amazonas->index[59].i = 9;		Amazonas->index[59].j = 4;
-Amazonas->index[60].i = 9;		Amazonas->index[60].j = 5;
-Amazonas->index[61].i = 9;		Amazonas->index[61].j = 6;
-Amazonas->index[62].i = 9;		Amazonas->index[62].j = 7;
-Amazonas->index[63].i = 9;		Amazonas->index[63].j = 8;
-Amazonas->index[64].i = 9;		Amazonas->index[64].j = 9;
-Amazonas->index[65].i = 9;		Amazonas->index[65].j = 10;
-Amazonas->index[66].i = 9;	 	Amazonas->index[66].j = 11;
-Amazonas->index[67].i = 9;		Amazonas->index[67].j = 12;
-Amazonas->index[68].i = 9;		Amazonas->index[68].j = 13;
-Amazonas->index[69].i = 9;		Amazonas->index[69].j = 14;
-Amazonas->index[70].i = 9;		Amazonas->index[70].j = 15;
-Amazonas->index[71].i = 10; 	Amazonas->index[71].j = 2;
-Amazonas->index[72].i = 10; 	Amazonas->index[72].j = 3;
-Amazonas->index[73].i = 10; 	Amazonas->index[73].j = 4;
-Amazonas->index[74].i = 10; 	Amazonas->index[74].j = 5;
-Amazonas->index[75].i = 10; 	Amazonas->index[75].j = 6;
-Amazonas->index[76].i = 10; 	Amazonas->index[76].j = 7;
-Amazonas->index[77].i = 10; 	Amazonas->index[77].j = 8;
-Amazonas->index[78].i = 10; 	Amazonas->index[78].j = 9;
-Amazonas->index[79].i = 10; 	Amazonas->index[79].j = 10;
-Amazonas->index[80].i = 10; 	Amazonas->index[80].j = 11;
-Amazonas->index[81].i = 10; 	Amazonas->index[81].j = 12;
-Amazonas->index[82].i = 10; 	Amazonas->index[82].j = 13;
-Amazonas->index[83].i = 10; 	Amazonas->index[83].j = 14;
-Amazonas->index[84].i = 11; 	Amazonas->index[84].j = 2;
-Amazonas->index[85].i = 11; 	Amazonas->index[85].j = 3;
-Amazonas->index[86].i = 11; 	Amazonas->index[86].j = 4;
-Amazonas->index[87].i = 11; 	Amazonas->index[87].j = 5;
-Amazonas->index[88].i = 11; 	Amazonas->index[88].j = 6;
-Amazonas->index[89].i = 11; 	Amazonas->index[89].j = 7;
-Amazonas->index[90].i = 11; 	Amazonas->index[90].j = 8;
-Amazonas->index[91].i = 11; 	Amazonas->index[91].j = 9;
-Amazonas->index[92].i = 11; 	Amazonas->index[92].j = 10;
-Amazonas->index[93].i = 11; 	Amazonas->index[93].j = 11;
-Amazonas->index[94].i = 11; 	Amazonas->index[94].j = 12;
-Amazonas->index[95].i = 11; 	Amazonas->index[95].j = 13;
-Amazonas->index[96].i = 11; 	Amazonas->index[96].j = 14;
-Amazonas->index[97].i = 12; 	Amazonas->index[97].j = 5;
-Amazonas->index[98].i = 12; 	Amazonas->index[98].j = 6;
-Amazonas->index[99].i = 12; 	Amazonas->index[99].j = 7;
-Amazonas->index[100].i = 12; 	Amazonas->index[100].j = 8;
-Amazonas->index[101].i = 12; 	Amazonas->index[101].j = 9;
-Amazonas->index[102].i = 12; 	Amazonas->index[102].j = 10;
-Amazonas->index[103].i = 12; 	Amazonas->index[103].j = 12;
-Amazonas->index[104].i = 12; 	Amazonas->index[104].j = 13;
-Amazonas->index[105].i = 12; 	Amazonas->index[105].j = 14;
-Amazonas->index[106].i = 13; 	Amazonas->index[106].j = 7;
-Amazonas->index[107].i = 13; 	Amazonas->index[107].j = 8;
+	Amazonas->myIndexPosition = 14; //posicao no vetor ESTADOS de nomes na classe objects.h
+	Amazonas->index[0].i = 3; 		Amazonas->index[0].j = 4;
+	Amazonas->index[1].i = 3; 		Amazonas->index[1].j = 5;
+	Amazonas->index[2].i = 3; 		Amazonas->index[2].j = 6;
+	Amazonas->index[3].i = 3; 		Amazonas->index[3].j = 7;
+	Amazonas->index[4].i = 3; 		Amazonas->index[4].j = 8;
+	Amazonas->index[5].i = 3; 		Amazonas->index[5].j = 9;
+	Amazonas->index[6].i = 3; 		Amazonas->index[6].j = 10;
+	Amazonas->index[7].i = 4; 		Amazonas->index[7].j = 5;
+	Amazonas->index[8].i = 4; 		Amazonas->index[8].j = 6;
+	Amazonas->index[9].i = 4; 		Amazonas->index[9].j = 7;
+	Amazonas->index[10].i = 4; 		Amazonas->index[10].j = 8;
+	Amazonas->index[11].i = 4; 		Amazonas->index[11].j = 9;
+	Amazonas->index[12].i = 4; 		Amazonas->index[12].j = 10;
+	Amazonas->index[13].i = 5; 		Amazonas->index[13].j = 5;
+	Amazonas->index[14].i = 5; 		Amazonas->index[14].j = 6;
+	Amazonas->index[15].i = 5; 		Amazonas->index[15].j = 7;
+	Amazonas->index[16].i = 5; 		Amazonas->index[16].j = 8;
+	Amazonas->index[17].i = 5; 		Amazonas->index[17].j = 9;
+	Amazonas->index[18].i = 5; 		Amazonas->index[18].j = 10;
+	Amazonas->index[19].i = 5; 		Amazonas->index[19].j = 12;
+	Amazonas->index[20].i = 5; 		Amazonas->index[20].j = 13;
+	Amazonas->index[21].i = 5; 		Amazonas->index[21].j = 14;
+	Amazonas->index[22].i = 6; 		Amazonas->index[22].j = 5;
+	Amazonas->index[23].i = 6; 		Amazonas->index[23].j = 6;
+	Amazonas->index[24].i = 6; 		Amazonas->index[24].j = 7;
+	Amazonas->index[25].i = 6; 		Amazonas->index[25].j = 8;
+	Amazonas->index[26].i = 6; 		Amazonas->index[26].j = 9;
+	Amazonas->index[27].i = 6; 		Amazonas->index[27].j = 10;
+	Amazonas->index[28].i = 6; 		Amazonas->index[28].j = 11;
+	Amazonas->index[29].i = 6; 		Amazonas->index[29].j = 12;
+	Amazonas->index[30].i = 6; 		Amazonas->index[30].j = 13;
+	Amazonas->index[31].i = 6; 		Amazonas->index[31].j = 14;
+	Amazonas->index[32].i = 6; 		Amazonas->index[32].j = 15;
+	Amazonas->index[33].i = 7; 		Amazonas->index[33].j = 5;
+	Amazonas->index[34].i = 7; 		Amazonas->index[34].j = 6;
+	Amazonas->index[35].i = 7; 		Amazonas->index[35].j = 7;
+	Amazonas->index[36].i = 7; 		Amazonas->index[36].j = 8;
+	Amazonas->index[37].i = 7; 		Amazonas->index[37].j = 9;
+	Amazonas->index[38].i = 7; 		Amazonas->index[38].j = 10;
+	Amazonas->index[39].i = 7; 		Amazonas->index[39].j = 11;
+	Amazonas->index[40].i = 7; 		Amazonas->index[40].j = 12;
+	Amazonas->index[41].i = 7; 		Amazonas->index[41].j = 13;
+	Amazonas->index[42].i = 7; 		Amazonas->index[42].j = 14;
+	Amazonas->index[43].i = 7;  	Amazonas->index[43].j = 15;
+	Amazonas->index[44].i = 7;  	Amazonas->index[44].j = 16;
+	Amazonas->index[45].i = 8;  	Amazonas->index[45].j = 4;
+	Amazonas->index[46].i = 8;  	Amazonas->index[46].j = 5;
+	Amazonas->index[47].i = 8;  	Amazonas->index[47].j = 6;
+	Amazonas->index[48].i = 8;		Amazonas->index[48].j = 7;
+	Amazonas->index[49].i = 8;		Amazonas->index[49].j = 8;
+	Amazonas->index[50].i = 8; 	    Amazonas->index[50].j = 9;
+	Amazonas->index[51].i = 8;		Amazonas->index[51].j = 10;
+	Amazonas->index[52].i = 8;		Amazonas->index[52].j = 11;
+	Amazonas->index[53].i = 8;		Amazonas->index[53].j = 12;
+	Amazonas->index[54].i = 8; 		Amazonas->index[54].j = 13;
+	Amazonas->index[55].i = 8;		Amazonas->index[55].j = 14;
+	Amazonas->index[56].i = 8;		Amazonas->index[56].j = 15;
+	Amazonas->index[57].i = 9;		Amazonas->index[57].j = 2;
+	Amazonas->index[58].i = 9;		Amazonas->index[58].j = 3;
+	Amazonas->index[59].i = 9;		Amazonas->index[59].j = 4;
+	Amazonas->index[60].i = 9;		Amazonas->index[60].j = 5;
+	Amazonas->index[61].i = 9;		Amazonas->index[61].j = 6;
+	Amazonas->index[62].i = 9;		Amazonas->index[62].j = 7;
+	Amazonas->index[63].i = 9;		Amazonas->index[63].j = 8;
+	Amazonas->index[64].i = 9;		Amazonas->index[64].j = 9;
+	Amazonas->index[65].i = 9;		Amazonas->index[65].j = 10;
+	Amazonas->index[66].i = 9;	 	Amazonas->index[66].j = 11;
+	Amazonas->index[67].i = 9;		Amazonas->index[67].j = 12;
+	Amazonas->index[68].i = 9;		Amazonas->index[68].j = 13;
+	Amazonas->index[69].i = 9;		Amazonas->index[69].j = 14;
+	Amazonas->index[70].i = 9;		Amazonas->index[70].j = 15;
+	Amazonas->index[71].i = 10; 	Amazonas->index[71].j = 2;
+	Amazonas->index[72].i = 10; 	Amazonas->index[72].j = 3;
+	Amazonas->index[73].i = 10; 	Amazonas->index[73].j = 4;
+	Amazonas->index[74].i = 10; 	Amazonas->index[74].j = 5;
+	Amazonas->index[75].i = 10; 	Amazonas->index[75].j = 6;
+	Amazonas->index[76].i = 10; 	Amazonas->index[76].j = 7;
+	Amazonas->index[77].i = 10; 	Amazonas->index[77].j = 8;
+	Amazonas->index[78].i = 10; 	Amazonas->index[78].j = 9;
+	Amazonas->index[79].i = 10; 	Amazonas->index[79].j = 10;
+	Amazonas->index[80].i = 10; 	Amazonas->index[80].j = 11;
+	Amazonas->index[81].i = 10; 	Amazonas->index[81].j = 12;
+	Amazonas->index[82].i = 10; 	Amazonas->index[82].j = 13;
+	Amazonas->index[83].i = 10; 	Amazonas->index[83].j = 14;
+	Amazonas->index[84].i = 11; 	Amazonas->index[84].j = 2;
+	Amazonas->index[85].i = 11; 	Amazonas->index[85].j = 3;
+	Amazonas->index[86].i = 11; 	Amazonas->index[86].j = 4;
+	Amazonas->index[87].i = 11; 	Amazonas->index[87].j = 5;
+	Amazonas->index[88].i = 11; 	Amazonas->index[88].j = 6;
+	Amazonas->index[89].i = 11; 	Amazonas->index[89].j = 7;
+	Amazonas->index[90].i = 11; 	Amazonas->index[90].j = 8;
+	Amazonas->index[91].i = 11; 	Amazonas->index[91].j = 9;
+	Amazonas->index[92].i = 11; 	Amazonas->index[92].j = 10;
+	Amazonas->index[93].i = 11; 	Amazonas->index[93].j = 11;
+	Amazonas->index[94].i = 11; 	Amazonas->index[94].j = 12;
+	Amazonas->index[95].i = 11; 	Amazonas->index[95].j = 13;
+	Amazonas->index[96].i = 11; 	Amazonas->index[96].j = 14;
+	Amazonas->index[97].i = 12; 	Amazonas->index[97].j = 5;
+	Amazonas->index[98].i = 12; 	Amazonas->index[98].j = 6;
+	Amazonas->index[99].i = 12; 	Amazonas->index[99].j = 7;
+	Amazonas->index[100].i = 12; 	Amazonas->index[100].j = 8;
+	Amazonas->index[101].i = 12; 	Amazonas->index[101].j = 9;
+	Amazonas->index[102].i = 12; 	Amazonas->index[102].j = 10;
+	Amazonas->index[103].i = 12; 	Amazonas->index[103].j = 12;
+	Amazonas->index[104].i = 12; 	Amazonas->index[104].j = 13;
+	Amazonas->index[105].i = 12; 	Amazonas->index[105].j = 14;
+	Amazonas->index[106].i = 13; 	Amazonas->index[106].j = 7;
+	Amazonas->index[107].i = 13; 	Amazonas->index[107].j = 8;
 
 
 
 #pragma endregion
 
-}
-
-// Inicializa o botao jogar
-void InitBotaoJogar(BotaoJogar * botaoJogar)
-{
-	botaoJogar->boundXInicio = 435;
-	botaoJogar->boundXFinal = 850;
-
-	botaoJogar->boundYInicio = 420;
-	botaoJogar->boundYFinal = 485;
-}
-
-// Inicializa o botao tutorial
-void InitBotaoTutorial(BotaoTutorial * botaoTutorial)
-{
-
-	botaoTutorial->boundXInicio = 431;
-	botaoTutorial->boundXFinal = 850;
-
-	botaoTutorial->boundYInicio = 500;
-	botaoTutorial->boundYFinal = 570;
-}
-
-void InitEstadosCores(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[])
-{
-	int i;
-	for (i = 0; i < 27; i++)
-	{
-		estadosCinza[i] = al_load_bitmap(estadosCinzaPath[i]);
-		estadosVerdes[i] = al_load_bitmap(estadosVerdesPath[i]);
-		estadosVermelhos[i] = al_load_bitmap(estadosVermelhosPath[i]);
-	}
 }
 
 void ResetJogador(Jogador * jogador, bool resetNome)
@@ -1523,7 +1583,6 @@ void ResetJogador(Jogador * jogador, bool resetNome)
 		jogador->indexEstadosPerdidos[i] = -1;
 	}
 }
-
 void ResetLista(Lista * lista)
 {
 	lista->heightLista = 0;
@@ -1532,8 +1591,6 @@ void ResetLista(Lista * lista)
 	free(lista->palavraAtual);
 }
 
-// Altera o valor Y do elemento da lista de acordo velocidade
-// da lista(lista->velocidade) para dar no��o de anima��o
 void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 {
 	// Caso a palavra tenha chegado na altura maxima devemos resetar a lista
@@ -1577,37 +1634,6 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 		lista->isMaxHeight = true;
 	}
 }
-
-void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP * estrela)
-{
-	if (pontos <= 12000)
-	{
-		al_draw_bitmap(estrela, (WIDTH / 2) - 10, (HEIGHT / 2) - 60, 0);
-	}
-	else if (pontos > 12000 && pontos <= 19000) {
-		al_draw_bitmap(estrela, (WIDTH / 2) - 35, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) + 10, (HEIGHT / 2) - 60, 0);
-	}
-	else if (pontos > 19000 && pontos <= 27000) {
-		al_draw_bitmap(estrela, (WIDTH / 2) - 65, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) - 17, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) + 30, (HEIGHT / 2) - 60, 0);
-	}
-	else if (pontos > 27000 && pontos <= 36000) {
-		al_draw_bitmap(estrela, (WIDTH / 2) - 85, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) - 40, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) + 5, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) + 50, (HEIGHT / 2) - 60, 0);
-	}
-	else if (pontos > 36000) {
-		al_draw_bitmap(estrela, (WIDTH / 2) - 110, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) - 65, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) - 20, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) + 25, (HEIGHT / 2) - 60, 0);
-		al_draw_bitmap(estrela, (WIDTH / 2) + 70, (HEIGHT / 2) - 60, 0);
-	}
-}
-
 void GetColor(Lista * lista, int pontos)
 {
 	if (pontos >= 36000)
@@ -1655,8 +1681,40 @@ void GetColor(Lista * lista, int pontos)
 		}
 	}	
 }
+void TiraEstado(Jogador * jogador)
+{
+	if (!perdeuEstado)
+	{
+		int i, j, maiorValor = -1, maiorIndex = 0;
+		for (i = 0; i < 27; i++)
+		{
+			if (jogador->acertoPorIndex[i] > maiorValor)
+			{
+				maiorIndex = i;
+				maiorValor = jogador->acertoPorIndex[i];
+			}
+		}
 
-// Sorteia uma a uma as palavras simples (somente estado, sigla ou capital)
+		for (i = 0; i < 5; i++)
+		{
+			if (jogador->indexEstadosPerdidos[i] < 0)
+			{
+				jogador->indexEstadosPerdidos[i] = maiorIndex;
+				jogador->acertoPorIndex[maiorIndex] = -1;
+				perdeuEstado = true;
+				break;
+			}
+		}
+	}
+}
+void ConcatenaLista(char * s1, char * s2, Lista * lista)
+{
+	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 6);
+	strcpy(lista->palavraAtual, s1);
+	strcat(lista->palavraAtual, "    ");
+	strcat(lista->palavraAtual, s2);
+}
+
 void SortPalavra(Jogador * jogador, Lista * lista)
 {
 	srand(time(NULL));
@@ -1749,6 +1807,27 @@ void SortPalavra(Jogador * jogador, Lista * lista)
 		default:
 			break;
 		}
+	}
+}
+void SortPontos(Ranking * ranking, int size)
+{
+	int i;
+
+	for (i = 0; i < size; i++)
+	{
+		int temp = ranking->pontosTxt[i];
+		char *tempString = ranking->nomesTxt[i];
+		int j = i;
+
+		while (j > 0 && temp > ranking->pontosTxt[j - 1])
+		{
+			ranking->pontosTxt[j] = ranking->pontosTxt[j - 1];
+			ranking->nomesTxt[j] = ranking->nomesTxt[j - 1];
+			j--;
+		}
+
+		ranking->pontosTxt[j] = temp;
+		ranking->nomesTxt[j] = tempString;
 	}
 }
 
@@ -1879,7 +1958,6 @@ void GetUserInput(Jogador * jogador, ALLEGRO_EVENT ev)
 		}			
 	}
 }
-
 void SalvaPontuacao(FILE * rankingData, Jogador * jogador)
 {
 	char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
@@ -1888,7 +1966,6 @@ void SalvaPontuacao(FILE * rankingData, Jogador * jogador)
 	fclose(rankingData);
 	free(rankingDataPath);
 }
-
 void GetPontuacao(FILE * rankingData, Ranking * ranking)
 {
 	char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
@@ -1919,32 +1996,36 @@ void GetPontuacao(FILE * rankingData, Ranking * ranking)
 
 	SortPontos(ranking, ranking->totalLinhas / 2);
 }
-
-void SortPontos(Ranking * ranking, int size)
+char *GetFolderPath(char * path)
 {
-	int i;
+	char *formatedPath = malloc(strlen(al_get_current_directory()) + strlen(path) + 1);
+	strcpy(formatedPath, "");
+	strcat(formatedPath, al_get_current_directory());
+	strcat(formatedPath, path);
 
-	for (i = 0; i < size; i++)
-	{
-		int temp = ranking->pontosTxt[i];
-		char *tempString = ranking->nomesTxt[i];
-		int j = i;
+	return formatedPath;
+}
+int GetTotalLinhas(FILE * rankingData)
+{
+	char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
+	int linhas = 0;
 
-		while (j > 0 && temp > ranking->pontosTxt[j - 1])
+	rankingData = fopen(rankingDataPath, "r");
+
+	while (!feof(rankingData)) {
+		char enter = fgetc(rankingData);
+		if (enter == '\n')
 		{
-			ranking->pontosTxt[j] = ranking->pontosTxt[j - 1];
-			ranking->nomesTxt[j] = ranking->nomesTxt[j - 1];
-			j--;
+			linhas++;
 		}
-
-		ranking->pontosTxt[j] = temp;
-		ranking->nomesTxt[j] = tempString;
 	}
+	fclose(rankingData);
+
+	return linhas;
 }
 
 void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 {
-	printf("COMBO: %d", jogador->combo);
 	if (!clicouPause)
 	{
 		if (musicaTocando)
@@ -1956,16 +2037,20 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 		jogador->acertos++;
 		jogador->combo++;
 
-		if (jogador->combo >= 10)
+		if (jogador->combo == 10 && jogador->vidas < 12)
 		{
-			jogador->vidas++;
+			jogador->vidas++;	
+		}
+
+		if (jogador->combo < 11)
+		{
+			jogador->combo = 0;
 		}
 
 		jogador->acertou = true;
 		ResetLista(lista);
 	}	
 }
-
 void JogadorErrou(Jogador * jogador, Lista * lista)
 {
 	if (!clicouPause)
@@ -1982,55 +2067,6 @@ void JogadorErrou(Jogador * jogador, Lista * lista)
 	}
 }
 
-void TiraEstado(Jogador * jogador)
-{
-	if (!perdeuEstado)
-	{
-		int i, j, maiorValor = 0, maiorIndex = 0;
-		for (i = 0; i < 27; i++)
-		{
-			if (jogador->acertoPorIndex[i] > maiorValor)
-			{
-				maiorIndex = i;
-			}
-		}
-
-		for (i = 0; i < 5; i++)
-		{
-			if (jogador->indexEstadosPerdidos[i] < 0)
-			{
-				jogador->indexEstadosPerdidos[i] = maiorIndex;
-				jogador->acertoPorIndex[maiorIndex] = -1;
-				perdeuEstado = true;
-				break;
-			}
-		}
-
-		//for (i = 0; i < 27; i++)
-		//{
-		//	if (jogador->acertoPorIndex[i] >= 1)
-		//	{
-		//		for (j = 0; j < 5; j++)
-		//		{
-		//			if (jogador->indexEstadosPerdidos[j] < 0)
-		//			{
-		//				if (i != jogador->indexEstadosPerdidos[0] && i != jogador->indexEstadosPerdidos[1] &&
-		//					i != jogador->indexEstadosPerdidos[2] && i != jogador->indexEstadosPerdidos[3] &&
-		//					i != jogador->indexEstadosPerdidos[4]) 
-		//				{
-		//					jogador->indexEstadosPerdidos[j] = i;
-		//					jogador->acertoPorIndex[i] = -1;
-		//					perdeuEstado = true;
-		//					break;
-		//				}
-		//			}
-		//		}
-		//		break;
-		//	}
-		//}
-	}
-}
-
 void FreeNomeJogadores(Ranking * ranking)
 {
 	int i;
@@ -2039,7 +2075,6 @@ void FreeNomeJogadores(Ranking * ranking)
 		free(ranking->nomesTxt[i]);
 	}
 }
-
 void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[])
 {
 	int i;
@@ -2054,137 +2089,164 @@ void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char 
 	}
 }
 
+void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP * estrela)
+{
+	if (pontos <= 12000)
+	{
+		al_draw_bitmap(estrela, (WIDTH / 2) - 10, (HEIGHT / 2) - 60, 0);
+	}
+	else if (pontos > 12000 && pontos <= 19000) {
+		al_draw_bitmap(estrela, (WIDTH / 2) - 35, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 10, (HEIGHT / 2) - 60, 0);
+	}
+	else if (pontos > 19000 && pontos <= 27000) {
+		al_draw_bitmap(estrela, (WIDTH / 2) - 65, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) - 17, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 30, (HEIGHT / 2) - 60, 0);
+	}
+	else if (pontos > 27000 && pontos <= 36000) {
+		al_draw_bitmap(estrela, (WIDTH / 2) - 85, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) - 40, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 5, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 50, (HEIGHT / 2) - 60, 0);
+	}
+	else if (pontos > 36000) {
+		al_draw_bitmap(estrela, (WIDTH / 2) - 110, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) - 65, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) - 20, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 25, (HEIGHT / 2) - 60, 0);
+		al_draw_bitmap(estrela, (WIDTH / 2) + 70, (HEIGHT / 2) - 60, 0);
+	}
+}
 void DesenhaCoracoes(ALLEGRO_BITMAP * coracaoVazio, ALLEGRO_BITMAP * coracaoMetade, ALLEGRO_BITMAP * coracaoCheio, Jogador * jogador)
 {
 	switch (jogador->vidas)
 	{
 	case 0:
-		al_draw_bitmap(coracaoVazio, 970, 70, 0);
-		al_draw_bitmap(coracaoVazio, 998, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoVazio, 950, 70, 0);
+		al_draw_bitmap(coracaoVazio, 978, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1006, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	case 1:
-		al_draw_bitmap(coracaoMetade, 970, 70, 0);
-		al_draw_bitmap(coracaoVazio, 998, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoMetade, 950, 70, 0);
+		al_draw_bitmap(coracaoVazio, 978, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1006, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	case 2:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoVazio, 998, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoVazio, 978, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1006, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		TiraEstado(jogador);
 		break;
 	case 3:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoMetade, 998, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoMetade, 978, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1006, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	case 4:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1026, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1006, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		TiraEstado(jogador);
 		break;
 	case 5:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoMetade, 1026, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1006, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	case 6:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1006, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		TiraEstado(jogador);
 		break;
 	case 7:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
-		al_draw_bitmap(coracaoMetade, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1006, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	case 8:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1006, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1034, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		TiraEstado(jogador);
 		break;
 	case 9:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
-		al_draw_bitmap(coracaoMetade, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1006, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1034, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	case 10:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
-		al_draw_bitmap(coracaoVazio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1006, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1034, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1062, 70, 0);
+		al_draw_bitmap(coracaoVazio, 1090, 70, 0);
 		TiraEstado(jogador);
 		break;
 	case 11:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
-		al_draw_bitmap(coracaoMetade, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1006, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1034, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1062, 70, 0);
+		al_draw_bitmap(coracaoMetade, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	case 12:
-		al_draw_bitmap(coracaoCheio, 970, 70, 0);
-		al_draw_bitmap(coracaoCheio, 998, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1026, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1054, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1082, 70, 0);
-		al_draw_bitmap(coracaoCheio, 1110, 70, 0);
+		al_draw_bitmap(coracaoCheio, 950, 70, 0);
+		al_draw_bitmap(coracaoCheio, 978, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1006, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1034, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1062, 70, 0);
+		al_draw_bitmap(coracaoCheio, 1090, 70, 0);
 		perdeuEstado = false;
 		break;
 	default:
 		break;
 	}
 }
-
 void DesenhaBtnPause(ALLEGRO_BITMAP * pauseBtn)
 {
 	al_draw_bitmap(pauseBtn, 1160, 25, 0);
 }
-
 void DesenhaBtnMusica(ALLEGRO_BITMAP * musicaOn, ALLEGRO_BITMAP * musicaOff, int posX, int posY, bool musicaTocando)
 {
 	if (musicaTocando)
@@ -2195,7 +2257,6 @@ void DesenhaBtnMusica(ALLEGRO_BITMAP * musicaOn, ALLEGRO_BITMAP * musicaOff, int
 		al_draw_bitmap(musicaOff, posX, posY, 0);
 	}
 }
-
 void DesenhaPontuacaoRanking(ALLEGRO_FONT * fontLista, Ranking * ranking)
 {
 	if (ranking->totalLinhas / 2 >= 5)
@@ -2279,7 +2340,6 @@ void DesenhaPontuacaoRanking(ALLEGRO_FONT * fontLista, Ranking * ranking)
 		}
 	}
 }
-
 void DesenhaEstadosCinza(ALLEGRO_BITMAP * estadosCinza[], Jogador * jogador)
 {
 	int i;
@@ -2291,7 +2351,6 @@ void DesenhaEstadosCinza(ALLEGRO_BITMAP * estadosCinza[], Jogador * jogador)
 		}
 	}
 }
-
 void DesenhaEstadosFeedBack(ALLEGRO_BITMAP * estadosVerdes[], ALLEGRO_BITMAP * estadosVermelhos[], Jogador * jogador, Lista * lista)
 {
 	if (al_get_timer_started(piscaTimer) && al_get_timer_count(piscaTimer) < 0.5)
@@ -2312,33 +2371,6 @@ void DesenhaEstadosFeedBack(ALLEGRO_BITMAP * estadosVerdes[], ALLEGRO_BITMAP * e
 	}
 }
 
-// Concatena as palavras da lista
-void ConcatenaLista(char * s1, char * s2, Lista * lista)
-{
-	lista->palavraAtual = malloc(strlen(s1) + strlen(s2) + 6);
-	strcpy(lista->palavraAtual, s1);
-	strcat(lista->palavraAtual, "    ");
-	strcat(lista->palavraAtual, s2);
-}
-
-// Cria matriz sob o Bitmap para poder identificar o click
-void CreateMatrix(float lines[], float columns[], int totalLines, int totalColumns, int offsetX, int offsetY)
-{
-	float pixelW = WIDTHMAPA / (float)totalLines; //dividir o width pelo numero de linhas me da o tamanho em pixel de cada quadrado
-	float pixelH = HEIGHTMAPA / (float)totalColumns; // mesma coisa de cima
-
-	int i = 0, j = 0;
-	for (i = 0; i < totalLines; i++)
-	{
-		lines[i] = (pixelH + pixelH * i) + offsetY; // adiciono o valor em pixels onde ira comecar a matriz de Linhas
-	}
-	for (j = 0; j < totalColumns; j++)
-	{
-		columns[j] = (pixelW + pixelW * j) + offsetX; // adiciono o valor em pixels onde ira comecar a matriz de colunas
-	}
-}
-
-// Verifica a posicao do click
 ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, int totalColumns, ALLEGRO_EVENT ev)
 {
 	ClickIndex temp;
@@ -2364,18 +2396,6 @@ ClickIndex CheckClickPosition(float lines[], float columns[], int totalLines, in
 
 	return temp; //falso para quando esta fora do mapa
 }
-
-char *GetFolderPath(char * path)
-{
-	char *formatedPath = malloc(strlen(al_get_current_directory()) + strlen(path) + 1);
-	strcpy(formatedPath, "");
-	strcat(formatedPath, al_get_current_directory());
-	strcat(formatedPath, path);
-
-	return formatedPath;
-}
-
-//Testa qual estado corresponde a posicao clicada e verifica acerto
 void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadrao *Acre, EstadosPadrao *Alagoas, EstadosPadrao *Amapa, EstadosPadrao *Amazonas, EstadosPadrao *Bahia,
 	EstadosPadrao *Ceara, EstadosPadrao *DistritoFederal, EstadosPadrao *EspiritoSanto, EstadosPadrao *Goias, EstadosPadrao *Maranhao,
 	EstadosPadrao *MatoGrosso, EstadosPadrao *MatoGrossoDoSul, EstadosPadrao *MinasGerais, EstadosPadrao *Para, EstadosPadrao *Paraiba,
@@ -2989,24 +3009,7 @@ void TestaEstados(Jogador *jogador, Lista *lista, ClickIndex index, EstadosPadra
 
 }
 
-int GetTotalLinhas(FILE * rankingData)
-{
-	char *rankingDataPath = GetFolderPath("/data/dadosRanking.txt");
-	int linhas = 0;
 
-	rankingData = fopen(rankingDataPath, "r");
-
-	while (!feof(rankingData)) {
-		char enter = fgetc(rankingData);
-		if (enter == '\n')
-		{
-			linhas++;
-		}
-	}
-	fclose(rankingData);
-
-	return linhas;
-}
 
 
 
