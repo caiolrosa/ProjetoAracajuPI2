@@ -199,6 +199,7 @@ int main() {
 	ALLEGRO_BITMAP *tocantins = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 	ALLEGRO_FONT *comboFont = NULL;
+	ALLEGRO_FONT *combo10Font = NULL;
 
 	// Inicializa o Allegro
 	if (!al_init())
@@ -330,7 +331,7 @@ int main() {
 	fontLista = al_load_font(fontListaPath, 20, 0);
 
 	char *fontComboPath = GetFolderPath("/fonts/Space Comics.ttf");
-	comboFont = al_load_font(fontComboPath, 30, 0);
+	comboFont = al_load_font(fontComboPath, 35, 0);
 
 	// Inicializa cores
 	WHITE = al_map_rgb(255, 255, 255);
@@ -513,7 +514,6 @@ int main() {
 
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && isGameOver)
 		{
-			printf("POS X: %d \n POS Y: %d \n", ev.mouse.x, ev.mouse.y);
 			if (ev.mouse.x >= 852 && ev.mouse.x <= 896 && ev.mouse.y >= 446 && ev.mouse.y <= 490)
 			{				
 				al_stop_sample_instance(jogoAudioInstance);
@@ -521,6 +521,7 @@ int main() {
 				digitouNome = false;
 				jogadorJogando = false;
 				ResetJogador(&jogador, true);
+				isGameOver = false;
 			}
 		}
 
@@ -599,9 +600,10 @@ int main() {
 				DesenhaBtnPause(pauseBtn);
 				DesenhaCoracoes(coracaoVazio, coracaoMetade, coracaoCheio, &jogador);
 				al_draw_textf(fontLista, BLACK, 1028, 36, 0, "%d", jogador.pontos);
+
 				if (jogador.combo >= 5)
 				{
-					al_draw_textf(comboFont, BLACK, 100, 650, 0, "X%d", jogador.combo);
+					al_draw_textf(comboFont, BLACK, 130, 550, 0, "X%d", jogador.combo);
 				}
 
 				// Se o jogador nao clicou pause e nao terminou o jogo devemos fazer o update da lista
@@ -1624,7 +1626,7 @@ void UpdateLista(ALLEGRO_FONT * fontLista, Jogador * jogador, Lista * lista)
 		// Aumentamos a altura da lista de acordo com a velocidade para dar no��o de anima��o
 		// isMaxHeigth permite sabermos que a palavra nao chegou ao final da lista, entao nao devemos reseta-la
 		lista->heightLista = lista->velocidade + 10;
-		lista->velocidade += 4.0f;
+		lista->velocidade += 3.8f;
 		lista->isMaxHeight = false;
 	}
 	else {
@@ -1699,8 +1701,17 @@ void TiraEstado(Jogador * jogador)
 		{
 			if (jogador->indexEstadosPerdidos[i] < 0)
 			{
-				jogador->indexEstadosPerdidos[i] = maiorIndex;
-				jogador->acertoPorIndex[maiorIndex] = -1;
+				if (maiorValor == -1)
+				{
+					srand(time(NULL));
+					int temp = rand() % 27;
+					jogador->indexEstadosPerdidos[i] = temp;
+				}
+				else {
+					jogador->indexEstadosPerdidos[i] = maiorIndex;
+					jogador->acertoPorIndex[maiorIndex] = -1;
+				}
+
 				perdeuEstado = true;
 				break;
 			}
@@ -2042,7 +2053,7 @@ void JogadorAcertou(Jogador * jogador, Lista * lista, int pontuacao)
 			jogador->vidas++;	
 		}
 
-		if (jogador->combo < 11)
+		if (jogador->combo >= 11)
 		{
 			jogador->combo = 0;
 		}
