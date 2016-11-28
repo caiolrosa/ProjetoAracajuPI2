@@ -177,7 +177,6 @@ int main() {
 #pragma endregion
 	
 	// Variaveis do Allegro
-	ALLEGRO_BITMAP *mapaBrasil = NULL;
 	ALLEGRO_BITMAP *menu = NULL;
 	ALLEGRO_BITMAP *nomeJogadorTela = NULL;
 	ALLEGRO_BITMAP *jogoBG = NULL;
@@ -269,12 +268,6 @@ int main() {
 	// Bitmap do popup de input de nome do jogador
 	char *inputPopupPath = GetFolderPath("/imgs/Telas/nomeJogador.png");
 	nomeJogadorTela = al_load_bitmap(inputPopupPath);
-
-	// Bitmap do mapa do jogo
-	char *mapaPath = GetFolderPath("/imgs/Mapas/mapaEscuro1.png");
-	mapaBrasil = al_load_bitmap(mapaPath);	 // bmp de testes para encontrar o indice correto
-	int mapaWidth = al_get_bitmap_width(mapaBrasil);			 // Recebe o tamanho X da imagem
-	int mapaHeight = al_get_bitmap_height(mapaBrasil);			 // Recebe o tamanho Y da imagem
 	
 	// Bitmap teste do fundo
 	char *jogoBGPath = GetFolderPath("/imgs/Telas/mapa-bg.jpg");
@@ -690,7 +683,6 @@ int main() {
 #pragma region Libera memoria paths
 	free(menuPath);
 	free(inputPopupPath);
-	free(mapaPath);
 	free(jogoBGPath);
 	free(gameOverPath);
 	free(rankingTelaPath);
@@ -725,7 +717,6 @@ int main() {
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
 	al_destroy_timer(piscaTimer);
-	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
 	al_destroy_bitmap(nomeJogadorTela);
 	al_destroy_bitmap(jogoBG);
