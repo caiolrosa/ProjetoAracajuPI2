@@ -106,6 +106,9 @@ void JogadorErrou(Jogador *jogador, Lista * lista);
 
 void FreeNomeJogadores(Ranking * ranking);
 void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char *estadosVermelhosPath[], ALLEGRO_BITMAP *estadosCinza[], ALLEGRO_BITMAP *estadosVerdes[], ALLEGRO_BITMAP *estadosVermelhos[]);
+void FreeEstadosAlocados(EstadosPadrao *_Acre, EstadosPadrao *_Alagoas, EstadosPadrao *_Amapa, EstadosPadrao *_Amazonas, EstadosPadrao *_Bahia, EstadosPadrao *_Ceara, EstadosPadrao *_DistritoFederal, EstadosPadrao *_EspiritoSanto, EstadosPadrao *_Goias, EstadosPadrao *_Maranhao,
+	EstadosPadrao *_MatoGrosso, EstadosPadrao *_MatoGrossoDoSul, EstadosPadrao *_MinasGerais, EstadosPadrao *_Para, EstadosPadrao *_Paraiba, EstadosPadrao *_Parana, EstadosPadrao *_Pernambuco, EstadosPadrao *_Piaui, EstadosPadrao *_RioDeJaneiro, EstadosPadrao *_RioGrandeDoNorte,
+	EstadosPadrao *_RioGrandeDoSul, EstadosPadrao *_Rondonia, EstadosPadrao *_Roraima, EstadosPadrao *_SantaCatarina, EstadosPadrao *_SaoPaulo, EstadosPadrao *_Sergipe, EstadosPadrao *_Tocantins);
 
 void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP *estrela);
 void DesenhaCoracoes(ALLEGRO_BITMAP *coracaoVazio, ALLEGRO_BITMAP *coracaoMetade, ALLEGRO_BITMAP *coracaoCheio, Jogador *jogador);
@@ -190,16 +193,12 @@ int main() {
 	ALLEGRO_BITMAP *closeBtn = NULL;
 	ALLEGRO_BITMAP *musicaOn = NULL;
 	ALLEGRO_BITMAP *musicaOff = NULL;
-	//ALLEGRO_BITMAP *jogarBotaoNormal = NULL;
-	//ALLEGRO_BITMAP *jogarBotaoOver = NULL;
 	ALLEGRO_BITMAP *estadosCinza[27];
 	ALLEGRO_BITMAP *estadosVerdes[27];
 	ALLEGRO_BITMAP *estadosVermelhos[27];
 	ALLEGRO_BITMAP *tutorialTela = NULL;
-	ALLEGRO_BITMAP *tocantins = NULL;
 	ALLEGRO_FONT *fontLista = NULL;
 	ALLEGRO_FONT *comboFont = NULL;
-	ALLEGRO_FONT *combo10Font = NULL;
 
 	// Inicializa o Allegro
 	if (!al_init())
@@ -488,7 +487,6 @@ int main() {
 			}
 		}
 
-		// TODO: Arrumar o erro que quando o jogador clica em JOGAR ja conta um acerto
 		if (ev.type == ALLEGRO_EVENT_MOUSE_BUTTON_DOWN && jogador.pronto && !isGameOver && digitouNome && !clicouPause) // Verifica se houve input de click no bot�o jogar
 		{
 			ClickIndex t = CheckClickPosition(mLines, mColumns, TOTAL_DE_LINHAS, TOTAL_DE_COLUNAS, ev); //checa se o click foi no mapa
@@ -497,9 +495,7 @@ int main() {
 			//TESTA o click para ver qual estado foi clicado
 			TestaEstados(&jogador, &lista, t, _Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
 				_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
-				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
-
-			
+				_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);	
 
 			// Verifica se jogador clicou no pause
 			if (ev.mouse.x >= 1164 && ev.mouse.x <= 1238 && ev.mouse.y >= 33 && ev.mouse.y <= 101 && !clicouPause)
@@ -717,6 +713,10 @@ int main() {
 	free(erroAudioSamplePath);
 	FreeNomeJogadores(&ranking);
 	FreeEstadosPaths(estadosCinzaPath, estadosVerdesPath, estadosVermelhosPath, estadosCinza, estadosVerdes, estadosVermelhos);
+	FreeEstadosAlocados(_Acre, _Alagoas, _Amapa, _Amazonas, _Bahia, _Ceara, _DistritoFederal, _EspiritoSanto, _Goias, _Maranhao,
+		_MatoGrosso, _MatoGrossoDoSul, _MinasGerais, _Para, _Paraiba, _Parana, _Pernambuco, _Piaui, _RioDeJaneiro, _RioGrandeDoNorte,
+		_RioGrandeDoSul, _Rondonia, _Roraima, _SantaCatarina, _SaoPaulo, _Sergipe, _Tocantins);
+
 #pragma endregion
 
 	// Libera a memoria alocada para variaveis Allegro
@@ -724,6 +724,7 @@ int main() {
 	al_destroy_display(display);
 	al_destroy_event_queue(event_queue);
 	al_destroy_timer(timer);
+	al_destroy_timer(piscaTimer);
 	al_destroy_bitmap(mapaBrasil);
 	al_destroy_bitmap(menu);
 	al_destroy_bitmap(nomeJogadorTela);
@@ -733,6 +734,7 @@ int main() {
 	al_destroy_bitmap(creditosTela);
 	al_destroy_bitmap(pauseTela);
 	al_destroy_bitmap(closeBtn);
+	al_destroy_bitmap(pauseBtn);
 	al_destroy_bitmap(musicaOn);
 	al_destroy_bitmap(musicaOff);
 	al_destroy_bitmap(coracaoVazio);
@@ -2031,7 +2033,7 @@ int GetTotalLinhas(FILE * rankingData)
 		}
 	}
 	fclose(rankingData);
-
+	free(rankingDataPath);
 	return linhas;
 }
 
@@ -2098,6 +2100,41 @@ void FreeEstadosPaths(char *estadosCinzaPath[], char *estadosVerdesPath[], char 
 		free(estadosVerdesPath[i]);
 		free(estadosVermelhosPath[i]);
 	}
+}
+
+void FreeEstadosAlocados(EstadosPadrao * _Acre, EstadosPadrao * _Alagoas, EstadosPadrao * _Amapa, EstadosPadrao * _Amazonas, EstadosPadrao * _Bahia, 
+	EstadosPadrao * _Ceara, EstadosPadrao * _DistritoFederal, EstadosPadrao * _EspiritoSanto, EstadosPadrao * _Goias, EstadosPadrao * _Maranhao, 
+	EstadosPadrao * _MatoGrosso, EstadosPadrao * _MatoGrossoDoSul, EstadosPadrao * _MinasGerais, EstadosPadrao * _Para, EstadosPadrao * _Paraiba, 
+	EstadosPadrao * _Parana, EstadosPadrao * _Pernambuco, EstadosPadrao * _Piaui, EstadosPadrao * _RioDeJaneiro, EstadosPadrao * _RioGrandeDoNorte, 
+	EstadosPadrao * _RioGrandeDoSul, EstadosPadrao * _Rondonia, EstadosPadrao * _Roraima, EstadosPadrao * _SantaCatarina, EstadosPadrao * _SaoPaulo, 
+	EstadosPadrao * _Sergipe, EstadosPadrao * _Tocantins)
+{
+	free(_Acre);
+	free(_Alagoas);
+	free(_Amapa);
+	free(_Amazonas);
+	free(_Bahia);
+	free(_Ceara);
+	free(_DistritoFederal);
+	free(_EspiritoSanto);
+	free(_Goias);
+	free(_Maranhao);
+	free(_MatoGrosso);
+	free(_MatoGrossoDoSul);
+	free(_MinasGerais);
+	free(_Paraiba);
+	free(_Parana);
+	free(_Pernambuco);
+	free(_Piaui);
+	free(_RioDeJaneiro);
+	free(_RioGrandeDoNorte);
+	free(_RioGrandeDoSul);
+	free(_Rondonia);
+	free(_Roraima);
+	free(_SantaCatarina);
+	free(_SaoPaulo);
+	free(_Sergipe);
+	free(_Tocantins);
 }
 
 void DesenhaEstrelas(int pontos, ALLEGRO_BITMAP * estrela)
