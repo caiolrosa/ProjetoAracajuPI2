@@ -509,6 +509,7 @@ int main() {
 				isInMenu = true;
 				digitouNome = false;
 				jogadorJogando = false;
+				salvouPontuacao = false;
 				ResetJogador(&jogador, true);
 				isGameOver = false;
 			}
